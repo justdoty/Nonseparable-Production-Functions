@@ -16,11 +16,11 @@ T <- 100
 totalT <- 30
 starttime <- T-totalT
 #Specification of the median of production function parameters:
-medconstant <- 0.1; medl <- 0.3; medk <- 0.2; medm <- 0.2; medu <- 0.1; medomega <- 0.1
+medconstant <- 0; medl <- 0.3; medk <- 0.3; medm <- 0.2; medu <- 0.1; medomega <- 0.1
 #Specification of the median for persistent productivity
 medrho <- 1; medrho0 <- 0
 #Specifcation of the median of investment function parameters
-iotamed0 <- -0.7; mediotak <- -0.2; mediotaI <- -0.1; mediotarho <- 1
+iotamed0 <- 0; mediotak <- -0.2; mediotaI <- -0.1; mediotarho <- 1
 #Capital Constant Coefficients###########################################
 delta <- 0.2; kappaI <- 0.5
 #This plots the coefficient functionals for the output equation
@@ -82,11 +82,11 @@ for (n in 1:nreps){
 	kdata <- matrix(0, N, T)
 	lnidata <- matrix(0, N, T)
 	#Initial level of capital (GNR)
-	kdata[,1] <- kappa0[,1]
-	lnidata[,1] <- iota0[,1]+kdata[,1]*iotak[,1]+omgdata[,1]*iotaw[,1]
+	kdata[,1] <- exp(kappa0[,1])
+	lnidata[,1] <- iota0[,1]+log(kdata[,1])*iotak[,1]+omgdata[,1]*iotaw[,1]
 	for (t in 2:T){
-		kdata[,t] <- kappa0[,t]+(1-delta)*kdata[,t-1]+kappaI*exp(lnidata[,t-1])
-		lnidata[,t] <- iota0[,t]+kdata[,t]*iotak[,t]+omgdata[,t]*iotaw[,t]
+		kdata[,t] <- exp(kappa0[,t])+(1-delta)*kdata[,t-1]+kappaI*exp(lnidata[,t-1])
+		lnidata[,t] <- iota0[,t]+log(kdata[,t])*iotak[,t]+omgdata[,t]*iotaw[,t]
 	}
 	#Log Capital
 	lnkdata <- log(kdata)
@@ -202,6 +202,8 @@ for (q in 1:length(tauseq)){
 	kMSE[q,] <- colMeans((kresmat[,,q]-ktrue)^2)
 	
 }
+#Bias reduced, but MSE in investment estimation is still high
+#Bias in capital equation: Constant and Investment Lag (good/ok in Capital Lag)
 
 
 
