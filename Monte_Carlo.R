@@ -8,6 +8,7 @@ lresmat <- array(0, dim=c(nreps, 3, length(tauseq)))
 mresmat <- array(0, dim=c(nreps, 3, length(tauseq)))
 uresmat <- array(0, dim=c(nreps, 3, length(tauseq)))
 iresmat <- array(0, dim=c(nreps, 3, length(tauseq)))
+kresmat <- array(0, dim=c(nreps, 3, length(tauseq)))
 #Number of Firms:
 N <- 500
 T <- 100
@@ -20,8 +21,8 @@ medconstant <- 0.1; medl <- 0.3; medk <- 0.2; medm <- 0.2; medu <- 0.1; medomega
 medrho <- 1; medrho0 <- 0
 #Specifcation of the median of investment function parameters
 iotamed0 <- -0.7; mediotak <- -0.2; mediotaI <- -0.1; mediotarho <- 1
-#Depreciation of Capital
-delta <- 0.2
+#Capital Constant Coefficients###########################################
+delta <- 0.2; kappaI <- 0.5
 #This plots the coefficient functionals for the output equation
 #Takes the inflection point as the median and returns a function that is concave
 #in lower tails and convex in higher tails. Consider changing the degree of
@@ -62,6 +63,11 @@ for (n in 1:nreps){
 	iotak <- apply(zetadata, 2, function(x) beta(x, mediotak, 0.02))
 	iotaw <- apply(zetadata, 2, function(x) beta(x, mediotarho, 0.1))
 	iota0 <- apply(zetadata, 2, function(x) beta(x, iotamed0, 0.1))
+	#Specification for Capital Demand Shocks
+	upsilondata <- matrix(runif(N*T, 0, 1), nrow=N, ncol=T)
+	#Specification for Constant Coefficient in Capital Equation
+	alphaK <- 1; sigmaK <- 0.1
+	kappa0 <- alphaK+sigmaK*qnorm(upsilondata)
 	#Form productivity
 	omgdata <- matrix(0, N, T)
 	#Period 0 values of omega (ACF)
@@ -73,45 +79,61 @@ for (n in 1:nreps){
 		omgdata[,t] <- rho0[,t]+rho[,t]*omgdata[,t-1]
 	}
 	#Form Capital and Investment rules using accumulation law and reduced form equation
-	Capital <- matrix(0, N, T)
-	Investment <- matrix(0, N, T)
+	kdata <- matrix(0, N, T)
+	lnidata <- matrix(0, N, T)
 	#Initial level of capital (GNR)
-	Capital[,1] <- runif(N)
-	Investment[,1] <- iota0[,1]+Capital[,1]*iotak[,1]+omgdata[,1]*iotaw[,1]
-	Capital[,2] <- (1-delta)*Capital[,1]+0.5*exp(Investment[,1])
-	Investment[,2] <- iota0[,2]+Capital[,2]*iotak[,2]+omgdata[,2]*iotaw[,2]
-	for (t in 3:T){
-		Capital[,t] <- (1-delta)*Capital[,t-1]+0.5*exp(Investment[,t-1])+0.5*exp(Investment[,t-2])
-		Investment[,t] <- iota0[,t]+Capital[,t]*iotak[,t]+omgdata[,t]*iotaw[,t]
+	kdata[,1] <- kappa0[,1]
+	lnidata[,1] <- iota0[,1]+kdata[,1]*iotak[,1]+omgdata[,1]*iotaw[,1]
+	for (t in 2:T){
+		kdata[,t] <- kappa0[,t]+(1-delta)*kdata[,t-1]+kappaI*exp(lnidata[,t-1])
+		lnidata[,t] <- iota0[,t]+kdata[,t]*iotak[,t]+omgdata[,t]*iotaw[,t]
 	}
 	#Log Capital
-	capital <- log(Capital)
-	#Reduced form equations for input demand functions:
+	lnkdata <- log(kdata)
+	#Reduced form equations for input demand functions (modelled as location scale):
 	#Labor Input Demand
 	epsdataL <- matrix(runif(N*T, 0, 1), nrow=N, ncol=T)
 	mukL <- 0.5; muwL <- 1; alphaL <- 1; sigmaL <- 0.1
-	beta0L <- alphaL+sigmaL*qnorm(epsdataL)
-	labor <- mukL*capital+muwL*omgdata+beta0L
+	mu0L <- alphaL+sigmaL*qnorm(epsdataL)
+	lnldata <- mukL*lnkdata+muwL*omgdata+mu0L
 	#Material Input Demand
 	epsdataM <- matrix(runif(N*T, 0, 1), nrow=N, ncol=T)
 	mukM <- 0.5; muwM <- 1; alphaM <- 1; sigmaM <- 0.1
-	beta0M <- alphaM+sigmaM*qnorm(epsdataM)
-	materials <- mukM*capital+muwM*omgdata+beta0M
+	mu0M <- alphaM+sigmaM*qnorm(epsdataM)
+	lnmdata <- mukM*lnkdata+muwM*omgdata+mu0M
 	#Energy Input Demand
 	epsdataU <- matrix(runif(N*T, 0, 1), nrow=N, ncol=T)
 	mukU <- 0.5; muwU <- 1; alphaU <- 1; sigmaU <- 0.1
-	beta0U <- alphaU+sigmaU*qnorm(epsdataU)
-	energy <- mukU*capital+muwU*omgdata+beta0U
+	mu0U <- alphaU+sigmaU*qnorm(epsdataU)
+	lnudata<- mukU*lnkdata+muwU*omgdata+mu0U
 	#Output Equation
-	output <- betaconstant+betal*labor+betak*capital+betam*materials+betau*energy+betarho*omgdata
+	lnydata <- betaconstant+betal*lnldata+betak*lnkdata+betam*lnmdata+betau*lnudata+betarho*omgdata
 	#Stack data across firms (all the data)
-	Output <- c(t(output[,(starttime+1):T]))
-	Labor <- c(t(labor[,(starttime+1):T]))
-	Capital <- c(t(capital[,(starttime+1):T]))
-	Materials <- c(t(materials[,(starttime+1):T]))
-	Energy <- c(t(energy[,(starttime+1):T]))
+	Output <- c(t(lnydata[,(starttime+1):T]))
+	Labor <- c(t(lnldata[,(starttime+1):T]))
+	Capital <- c(t(lnkdata[,(starttime+1):T]))
+	Materials <- c(t(lnmdata[,(starttime+1):T]))
+	Energy <- c(t(lnudata[,(starttime+1):T]))
 	Productivity <- c(t(omgdata[,(starttime+1):T]))
-	Investment <- c(t(Investment[,(starttime+1):T]))
+	Investment <- c(t(lnidata[,(starttime+1):T]))
+
+	#Stack data across firms (lagged data)
+	Output_Lag1 <- c(t(lnydata[,(starttime+1):(T-1)]))
+	Labor_Lag1 <- c(t(lnldata[,(starttime+1):(T-1)]))
+	Capital_Lag1 <- c(t(lnkdata[,(starttime+1):(T-1)]))
+	Materials_Lag1 <- c(t(lnmdata[,(starttime+1):(T-1)]))
+	Energy_Lag1 <- c(t(lnudata[,(starttime+1):(T-1)]))
+	Productivity_Lag1 <- c(t(omgdata[,(starttime+1):(T-1)]))
+	Investment_Lag1 <- c(t(lnidata[,(starttime+1):(T-1)]))
+
+	#Stack data across firms (contermporaneous data)
+	Output_Con <- c(t(lnydata[,(starttime+2):T]))
+	Labor_Con <- c(t(lnldata[,(starttime+2):T]))
+	Capital_Con <- c(t(lnkdata[,(starttime+2):T]))
+	Materials_Con <- c(t(lnmdata[,(starttime+2):T]))
+	Energy_Con <- c(t(lnudata[,(starttime+2):T]))
+	Productivity_Con <- c(t(omgdata[,(starttime+2):T]))
+	Investment_Con <- c(t(lnidata[,(starttime+2):T]))
 	#Estimation
 	for (q in 1:length(tauseq)){
 		ytest <- rq(Output~Labor+Capital+Materials+Energy+Productivity, tau=tauseq[q])
@@ -119,11 +141,13 @@ for (n in 1:nreps){
 		mtest <- rq(Materials~Capital+Productivity, tau=tauseq[q])
 		utest <- rq(Materials~Capital+Productivity, tau=tauseq[q])
 		itest <- rq(Investment~Capital+Productivity, tau=tauseq[q])
+		ktest <- rq(Capital_Con~Capital_Lag1+Investment_Lag1, tau=tauseq[q])
 		yresmat[,,q][n,] <- as.numeric(ytest$coefficients)
 		lresmat[,,q][n,] <- as.numeric(ltest$coefficients)
 		mresmat[,,q][n,] <- as.numeric(mtest$coefficients)
 		uresmat[,,q][n,] <- as.numeric(utest$coefficients)
 		iresmat[,,q][n,] <- as.numeric(itest$coefficients)
+		kresmat[,,q][n,] <- as.numeric(ktest$coefficients)
 	}
 }
 print(Sys.time()-sim.speed)
@@ -141,6 +165,9 @@ uMSE <- array(0, dim=c(length(tauseq), 3))
 
 iBias <- array(0, dim=c(length(tauseq), 3))
 iMSE <- array(0, dim=c(length(tauseq), 3))
+
+kBias <- array(0, dim=c(length(tauseq), 3))
+kMSE <- array(0, dim=c(length(tauseq), 3))
 for (q in 1:length(tauseq)){
 	ytrue <- c(quantile(c(betaconstant), tauseq[q]), quantile(c(betal), tauseq[q]),
 		quantile(c(betak), tauseq[q]), quantile(c(betam), tauseq[q]),
@@ -149,17 +176,17 @@ for (q in 1:length(tauseq)){
 	yBias[q,] <- ycoef-as.numeric(ytrue)
 	yMSE[q,] <- colMeans((yresmat[,,q]-ytrue)^2)
 
-	ltrue <- c(quantile(c(beta0L), tauseq[q]), mukL, muwL)
+	ltrue <- c(quantile(c(mu0L), tauseq[q]), mukL, muwL)
 	lcoef <- colMeans(lresmat[,,q])
 	lBias[q,] <- lcoef-as.numeric(ltrue)
 	lMSE[q,] <- colMeans((lresmat[,,q]-ltrue)^2)
 
-	mtrue <- c(quantile(c(beta0M), tauseq[q]), mukM, muwM)
+	mtrue <- c(quantile(c(mu0M), tauseq[q]), mukM, muwM)
 	mcoef <- colMeans(mresmat[,,q])
 	mBias[q,] <- mcoef-as.numeric(mtrue)
 	mMSE[q,] <- colMeans((mresmat[,,q]-mtrue)^2)
 
-	utrue <- c(quantile(c(beta0U), tauseq[q]), mukU, muwU)
+	utrue <- c(quantile(c(mu0U), tauseq[q]), mukU, muwU)
 	ucoef <- colMeans(uresmat[,,q])
 	uBias[q,] <- ucoef-as.numeric(utrue)
 	uMSE[q,] <- colMeans((uresmat[,,q]-utrue)^2)
@@ -168,8 +195,13 @@ for (q in 1:length(tauseq)){
 	icoef <- colMeans(iresmat[,,q])
 	iBias[q,] <- icoef-as.numeric(itrue)
 	iMSE[q,] <- colMeans((iresmat[,,q]-itrue)^2)
+
+	ktrue <- c(quantile(c(kappa0), tauseq[q]), (1-delta), kappaI)
+	kcoef <- colMeans(kresmat[,,q])
+	kBias[q,] <- kcoef-as.numeric(ktrue)
+	kMSE[q,] <- colMeans((kresmat[,,q]-ktrue)^2)
+	
 }
-#TO DO: FIX INVESTMENT ESTIMATION RESULTS
 
 
 
