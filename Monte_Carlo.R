@@ -2,13 +2,13 @@ require(quantreg)
 #This code extends the Monte Carlo experiment of Hu, Huang, and Sasaki (2019)
 #Uses a random coefficient model instead of a linear model
 nreps <- 1000
-tauseq <- seq(0.25, 0.75, by=0.25)
+tauseq <- seq(0.1, 0.9, by=0.1)
 yresmat <- array(0, dim=c(nreps, 6, length(tauseq)))
 lresmat <- array(0, dim=c(nreps, 3, length(tauseq)))
 mresmat <- array(0, dim=c(nreps, 3, length(tauseq)))
 uresmat <- array(0, dim=c(nreps, 3, length(tauseq)))
 iresmat <- array(0, dim=c(nreps, 3, length(tauseq)))
-kresmat <- array(0, dim=c(nreps, 3, length(tauseq)))
+kresmat <- array(0, dim=c(nreps, 2, length(tauseq)))
 #Number of Firms:
 N <- 500
 T <- 100
@@ -64,7 +64,7 @@ for (n in 1:nreps){
 	iotaw <- apply(zetadata, 2, function(x) beta(x, mediotarho, 0.1))
 	iota0 <- apply(zetadata, 2, function(x) beta(x, iotamed0, 0.1))
 	#Specification for Capital Demand Shocks
-	upsilondata <- matrix(runif(N*T, 0, 1), nrow=N, ncol=T)
+	upsilondata <- matrix(rnorm(N*T, 0, 0.4), nrow=N, ncol=T)
 	#Specification for Constant Coefficient in Capital Equation
 	alphaK <- 1; sigmaK <- 0.1
 	kappa0 <- alphaK+sigmaK*qnorm(upsilondata)
@@ -85,7 +85,7 @@ for (n in 1:nreps){
 	kdata[,1] <- exp(kappa0[,1])
 	lnidata[,1] <- iota0[,1]+log(kdata[,1])*iotak[,1]+omgdata[,1]*iotaw[,1]
 	for (t in 2:T){
-		kdata[,t] <- exp(kappa0[,t])+(1-delta)*kdata[,t-1]+kappaI*exp(lnidata[,t-1])
+		kdata[,t] <- (1-delta)*kdata[,t-1]+kappaI*exp(lnidata[,t-1])+upsilondata[,t]
 		lnidata[,t] <- iota0[,t]+log(kdata[,t])*iotak[,t]+omgdata[,t]*iotaw[,t]
 	}
 	#Log Capital
@@ -135,19 +135,23 @@ for (n in 1:nreps){
 	Productivity_Con <- c(t(omgdata[,(starttime+2):T]))
 	Investment_Con <- c(t(lnidata[,(starttime+2):T]))
 	#Estimation
+	ltest <- lm(Labor~Capital+Productivity)
+	lcoef <- as.numeric(ltest$coefficients)
+	mtest <- lm(Materials~Capital+Productivity)
+	mcoef <- as.numeric(mtest$coefficients)
+	utest <- lm(Materials~Capital+Productivity)
+	ucoef <- as.numeric(utest$coefficients)
+	ktest <- lm(Capital_Con~Capital_Lag1+Investment_Lag1+Productivity_Lag1)
+	kcoef <- as.numeric(ktest$coefficients)
 	for (q in 1:length(tauseq)){
 		ytest <- rq(Output~Labor+Capital+Materials+Energy+Productivity, tau=tauseq[q])
-		ltest <- rq(Labor~Capital+Productivity, tau=tauseq[q])
-		mtest <- rq(Materials~Capital+Productivity, tau=tauseq[q])
-		utest <- rq(Materials~Capital+Productivity, tau=tauseq[q])
 		itest <- rq(Investment~Capital+Productivity, tau=tauseq[q])
-		ktest <- rq(Capital_Con~Capital_Lag1+Investment_Lag1, tau=tauseq[q])
 		yresmat[,,q][n,] <- as.numeric(ytest$coefficients)
-		lresmat[,,q][n,] <- as.numeric(ltest$coefficients)
-		mresmat[,,q][n,] <- as.numeric(mtest$coefficients)
-		uresmat[,,q][n,] <- as.numeric(utest$coefficients)
+		lresmat[,,q][n,] <- c(lcoef[1]+sigma(ltest)*qnorm(tauseq[q]), lcoef[2], lcoef[3])
+		mresmat[,,q][n,] <- c(mcoef[1]+sigma(mtest)*qnorm(tauseq[q]), mcoef[2], mcoef[3])
+		uresmat[,,q][n,] <- c(ucoef[1]+sigma(utest)*qnorm(tauseq[q]), ucoef[2], ucoef[3])
 		iresmat[,,q][n,] <- as.numeric(itest$coefficients)
-		kresmat[,,q][n,] <- as.numeric(ktest$coefficients)
+		kresmat[,,q][n,] <- kcoef[2:3]
 	}
 }
 print(Sys.time()-sim.speed)
@@ -166,44 +170,43 @@ uMSE <- array(0, dim=c(length(tauseq), 3))
 iBias <- array(0, dim=c(length(tauseq), 3))
 iMSE <- array(0, dim=c(length(tauseq), 3))
 
-kBias <- array(0, dim=c(length(tauseq), 3))
-kMSE <- array(0, dim=c(length(tauseq), 3))
+kBias <- array(0, dim=c(length(tauseq), 2))
+kMSE <- array(0, dim=c(length(tauseq), 2))
 for (q in 1:length(tauseq)){
 	ytrue <- c(quantile(c(betaconstant), tauseq[q]), quantile(c(betal), tauseq[q]),
 		quantile(c(betak), tauseq[q]), quantile(c(betam), tauseq[q]),
 		quantile(c(betau), tauseq[q]), quantile(c(betarho), tauseq[q]))
 	ycoef <- colMeans(yresmat[,,q])
 	yBias[q,] <- ycoef-as.numeric(ytrue)
-	yMSE[q,] <- colMeans((yresmat[,,q]-ytrue)^2)
+	yMSE[q,] <- apply(yresmat[,,q], 2, var)+yBias[q,]^2
 
 	ltrue <- c(quantile(c(mu0L), tauseq[q]), mukL, muwL)
 	lcoef <- colMeans(lresmat[,,q])
 	lBias[q,] <- lcoef-as.numeric(ltrue)
-	lMSE[q,] <- colMeans((lresmat[,,q]-ltrue)^2)
+	lMSE[q,] <- apply(lresmat[,,q], 2, var)+lBias[q,]^2
 
 	mtrue <- c(quantile(c(mu0M), tauseq[q]), mukM, muwM)
 	mcoef <- colMeans(mresmat[,,q])
 	mBias[q,] <- mcoef-as.numeric(mtrue)
-	mMSE[q,] <- colMeans((mresmat[,,q]-mtrue)^2)
+	mMSE[q,] <- apply(mresmat[,,q], 2, var)+mBias[q,]^2
 
 	utrue <- c(quantile(c(mu0U), tauseq[q]), mukU, muwU)
 	ucoef <- colMeans(uresmat[,,q])
 	uBias[q,] <- ucoef-as.numeric(utrue)
-	uMSE[q,] <- colMeans((uresmat[,,q]-utrue)^2)
+	uMSE[q,] <- apply(uresmat[,,q], 2, var)+uBias[q,]^2
 
 	itrue <- c(quantile(c(iota0), tauseq[q]), quantile(c(iotak), tauseq[q]), quantile(c(iotaw), tauseq[q]))
 	icoef <- colMeans(iresmat[,,q])
 	iBias[q,] <- icoef-as.numeric(itrue)
-	iMSE[q,] <- colMeans((iresmat[,,q]-itrue)^2)
+	iMSE[q,] <- apply(iresmat[,,q], 2, var)+iBias[q,]^2
 
-	ktrue <- c(quantile(c(kappa0), tauseq[q]), (1-delta), kappaI)
+	ktrue <- c((1-delta), kappaI)
 	kcoef <- colMeans(kresmat[,,q])
 	kBias[q,] <- kcoef-as.numeric(ktrue)
-	kMSE[q,] <- colMeans((kresmat[,,q]-ktrue)^2)
-	
+	kMSE[q,] <- apply(kresmat[,,q], 2, var)+kBias[q,]^2
 }
-#Bias reduced, but MSE in investment estimation is still high
 #Bias in capital equation: Constant and Investment Lag (good/ok in Capital Lag)
+
 
 
 
