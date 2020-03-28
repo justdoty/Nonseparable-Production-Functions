@@ -1,0 +1,396 @@
+\documentclass{article}
+\usepackage{graphicx}
+\usepackage{verbatim}
+\usepackage{dcolumn}
+\usepackage{array}
+\usepackage{mathtools}
+\usepackage{float}
+\usepackage{booktabs}
+\usepackage{cleveref}
+\usepackage{siunitx}
+\usepackage{enumitem}
+\usepackage{bbm}
+\usepackage{xcolor}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amsthm}
+\usepackage{amssymb}
+\usepackage{booktabs}
+\usepackage{caption}
+\usepackage{float}
+\usepackage{natbib}
+\newtheorem{assump}{Assumption}[subsection]
+\usepackage[toc,page]{appendix}
+\pagenumbering{gobble}
+\topmargin 0.0cm
+\oddsidemargin 0.2cm
+\textwidth 16cm
+\textheight 21cm
+\footskip 1.0cm
+\title{Nonlinear Estimation of Production Functions via Quantile Regressions}
+\author{Justin Doty\thanks{Department of Economics, University of Iowa, S321 Pappajohn Business Building, 21 E Market St, Iowa City, IA 52242. Email: \texttt{justin-doty@uiowa.edu}} and Suyong Song\thanks{Department of Economics and Finance, University of Iowa, W360 Pappajohn Business Building, 21 E Market St, Iowa City, IA 52242. Email: \texttt{suyong-song@uiowa.edu}}
+}
+\date{\vspace{-5ex}}
+\begin{document}
+\maketitle{} 
+\section{Introduction}
+
+Consider a nonlinear model for a firm's gross-output production function (in logs)
+\begin{equation}\label{modely}
+y_{it}=\sum_{j=1}^{J_{1}}\beta_{j}(\eta_{it})g_{j}(x_{it})+\omega_{it}(\eta_{it})
+\end{equation}
+where $y_{it}$ is firm $i$'s' output at time $t$ and $x_{it}$ denotes optimal input choices of the firm which include predetermined inputs such as capital and flexible inputs such as labor and other intermediate inputs. The unobserved productivity is denoted by $\omega_{it}$ which is correlated to input choices of the firm at time $t$. We let the output elasticities $\beta$ and productivity $\omega_{it}$ to be functionally dependent on unobserved production shocks $\eta_{i1},\dots, \eta_{iT}$ that are uncorrelated to input choices and productivity at time $t$.\\
+
+Without loss of generality we normalize $\eta_{it}$ to be uniformly distributed on the interval $[0,1]$. This model corresponds to a nonlinear random coefficient model where the outcome $y_{it}$ is monotonic in $\eta_{it}$. In practice we can allow for nonlinear interactions between inputs and unobserved productivity at different quantiles so that marginal effects can be modeled as non-Hick's neutral. For empirical simplicity we assume separability in the unobserved productivity. The function $g$ is an unknown nonlinear function.
+
+In this model, heterogeneity in production technology across firms is driven by the rank of the unobserved production shocks $\eta_{it}$. In the following section we discuss how in certain specification, this is a valid approach to modeling heterogeneous input choices by connecting to the literature on production uncertainty and the firm's profit maximization problem.
+
+We specify the productivity process as
+\begin{equation}\label{modelw}
+\omega_{it}=\sum_{j=1}^{J_{2}}\rho_{j}(\xi_{it})h_{j}(\omega_{it-1})
+\end{equation}
+
+where $\xi_{i1},\dots, \xi_{iT}$ are independent uniform random variables which represent innovation shocks to productivity. We assume $\omega_{it}$ is monotonic in $\xi_{it}$ We let $h$ be another unknown nonlinear function that allows the persistence in productivity in firms to be nonlinear across different quantiles.
+
+\section{Model and Identification}
+
+\subsection{Output Equation:}
+
+\noindent We specify the gross-output production function (subscript $i$ omitted) as
+\begin{equation}\label{pf}
+Y_{t}=F_{t}(L_{t}, K_{t}, M_{t}, U_{t}, \omega_{t}, \eta_{t}),
+\end{equation}
+where $Y_{t}, L_{t}, K_{t}, M_{t}, U_{t}$ are levels of output, labor, capital, material and energy. $\omega_{t}$ is time varying latent productivity and $\eta_{t}$ is the iid production shock that is unpredictable and unobserved by firms. We make the following assumptions on the production function\\
+
+\begin{assump}\label{as1}
+~
+\begin{enumerate}[label=\alph*)]
+\item $\eta_{t}$ follows a standard uniform distribution independent of $(L_{t}, K_{t}, M_{t}, U_{t}, \omega_{t})$
+\item $\tau \rightarrow Q_{y}(L, K, M, U,\omega, \tau)$ is strictly increasing on $(0,1)$ for almost $(L, K, M, U,\omega)$ in the support of $(L_{t}, K_{t}, M_{t}, U_{t}, \omega_{t})$
+\item For all $t\neq s$, $\eta_{t}$ is independent of $\eta_{s}$
+\end{enumerate}
+\end{assump}
+
+
+\subsection{Unobserved Productivity:}
+
+\noindent We specify the productivity process as a first-order Markov process
+\begin{equation}\label{markov}
+	\omega_{t}=g_{t}(\omega_{t-1}, \xi_{t})
+\end{equation}
+
+\begin{assump}\label{as2}
+~
+\begin{enumerate}[label=\alph*)]
+\item $\xi_{t}$ follows a standard uniform distribution independent of $\omega_{t-1}$ and $(L_{t}, K_{t}, M_{t}, U_{t})$
+\item $\omega_{t}$ is strictly increasing on $(0,1)$
+\end{enumerate}
+\end{assump}
+
+\subsection{Input Demand Functions}
+We make the following assumptions regarding the timing and shape restrictions of input decisions
+\begin{assump}{The predetermined input demand function is given by:}\label{as:3}
+\begin{equation}\label{capital}
+K_{it}=\kappa_{t}(K_{it-1}, I_{it-1}, \upsilon_{it})=\kappa_{t}(K_{it-1}, \omega_{it-1}, \upsilon_{it})
+\end{equation}
+where $I_{it-1}$ is the previous period's investment and $\upsilon_{it}$ is an iid uniform independent of $K_{it-1}$ and $I_{it-1}$. We assume the function $\kappa_{t}$ is increasing in its last argument.
+\end{assump}
+
+\begin{assump}{The flexible input demand function (in logs) is given by:}\label{as:4}
+\begin{equation}\label{static}
+z_{it}=\mu_{zt}(k_{it}, \omega_{it}, \epsilon_{it})
+\end{equation}
+where $z_{it}=l_{it}, m_{it}, u_{it}$. $\epsilon_{it}$ denotes iid uniform unobserved shocks  to input demand independent of $k_{it}$ and $\omega_{it}$ which can capture unobserved firm-specific input prices or deviations from optimal input demand. We assume the function $\mu_{zt}$ is increasing in its last argument.
+\end{assump}
+In the next section we discuss how to model the distribution of initial capital as well as how to specify the evolution for capital and the demand function for flexible inputs. \textcolor{red}{Lagged productivity enters the capital evolution equation and current productivity enters the flexible input demand equations so we need to model both. These can be flexibly modeled. See footnote 23 page 709 in \cite{Arellano2017}}\\
+
+\textcolor{blue}{\textbf{The blue text refers to an extension of the model which was the first version of this paper.}}\\
+
+\textcolor{blue}{We follow the set up of \cite{Hu2019} to nonparametrically identify our model of firm production by introducing two proxy variables that act as contaminated measures of unobserved productivity. We let observed static inputs $z=l,m,u$ be at time $t+1$ be determined by:
+\begin{equation}\label{static+1}
+    z_{t+1}=\mu_{zt+1}(k_{t+1},\omega_{t+1}, \epsilon_{t+1}),
+\end{equation}
+where $\epsilon_{t+1}$ denotes unobserved shocks to input demand which can capture unobserved firm-specific input prices or deviations from optimal input demand. We assume the function $\mu_{zt}(k_{t},\omega_{t}, \epsilon_{t})$ is strictly increasing in its last component for each $t$}.\\
+
+\textcolor{blue}{The other proxy to productivity, investment, is modeled as censored variable:
+\begin{equation}\label{investment}
+    \begin{split}
+    I_{t}^{*}&=\iota_{t}(\omega_{t}, k_{t}, \zeta_{t})\\
+    I_{t}&=I_{t}^{*}\times  \mathbbm{1}\{I_{t}^{*}\geq 0\},
+    \end{split}
+\end{equation}
+where $I_{t}$ is observed investment, $I_{t}^{*}$ is a latent index variable and $\zeta$ is an unobserved shock to investment. Capital accumulates according to:
+\begin{equation}\label{capitalhu}
+    K_{t}=\kappa_{t}(K_{t-1}, I_{t-1}, \upsilon_{t-1}),
+\end{equation}
+where the function $\kappa_{t}$ is strictly increasing in its last component.}\\
+
+\textcolor{blue}{We assume $\eta_{t}, \xi_{t+1}, \epsilon_{t}, \zeta_{t}$ are mutually independent conditional on $(\omega_{t}, l_{t}, k_{t}, m_{t}, u_{t})$ and that $\eta_{t}$ is mutually independent of $\upsilon_{t}$ conditional on $(\omega_{t}, l_{t}, k_{t}, m_{t}, u_{t})$. Let $W_{t}=(l_{t}, k_{t}, m_{t}, u_{t}, k_{t+1})$ denote the vector of control variables. Under the previously mentioned conditional independence restrictions we have that:}
+
+\textcolor{blue}{
+\begin{equation}\label{identification}
+    f(y_{t}, I_{t}|m_{t+1}, W_{t})=\int f(y_{t}|\omega_{t}, l_{t}, k_{t}, m_{t}, u_{t})g(I_{t}|\omega_{t}, W_{t})h(\omega_{t}|m_{t+1}, W_{t})d\omega_{t}
+\end{equation}
+}
+
+\textcolor{blue}{\cite{Hu2008} and \cite{Hu2019} it can be shown that the latent conditional densities $f(y_{t}|\omega_{t}, l_{t}, k_{t}, m_{t}, u_{t}), g(I_{t}|\omega_{t}, W_{t}),$ and $h(\omega_{t}|m_{t+1}, W_{t})$ are identified.}
+
+\textcolor{blue}{
+\subsection{Discussion}
+It may be possible to extend these identification assumptions to the situation where all inputs are measured with error using the approach of \cite{Song2017}. We introduce the basic approach to identification here for simplicity. Estimation of the model can be naturally extended using the approach of \cite{Wei2009}. Below we discuss examples of the nonlinear production function in \eqref{pf}.}
+
+\section{Examples}
+\subsection{Example 1}
+\subsubsection{Production Function for a Fixed Quantile: Location-Scale:}
+Consider the following location-scale model for a production function (in logs)
+\begin{equation}\label{locationscale}
+y_{t}=x_{t}^{'}\beta+\omega_{t}+(x_{t}^{'}\gamma+\mu\omega_{t})\eta_{t}
+\end{equation}
+The conditional quantiles of $y_{t}$ are then given by
+\begin{equation}\label{qlocationscale}
+Q_{y}(x_{t}, \omega_{t}, \tau)=x_{t}^{'}\beta+\omega_{t}+(x_{t}^{'}\gamma+\mu\omega_{t})F^{-1}(\tau), \quad \tau\in(0,1)
+\end{equation}
+where $F$ is the cumulative distribution function of $\eta_{t}$\\
+
+This formulation is not new to the production function literature. The assumption that input choices can impact firm's production beyond the conditional mean has important consequences for firm's attitude towards production risk. A volume of literature that originated in the late 1970's challenged the standard stochastic specifications of production functions \citep{Just1978,Just1979} by considering a specification that allowed firm's inputs to both increase or decrease the marginal variability of final output. For example, consider the standard Cobb-Douglas production function 
+\begin{equation*}
+    Y=(\prod_{j=1}^{J}X_{j}^{\beta_{j}})e^{\upsilon},
+\end{equation*}
+where Y is output, $X_{j}$ is a factor input, $\beta_{j}>0$ and $\upsilon$ is the stochastic disturbance with $E[\upsilon]=0$ and $V(\upsilon)>0$. Then,
+\begin{equation*} 
+    V(Y)=(\prod_{j=1}^{J}X_{j}^{2\beta_{j}})V(e^{\upsilon})
+\end{equation*}
+then the marginal variability
+\begin{equation*}
+    \frac{\partial V(Y)}{\partial X_{j}}=\frac{2\beta}{X_{j}}(\prod_{j=1}^{J}X_{j}^{2\beta_{j}})V(e^{\upsilon})>0
+\end{equation*}
+According to this specification a policy that reduces the use of an input such as pesticides in the agricultural industry would lead to a reduction in variability of output when in reality would lead to more variable production. In the manufacturing industry, settings where labor services can be random, risk can be reduced through capital intensification \citep{Pope1979}. Therefore, some researchers have used the \cite{Just1978} production function specification
+\begin{equation} \label{pf-risk}
+    y=f(x)+h(x)\upsilon
+\end{equation}
+where $f(x)$ is the deterministic component of production and $h(x)$ is the production risk function. It can be seen that if $h(\cdot)$ is positive (negative) then variance of production is increasing (decreasing).It then remains an empirical challenge to find examples where production risk is significant in other meaningful industries in the economy. The more general approach to estimation $(9)$ is the following linear quantile regression: \\
+
+\begin{equation}\label{singleq}
+	y_{t}=x_{t}^{'}\beta(\tau)+\omega_{t}\mu(\tau)+\eta_{t}(\tau),
+\end{equation}
+where $\eta_{t}$ is the production error term whose $\tau$th quantile is zero conditional on $(x_{t},\omega_{t})$. This fixed quantile specification for a production function may appear odd as we usually assume firms input decisions are solved by maximizing expected profit, where uncertainty in production is represented by $\eta_{t}$.\\ 
+
+The above quantile specification may allow for firms that maximize quantile utility of profit which could explain a new behavior framework for firm input decisions that vary over the conditional output distribution. This specification could capture firm's varying perception of risk in $\eta_{t}$. A short list of papers have considered quantile utility maximization such as \cite{Manski1988}, \cite{ROSTEK2009}, \cite{Chambers2007}, and \cite{Bhattacharya2009}. Dynamic input choices such as capital are much more difficult to solve using the quantile utility framework and the reader can refer to \cite{Castro2017} for a treatment of dynamic quantile utility models. As far as we know, the quantile utility framework has not been applied to firm decision problems and a more thorough treatment of such is outside the scope of this paper. We consider a more flexible nonlinear production function in the following example which we use for our simulation and empirical illustration.
+
+\subsection{Example 2}
+\subsubsection{Nonlinear Panel Data Quantile Regression}
+For empirical purposes, we consider the following linear quantile specification of the production function (in logs)
+\begin{equation}\label{randomcoefficient}
+y_{t}=\omega_{t}\mu(\eta_{t})+f_{t}(x_{t}, \eta_{t})
+\end{equation} 
+Given assumptions 2.1 and 2.2 the conditional quantiles are given by
+\begin{equation}\label{qrandomcoefficient}
+Q_{t}(x_{t}, \omega_{t}, \tau)=\omega_{t}\mu(\tau)+f_{t}(x_{t}, \tau)
+\end{equation}
+In this specification, we treat the unobserved productivity as a missing regressor instead of a nonparametric function of $\eta_{t}$. We can use the following linear quantile specification for the conditional distribution of productivity:
+\begin{equation}\label{omegacoef}
+\omega_{t}=\rho(\xi_{t})\omega_{t-1}
+\end{equation}
+Given assumption 2.2, the conditional quantiles of $\omega_{t}$ is
+\begin{equation}\label{qomegacoef}
+ Q_{t}(\omega_{t-1}, \tau)=\rho(\tau)\omega_{t-1}
+\end{equation}
+
+\section{Estimation Strategy}
+Our estimation strategy does not follow directly from the identification conditions discussed earlier in this paper, but on a set of restrictions discussed in the appendix. Our empirical specification for the Markovian transitions of productivity, output, and capital evolution closely resemble \cite{Arellano2017}. 
+\subsection{Persistent Productivity}
+Let $age_{it}$ denote the age of firm $i$ at time $t$, we specify productivity to transition according to:
+\begin{equation}\label{omegamodel}
+Q_{t}(\omega_{it-1}, \tau)=Q(\omega_{it-1}, age_{it}, \tau)=\rho_{0}(\tau)+\rho_{\omega}(\tau)\omega_{it-1}+\rho_{a}(\tau)age_{it}
+\end{equation}
+
+\noindent The quantile function for $\omega_{i1}$ is specified in a similar way
+\begin{equation}
+\label{omega1model}
+Q_{\omega_{1}}(age_{i1}, \tau)=\rho_{01}(\tau)+\rho_{a1}(\tau)age_{i1}
+\end{equation}
+
+\subsection{Output}
+We specify the output equation as follows:
+\begin{equation}\label{ymodel}
+\begin{split}
+Q_{t}(x_{it}, \omega_{it}, \tau)&=Q(x_{it}, age_{it}, \omega_{it}, \tau)=\\
+&\beta_{0}(\tau)+\beta_{\omega}(\tau)\omega_{it}+\beta_{a}(\tau)age_{it}+\beta_{l}(\tau)l_{it}+\beta_{k}(\tau)k_{it}+\beta_{m}(\tau)m_{it}+\beta_{u}(\tau)u_{it}
+\end{split}
+\end{equation}
+The above representation of the production function is a simple case. One can also consider more flexible specifications that allow for interactions of productivity and input choices thus allowing for non-Hicks neutral technology changes.
+
+\textcolor{blue}{
+\subsection{Investment Demand}
+We specify the investment process as the censored variable, $I_{t}=\text{max}\{0, I^{*}_{t}\}$ where $I_{t}^{*}=\iota_{t}(\omega_{it}, k_{it}, \zeta_{it})$. We specify the investment demand equation as:
+\begin{equation}\label{imodel}
+\iota_{t}(\omega_{it}, k_{it}, \tau)=\iota(\omega_{it}, k_{it}, age_{it}, \tau)=\iota_{\omega}(\tau)\omega_{it}+\iota_{k}(\tau)k_{it}+\iota_{a}(\tau)age_{it}+\iota_{0}(\tau)
+\end{equation}
+Due to the equivariance of quantiles to monotone transformations we can write the censored investment variable as:
+\begin{equation}\label{censormodel}
+Q(\omega_{it}, k_{it}, \tau)=\text{max}\{0, \iota_{0}(\tau)+\iota_{\omega}(\tau)\omega_{it}+\iota_{k}(\tau)k_{it}+\iota_{a}(\tau)age_{it}\}
+\end{equation}}
+
+\subsection{Static Inputs}
+Finally, we specify a reduced-form demand function for the static inputs of $z=m$ and $u$ (in logs) as:
+\begin{equation}\label{staticmodel}
+\mu_{zt+1}(k_{it+1}, \omega_{it+1}, \tau)=\mu_{z}(k_{it+1}, \omega_{it+1}, age_{it+1}, \tau)=\mu_{zk}k_{it+1}+\mu_{z\omega}\omega_{it+1}+\mu_{za}age_{it}+\mu_{z0}(\tau)
+\end{equation}
+
+\section{Implementation}
+To ease notation, let $\delta$ denote a finite dimensional parameter vector that contains the functions $\rho_{0},\rho_{\omega}, \rho_{a}, \rho_{01}, \rho_{a_{1}}$ and $\theta$ denote the finite dimensional parameter vector that contains the functions $\beta_{0}, \beta_{\omega}, \beta_{a}, \beta_{l}, \beta_{k}, \beta_{m}, \beta_{u}, \iota_{0}, \gamma_{0}, \gamma_{\omega}, \gamma_{a}, \kappa_{0}$ and $\mu_{x0}$. The vector $\theta$ also contains the finite dimensional parameters $\iota_{\omega}, \iota_{k}, \iota_{a}, \kappa_{K}, \kappa_{I}, \kappa_{a}, \mu_{xk}$ and $\mu_{xa}$. We model the functional parameters using \cite{Wei2009} and\cite{Arellano2016}. For example, the function $\rho_{\omega}$ is modeled as a piecewise-polynomial interpolating splines on a grid $[\tau_{1},\tau_{2}], [\tau_{3},\tau_{4}],\dots, [\tau_{J-1},\tau_{J}]$, contained in the unit interval and is constant on $[0, \tau_{1}]$ and $[\tau_{J}, 1)$ The intercept coefficient $\rho_{0}$ is specified as the quantile of an exponential distribution on $(0,\tau_{1}]$ (indexed by $\lambda_{\omega}^{-}$) and $[\tau_{J-1}, 1)$ (indexed by $\lambda_{\omega}^{+}$).\\
+
+The function $\rho_{\omega}$ is modeled as piecewise linear on $[\tau_{1}, \tau_{J}]$.The remaining functional parameters are modeled similarly. We take $J=11$ and $\tau_{j}=\frac{j}{J+1}$. Following \cite{Arellano2017} we parameterize the distribution of $\epsilon$ to be log-normal so we set, for example, $\mu_{z0}(\tau)=\alpha_{z0}+\sigma_{z}\Phi^{-1}(\tau)$ although this can be relaxed. In the following section we outline the model's restrictions and a feasible estimation strategy.
+
+\subsection{Model Restrictions}
+Let $\Psi_{\tau}(u)=\tau-\mathbbm{1}\{u<0\}$ denote the first derivative of the quantile check function $\psi_{\tau}(u)=(\tau-\mathbbm{1}\{u<0\})u$. The following conditional moment restrictions hold as an implication of the conditional independence restrictions in section 2. Therefore, we estimate the parameters of interest from the following conditional moment restrictions.
+
+\begin{equation}\label{qmoments}
+\mathbbm{E}\Bigg[\Psi_{\tau_{j}}
+\begin{pmatrix}
+\xi_{it+1} \\
+\eta_{it}
+\end{pmatrix}
+\Big|\omega_{it}, age_{it}, \tilde{z}_{td}\Bigg]=0
+\end{equation}
+For investment,
+\begin{equation}\label{imoment}
+\mathbbm{E}\Bigg[\Psi_{\tau_{j}}(\zeta_{it})|\omega_{it}, k_{it}, age_{it}\Bigg]=0,
+\end{equation}
+and lastly for the static input:
+\begin{equation}\label{staticmoment}
+\mathbbm{E}\Bigg[\epsilon_{it+1}|\omega_{it},age_{it}, \tilde{z}_{td}\Bigg]=0,
+\end{equation}
+
+
+\textcolor{red}{Why do we need a moment restriction for $\zeta_{it}$? Current productivity enters the investment equation so we need a model for investment. See footnote 23 page 709 in \cite{Arellano2017}}\\
+
+where $\tilde{z}_{td}=I_{t}, l_{t}, k_{t}, m_{t}$, and $u_{t}$. To fix ideas, we first specify how to estimate the conditional moments for persistent productivity and production.\\
+
+\noindent For $t\geq 2$
+\begin{equation}\label{omegamoment}
+\begin{split}
+\mathbbm{E}\Bigg[&\Psi_{\tau_{j}}(\xi_{it+1})\Big|\omega_{it}, age_{it}, \tilde{z}_{td}\Bigg]=\\
+&\mathbbm{E}\Bigg[\Psi_{\tau_{j}}(\omega_{it+1}-\bar{\rho}_{0}(\tau_{j})-\bar{\rho}_{\omega}(\tau_{j})\omega_{it}-\bar{\rho}_{a}(\tau_{j})age_{it})\Big|\omega_{it}, age_{it}, \tilde{z}_{td}\Bigg]=0
+\end{split}
+\end{equation}
+\begin{equation}\label{ymoment}
+\begin{split}
+\mathbbm{E}\Bigg[&\Psi_{\tau_{j}}(\eta_{it})\Big|\omega_{it}, age_{it}, \tilde{z}_{td}\Bigg]=\\
+&\mathbbm{E}\Bigg[\Psi_{\tau_{j}}(y_{it}-\bar{\beta}_{0}(\tau_{j})-\bar{\beta}_{\omega}(\tau_{j})\omega_{it}-\bar{\beta}_{a}(\tau_{j})age_{it}-\bar{\beta}_{l}(\tau_{j})l_{it}-\bar{\beta}_{k}(\tau_{j})k_{it}\\
+&-\bar{\beta}_{m}(\tau_{j})m_{it}-\bar{\beta}_{u}(\tau_{j})u_{it})\Big|\omega_{it}, age_{it}, \tilde{z}_{td}\Bigg]=0
+\end{split}
+\end{equation}
+
+Here $\bar{\rho}(\tau_{j})$ and $\bar{\beta}(\tau_{j})$ denote the true values of $\rho(\tau_{j})$ and $\beta(\tau_{j})$ for $j\in\{1,\dots, J\}$. Clearly, estimating the above conditional moment restrictions are infeasible due to the unobserved productivity component. Therefore, we use the following unconditional moment restrictions and posterior distributions for $\omega_{it}$ to integrate out the unobserved productivity. Due to the law of iterated expectations we now have the following integrated moment conditions:
+
+\begin{equation}\label{omegaimc}
+\mathbbm{E}\Bigg[\int\Bigg(\Psi_{\tau_{j}}(\omega_{it+1}-\bar{\rho}_{0}(\tau_{j})+\bar{\rho}_{\omega}(\tau_{j})\omega_{it}-\bar{\rho}_{a}(\tau_{j})age_{it})\otimes
+\begin{pmatrix}
+1 \\
+\omega_{it}\\
+age_{it}\\
+\tilde{z}_{td}
+\end{pmatrix}
+\Bigg)g_{i}(\omega_{it};\bar{\delta},\bar{\theta})d\omega_{it}\Bigg]=0
+\end{equation}
+and 
+\begin{equation}\label{yimc}
+\begin{split}
+\mathbbm{E}\Bigg[\int\Bigg(\Psi_{\tau_{j}}(y_{it}&-\bar{\beta}_{0}(\tau_{j})+\bar{\beta}_{\omega}(\tau_{j})\omega_{it}+\bar{\beta}_{a}(\tau_{j})age_{it}+\bar{\beta}_{l}(\tau_{j})l_{it}+\bar{\beta}_{k}(\tau_{j})k_{it}\\
+&+\bar{\beta}_{m}(\tau_{j})m_{it}+\bar{\beta}_{u}(\tau_{j})u_{it})\otimes
+\begin{pmatrix}
+1 \\
+\omega_{it}\\
+age_{it}\\
+\tilde{z}_{td}
+\end{pmatrix}
+\Bigg)g_{i}(\omega_{it};\bar{\delta},\bar{\theta})d\omega_{it}\Bigg]=0,
+\end{split}
+\end{equation}
+
+where $\bar{\theta}$ and $\bar{\delta}$ denote the true values of $\theta$ and $\delta$. The posterior distribution is specified as (age omitted for ease of notation):
+\begin{equation}\label{posterior}
+\begin{split}
+g_{i}(\omega_{it};\bar{\delta},\bar{\theta})&=g(\omega_{it}|m_{it+1}, y_{it}, \tilde{z}_{td}; \bar{\delta},\bar{\theta}) \propto\\
+&\prod_{t=1}^{T}g(y_{it}|\omega_{it}, l_{it}, k_{it}, m_{it}, u_{it};\bar{\delta},\bar{\theta})\times
+\prod_{t=1}^{T}g(I_{it}|\omega_{it}, l_{it}, k_{it}, m_{it}, u_{it};\bar{\delta},\bar{\theta})\times\\
+&\prod_{t=1}^{T}g(m_{it+1}|\omega_{it}, l_{it}, k_{it}, m_{it}, u_{it};\bar{\delta},\bar{\theta})\times \prod_{t=2}^{T}g(\omega_{it}|\omega_{it-1};\bar{\delta})\times g(\omega_{i1};\bar{\delta})
+\end{split}
+\end{equation}
+
+The unconditional moment restrictions implied by \eqref{qmoments} are over-identified. The posterior density in equation \eqref{posterior} is a closed-form expression when using piece-wise linear splines for $(\delta(\cdot), \theta(\cdot))$. Therefore, we use a Generalized Method of Moments (GMM) objective function to estimate $(\delta, \theta)$ The estimation is an Expectation Maximization (EM) algorithm. In \cite{Arellano2016} and \cite{Arellano2017}, the ``M-step'' is performed using quantile regression. In our M-step, we replace quantile regression with GMM since our moment conditions are smooth due to the presence of the integral. Given an initial parameter value $(\hat{\delta}^{0}, \hat{\theta}^{0})$. Iterate on $s=0,1,2,\dots$ in the following two-step procedure until converge to a stationary distribution:
+
+\begin{enumerate}
+    \item \textit{Stochastic E-Step}: Draw $M$ values $\omega_{i}^{(m)}=(\omega_{i1}^{(m)}, \omega_{i2}^{(m)},\dots, \omega_{iT}^{(m)})$ from
+        \begin{equation*}
+        \begin{split}
+            g(\omega_{it}&|m_{it+1}, y_{it}, \tilde{z}_{td}; \hat{\delta}^{(s)},\hat{\theta}^{(s)}) \propto\\
+            &\prod_{t=1}^{T}g(y_{it}|\omega_{it}, l_{it}, k_{it}, m_{it}, u_{it};\hat{\delta}^{(s)},\hat{\theta}^{(s)})\times
+            \prod_{t=1}^{T}g(I_{it}|\omega_{it}, l_{it}, k_{it}, m_{it}, u_{it};\hat{\delta}^{(s)},\hat{\theta}^{(s)})\times\\
+            &\prod_{t=1}^{T}g(m_{it+1}|\omega_{it}, l_{it}, k_{it}, m_{it}, u_{it};\hat{\delta}^{(s)},\hat{\theta}^{(s)})\times \prod_{t=2}^{T}g(\omega_{it}|\omega_{it-1};\hat{\delta}^{(s)})\times g(\omega_{i1};\hat{\delta}^{(s)})
+            \end{split}
+        \end{equation*}
+    \item \textit{Maximization Step}: For $j=1,\dots, J$, solve the following GMM objective functions
+    \begin{equation*}
+    \begin{split}
+    \hat{\boldsymbol\rho}(\tau_{j})^{(s+1)}&=\underset{\boldsymbol\rho(\tau_{j})}{\operatorname{argmin}}\,\hat{M}_{n,t,m}(\boldsymbol\rho, \tau_{j})^{'}\hat{W}_{\boldsymbol\rho}\hat{M}_{n,t,m}(\boldsymbol\rho, \tau_{j})\\
+    \hat{\boldsymbol\rho_{1}}(\tau_{j})^{(s+1)}&=\underset{\boldsymbol\rho_{1}(\tau_{j})}{\operatorname{argmin}}\,\hat{M}_{n,1,m}(\boldsymbol\rho_{1}, \tau_{j})^{'}\hat{W}_{\boldsymbol\rho_{1}}\hat{M}_{n,1,m}(\boldsymbol\rho_{1}, \tau_{j})\\
+    \hat{\boldsymbol\beta}(\tau_{j})^{(s+1)}&=\underset{\boldsymbol\beta(\tau_{j})}{\operatorname{argmin}}\,\hat{M}_{n,t,m}(\boldsymbol\beta, \tau_{j})^{'}\hat{W_{\boldsymbol\beta}}\hat{M}_{n,t,m}(\boldsymbol\beta, \tau_{j})\\
+    \end{split}
+    \end{equation*}
+    where, for example
+    \begin{equation*}
+    \begin{split}
+     \boldsymbol\rho(\tau_{j})&=(\rho_{0}(\tau_{j}), \rho_{\omega}(\tau_{j}), \rho_{a}(\tau_{j}))\\
+     \hat{M}_{n,t,m}(\boldsymbol\rho, \tau_{j})&=\sum_{i=1}^{N}\sum_{t=2}^{T}\sum_{m=1}^{M}\Psi_{\tau_{j}}(\xi_{it+1}(\boldsymbol\rho(\tau_{j})))Z_{it}^{(m)}\\
+     Z_{it}^{(m)}&=(1, \omega_{it}^{(m)}, age_{it}, \tilde{z}_{td})\\
+     \xi_{t+1}(\boldsymbol\rho(\tau_{j}))&=\omega_{it+1}^{(m)}-\rho_{0}(\tau_{j})+\rho_{\omega}(\tau_{j})\omega_{it}^{(m)}-\rho_{a}(\tau_{j})age_{it}
+     \end{split}
+     \end{equation*}
+     and $\hat{W_{\boldsymbol\rho}}$ is a weighting matrix. We estimate each moment restriction separately as computation is less prone to error compared to estimating jointly. \\
+
+     We estimate the investment equation without over-identifying conditions \textcolor{red}{because I do not know how to estimate a censored quantile regression model using GMM}
+     \begin{equation}\label{iimc}
+     \mathbbm{E}\Bigg[\int\Bigg(\Psi_{\tau_{j}}(I_{it}-\max\{0, \iota_{0}(\tau)+\iota_{\omega}(\tau)\omega_{it}+\iota_{k}(\tau)k_{it}+\iota_{a}(\tau)age_{it}\})\otimes
+     \begin{pmatrix}
+     1\\
+     \omega_{it}\\
+     k_{it}\\
+     age_{it}
+     \end{pmatrix}
+     \Bigg) g_{i}(\omega_{it};\bar{\delta},\bar{\theta})d\omega_{it}
+     \Bigg]=0
+     \end{equation}
+     which can be estimated using
+     \begin{equation}\label{iobjective}
+      \hat{\boldsymbol\iota}(\tau_{j})^{(s+1)}=\underset{\boldsymbol\iota(\tau_{j})}{\operatorname{argmin}}\,\sum_{i=1}^{N}\sum_{t=1}^{T}\sum_{m=1}^{M}\psi_{\tau_{j}}\Bigg(I_{it}-\max\{0, \iota_{0}(\tau)+\iota_{\omega}(\tau)\omega_{it}^{(m)}+\iota_{k}(\tau)k_{it}+\iota_{a}(\tau)age_{it}\Bigg)
+     \end{equation}
+     this step can be performed using any existing censored quantile regression using the package \textit{quantreg}.\\
+
+     The moment restrictions involving the static input can be written as:
+     \begin{equation}\label{staticimc}
+     \mathbbm{E}\Bigg[\int(z_{it+1}-\alpha_{z0}-\mu_{zk}k_{it+1}+\mu_{z\omega}\omega_{it+1}-\mu_{za}age_{it})\otimes
+     \begin{pmatrix}
+     1\\
+     \omega_{it}\\
+     age_{it}\\
+     \tilde{z}_{td}
+     \end{pmatrix}
+     g_{i}(\omega_{it};\bar{\delta},\bar{\theta})d\omega_{it}
+     \Bigg]=0,
+     \end{equation}
+     which can be estimated using GMM. With estimates ($\hat{\alpha}_{z0}, \hat{\mu}_{k\omega}, \hat{\mu}_{z\omega},\hat{\mu}_{za}$), the variance of the static input demand shock can be found by the following equation:
+     \begin{equation}\label{staticvar}
+     \hat{\sigma}^{2}_{z}=\frac{1}{T}\sum_{t=1}^{T}\mathbbm{E}\Bigg[\int\Bigg(z_{it+1}-\hat{\alpha}_{z0}-\hat{\mu}_{zk}k_{it+1}+\hat{\mu}_{z\omega}\omega_{it+1}-\hat{\mu}_{za}age_{it})^{2}g_{i}(\omega_{it};\bar{\delta},\bar{\theta})\Bigg)d\omega_{it}\Bigg]
+     \end{equation}
+\end{enumerate}
+
+\pagebreak
+\newpage
+
+\bibliographystyle{ecca.bst}
+\bibliography{NL_PF_QR}
+
+
+\end{document}

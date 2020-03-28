@@ -1,0 +1,47 @@
+This is BibTeX, Version 0.99d (TeX Live 2017)
+Capacity: max_strings=100000, hash_size=100000, hash_prime=85009
+The top-level auxiliary file: Nonlinear_Quantile_Production.aux
+The style file: ecca.bst.bst
+Database file #1: NL_PF_QR.bib
+Reallocated wiz_functions (elt_size=4) to 6000 items from 3000.
+You've used 14 entries,
+            3231 wiz_defined-function locations,
+            772 strings with 7077 characters,
+and the built_in function-call counts, 11611 in all, are:
+= -- 957
+> -- 736
+< -- 11
++ -- 343
+- -- 108
+* -- 932
+:= -- 1826
+add.period$ -- 41
+call.type$ -- 14
+change.case$ -- 98
+chr.to.int$ -- 14
+cite$ -- 14
+duplicate$ -- 890
+empty$ -- 621
+format.name$ -- 129
+if$ -- 2053
+int.to.chr$ -- 1
+int.to.str$ -- 1
+missing$ -- 117
+newline$ -- 46
+num.names$ -- 56
+pop$ -- 241
+preamble$ -- 1
+purify$ -- 83
+quote$ -- 0
+skip$ -- 438
+stack$ -- 0
+substring$ -- 641
+swap$ -- 593
+text.length$ -- 246
+text.prefix$ -- 0
+top$ -- 0
+type$ -- 126
+warning$ -- 0
+while$ -- 80
+width$ -- 0
+write$ -- 154
