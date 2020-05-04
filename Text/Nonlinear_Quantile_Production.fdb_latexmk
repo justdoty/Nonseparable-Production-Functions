@@ -1,14 +1,14 @@
 # Fdb version 3
-["bibtex Nonlinear_Quantile_Production"] 1582596007 "Nonlinear_Quantile_Production.aux" "Nonlinear_Quantile_Production.bbl" "Nonlinear_Quantile_Production" 1582654126
-  "NL_PF_QR.bib" 1582595929 5890 d65a1bb45e8adb43f9cdda1d1441062b ""
-  "Nonlinear_Quantile_Production.aux" 1582654126 5984 e5af21ebeb31ed9f4404328b77d34aaa ""
+["bibtex Nonlinear_Quantile_Production"] 1588614760 "Nonlinear_Quantile_Production.aux" "Nonlinear_Quantile_Production.bbl" "Nonlinear_Quantile_Production" 1588614803
+  "NL_PF_QR.bib" 1588614551 6665 fa6fd940189ba31e415fee44a8d27c4e ""
+  "Nonlinear_Quantile_Production.aux" 1588614802 6372 ed24b3869da9072c33edaad09c21ab1f ""
   "ecca.bst.bst" 0 -1 0 ""
   (generated)
-  "Nonlinear_Quantile_Production.bbl"
   "Nonlinear_Quantile_Production.blg"
-["pdflatex"] 1582654126 "/Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Function_QR/Text/Nonlinear_Quantile_Production.tex" "/Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Function_QR/Text/Nonlinear_Quantile_Production.pdf" "Nonlinear_Quantile_Production" 1582654126
-  "/Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Function_QR/Text/Nonlinear_Quantile_Production.aux" 1582654126 5984 e5af21ebeb31ed9f4404328b77d34aaa ""
-  "/Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Function_QR/Text/Nonlinear_Quantile_Production.tex" 1582654125 28409 3f80b51a30ba4f4aab7264b5e99fb74f ""
+  "Nonlinear_Quantile_Production.bbl"
+["pdflatex"] 1588614802 "/Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Function_QR/Code/Nonlinear-Production-Quantile/Text/Nonlinear_Quantile_Production.tex" "/Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Function_QR/Code/Nonlinear-Production-Quantile/Text/Nonlinear_Quantile_Production.pdf" "Nonlinear_Quantile_Production" 1588614803
+  "/Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Function_QR/Code/Nonlinear-Production-Quantile/Text/Nonlinear_Quantile_Production.aux" 1588614802 6372 ed24b3869da9072c33edaad09c21ab1f ""
+  "/Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Function_QR/Code/Nonlinear-Production-Quantile/Text/Nonlinear_Quantile_Production.tex" 1588614801 31592 898d850c8952e6a519600ab7cfa7ff01 ""
   "/Users/justindoty/Library/texlive/2017/texmf-var/fonts/pk/ljfour/public/bbm/bbm10.600pk" 1510615291 6964 a1ed3d83d43ed1cdbfa9fcf5a0521e81 ""
   "/usr/local/texlive/2017/texmf-dist/fonts/map/fontname/texfonts.map" 1480098670 3287 e6b82fe08f5336d4d5ebc73fb1152e87 ""
   "/usr/local/texlive/2017/texmf-dist/fonts/tfm/public/amsfonts/cmextra/cmbsy5.tfm" 1480098698 1120 1e8878807317373affa7f7bba4cf2f6a ""
@@ -140,12 +140,14 @@
   "/usr/local/texlive/2017/texmf-var/fonts/map/pdftex/updmap/pdftex.map" 1495593472 2350277 a699055bee05bf8a40b0504752487295 ""
   "/usr/local/texlive/2017/texmf-var/web2c/pdftex/pdflatex.fmt" 1495593487 4129592 0e6cfee100d68e6d96b92c0258f2ff73 ""
   "/usr/local/texlive/2017/texmf.cnf" 1495593465 577 2b71d4d888f9e5560b2e99985915a9fa ""
-  "Nonlinear_Quantile_Production.aux" 1582654126 5984 e5af21ebeb31ed9f4404328b77d34aaa ""
-  "Nonlinear_Quantile_Production.bbl" 1582596007 3232 e62a8e6691edbaa1562ecc93de8d3192 "bibtex Nonlinear_Quantile_Production"
-  "Nonlinear_Quantile_Production.tex" 1582654125 28409 3f80b51a30ba4f4aab7264b5e99fb74f ""
+  "Nonlinear_Quantile_Production.aux" 1588614802 6372 ed24b3869da9072c33edaad09c21ab1f ""
+  "Nonlinear_Quantile_Production.bbl" 1588614760 3692 a16c205ec3405416bf6287bf40088e62 "bibtex Nonlinear_Quantile_Production"
+  "Nonlinear_Quantile_Production.tex" 1588614801 31592 898d850c8952e6a519600ab7cfa7ff01 ""
   (generated)
+  "Nonlinear_Quantile_Production.aux"
+  "/Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Function_QR/Code/Nonlinear-Production-Quantile/Text/Nonlinear_Quantile_Production.pdf"
   "Nonlinear_Quantile_Production.pdf"
   "/Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Function_QR/Text/Nonlinear_Quantile_Production.pdf"
+  "/Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Function_QR/Code/Nonlinear-Production-Quantile/Text/Nonlinear_Quantile_Production.log"
   "/Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Function_QR/Text/Nonlinear_Quantile_Production.log"
-  "Nonlinear_Quantile_Production.aux"
   "Nonlinear_Quantile_Production.log"

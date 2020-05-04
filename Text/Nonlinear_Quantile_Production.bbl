@@ -1,4 +1,4 @@
-\begin{thebibliography}{14}
+\begin{thebibliography}{16}
 \providecommand{\natexlab}[1]{#1}
 
 \bibitem[{Arellano \textit{et~al.}(2017)Arellano, Blundell and
@@ -25,6 +25,11 @@
 \textsc{de~Castro, L.~I.} and \textsc{Galvao, A.~F.} (2017). Dynamic quantile
   models of rational behavior. \textit{{SSRN} Electronic Journal}.
 
+\bibitem[{Ericson and Pakes(1995)}]{Ericson1995}
+\textsc{Ericson, R.} and \textsc{Pakes, A.} (1995). Markov-perfect industry
+  dynamics: A framework for empirical work. \textit{The Review of Economic
+  Studies}, \textbf{62}~(1), 53.
+
 \bibitem[{Hu \textit{et~al.}(2019)Hu, Huang and Sasaki}]{Hu2019}
 \textsc{Hu, Y.}, \textsc{Huang, G.} and \textsc{Sasaki, Y.} (2019). Estimating
   production functions with robustness against errors in the proxy variables.
@@ -34,6 +39,11 @@
 \textsc{---} and \textsc{Schennach, S.~M.} (2008). Instrumental variable
   treatment of nonclassical measurement error models. \textit{Econometrica},
   \textbf{76}~(1), 195--216.
+
+\bibitem[{Hu and Shum(2012)}]{Hu2012}
+\textsc{---} and \textsc{Shum, M.} (2012). Nonparametric identification of
+  dynamic models with unobserved state variables. \textit{Journal of
+  Econometrics}, \textbf{171}~(1), 32--44.
 
 \bibitem[{il~Kim \textit{et~al.}(2017)il~Kim, Petrin and Song}]{Song2017}
 \textsc{il~Kim, K.}, \textsc{Petrin, A.} and \textsc{Song, S.} (2017).

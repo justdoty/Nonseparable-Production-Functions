@@ -52,7 +52,7 @@ We specify the productivity process as
 
 where $\xi_{i1},\dots, \xi_{iT}$ are independent uniform random variables which represent innovation shocks to productivity. We assume $\omega_{it}$ is monotonic in $\xi_{it}$ We let $h$ be another unknown nonlinear function that allows the persistence in productivity in firms to be nonlinear across different quantiles.
 
-\section{Model and Identification}
+\section{Model and Identification using Hu, Huang, and Sasaki (2019)}
 
 \subsection{Output Equation:}
 
@@ -104,15 +104,13 @@ where $z_{it}=l_{it}, m_{it}, u_{it}$. $\epsilon_{it}$ denotes iid uniform unobs
 \end{assump}
 In the next section we discuss how to model the distribution of initial capital as well as how to specify the evolution for capital and the demand function for flexible inputs. \textcolor{red}{Lagged productivity enters the capital evolution equation and current productivity enters the flexible input demand equations so we need to model both. These can be flexibly modeled. See footnote 23 page 709 in \cite{Arellano2017}}\\
 
-\textcolor{blue}{\textbf{The blue text refers to an extension of the model which was the first version of this paper.}}\\
-
-\textcolor{blue}{We follow the set up of \cite{Hu2019} to nonparametrically identify our model of firm production by introducing two proxy variables that act as contaminated measures of unobserved productivity. We let observed static inputs $z=l,m,u$ be at time $t+1$ be determined by:
+We follow the set up of \cite{Hu2019} to nonparametrically identify our model of firm production by introducing two proxy variables that act as contaminated measures of unobserved productivity. We let observed static inputs $z=l,m,u$ be at time $t+1$ be determined by:
 \begin{equation}\label{static+1}
     z_{t+1}=\mu_{zt+1}(k_{t+1},\omega_{t+1}, \epsilon_{t+1}),
 \end{equation}
-where $\epsilon_{t+1}$ denotes unobserved shocks to input demand which can capture unobserved firm-specific input prices or deviations from optimal input demand. We assume the function $\mu_{zt}(k_{t},\omega_{t}, \epsilon_{t})$ is strictly increasing in its last component for each $t$}.\\
+where $\epsilon_{t+1}$ denotes unobserved shocks to input demand which can capture unobserved firm-specific input prices or deviations from optimal input demand. We assume the function $\mu_{zt}(k_{t},\omega_{t}, \epsilon_{t})$ is strictly increasing in its last component for each $t$.\\
 
-\textcolor{blue}{The other proxy to productivity, investment, is modeled as censored variable:
+The other proxy to productivity, investment, is modeled as censored variable:
 \begin{equation}\label{investment}
     \begin{split}
     I_{t}^{*}&=\iota_{t}(\omega_{t}, k_{t}, \zeta_{t})\\
@@ -123,21 +121,57 @@ where $I_{t}$ is observed investment, $I_{t}^{*}$ is a latent index variable and
 \begin{equation}\label{capitalhu}
     K_{t}=\kappa_{t}(K_{t-1}, I_{t-1}, \upsilon_{t-1}),
 \end{equation}
-where the function $\kappa_{t}$ is strictly increasing in its last component.}\\
+where the function $\kappa_{t}$ is strictly increasing in its last component.\\
 
-\textcolor{blue}{We assume $\eta_{t}, \xi_{t+1}, \epsilon_{t}, \zeta_{t}$ are mutually independent conditional on $(\omega_{t}, l_{t}, k_{t}, m_{t}, u_{t})$ and that $\eta_{t}$ is mutually independent of $\upsilon_{t}$ conditional on $(\omega_{t}, l_{t}, k_{t}, m_{t}, u_{t})$. Let $W_{t}=(l_{t}, k_{t}, m_{t}, u_{t}, k_{t+1})$ denote the vector of control variables. Under the previously mentioned conditional independence restrictions we have that:}
+We assume $\eta_{t}, \xi_{t+1}, \epsilon_{t}, \zeta_{t}$ are mutually independent conditional on $(\omega_{t}, l_{t}, k_{t}, m_{t}, u_{t})$ and that $\eta_{t}$ is mutually independent of $\upsilon_{t}$ conditional on $(\omega_{t}, l_{t}, k_{t}, m_{t}, u_{t})$. Let $W_{t}=(l_{t}, k_{t}, m_{t}, u_{t}, k_{t+1})$ denote the vector of control variables. Under the previously mentioned conditional independence restrictions we have that:
 
-\textcolor{blue}{
 \begin{equation}\label{identification}
     f(y_{t}, I_{t}|m_{t+1}, W_{t})=\int f(y_{t}|\omega_{t}, l_{t}, k_{t}, m_{t}, u_{t})g(I_{t}|\omega_{t}, W_{t})h(\omega_{t}|m_{t+1}, W_{t})d\omega_{t}
 \end{equation}
-}
 
-\textcolor{blue}{\cite{Hu2008} and \cite{Hu2019} it can be shown that the latent conditional densities $f(y_{t}|\omega_{t}, l_{t}, k_{t}, m_{t}, u_{t}), g(I_{t}|\omega_{t}, W_{t}),$ and $h(\omega_{t}|m_{t+1}, W_{t})$ are identified.}
 
-\textcolor{blue}{
+\cite{Hu2008} and \cite{Hu2019} it can be shown that the latent conditional densities $f(y_{t}|\omega_{t}, l_{t}, k_{t}, m_{t}, u_{t}), g(I_{t}|\omega_{t}, W_{t}),$ and $h(\omega_{t}|m_{t+1}, W_{t})$ are identified.
+
+\section{Model and Identification using Hu and Shum (2012)}
+
+Our goal is identification of the Markov law of motion $f_{y_{t}, l_{t}, m_{t}, k_{t}, I_{t}, \omega_{t}|y_{t-1}, l_{t-1}, m_{t-1}, k_{t-1}, I_{t-1}, \omega_{t-1}}$ which we assume to be stationary. We assume the researcher observes a panel dataset consisting of i.i.d observations of firm output and input choices with the number of time periods $T\geq 4$ for a large number of firms. We introduce the following assumptions that simplify the expression for the law of motion. 
+
+\begin{assump}\label{markovfeedback}
+~
+    \begin{enumerate}[label=\alph*)]
+        \item \textit{Non-dynamic inputs:} $f_{y_{t}, l_{t}, m_{t}, k_{t}, I_{t}, \omega_{t}|y_{t-1}, l_{t-1}, m_{t-1}, k_{t-1}, I_{t-1}, \omega_{t-1}}=f_{y_{t}, l_{t}, m_{t}, k_{t}, I_{t}, \omega_{t}|k_{t-1}, I_{t-1}, \omega_{t-1}}$
+        \item \textit{First-order Markov:} $f_{y_{t}, l_{t}, m_{t}, k_{t}, I_{t}, \omega_{t}|k_{t-1}, I_{t-1}, \omega_{t-1}, \mathcal{I}_{<t-1}}=f_{y_{t}, l_{t}, m_{t}, k_{t}, I_{t}, \omega_{t}|k_{t-1}, I_{t-1}, \omega_{t-1}}$, where $\mathcal{I}_{<t-1}$ is the firm's information set up to time $t-1$
+        \item \textit{Limited Feedback:} $f_{y_{t}, l_{t}, m_{t}, k_{t}, I_{t}|k_{t-1}, I_{t-1}, \omega_{t}, \omega_{t-1}}=f_{y_{t}, l_{t}, m_{t}, k_{t}, I_{t}|k_{t-1}, I_{t-1}, \omega_{t}}$ 
+    \end{enumerate}
+\end{assump}
+
+Assumption \eqref{markovfeedback}(a) states that input decisions for labor and material inputs maximize profits in the current period and do not have any dynamic implications. This can be relaxed to include cases where labor has dynamic effects due to hiring/firing costs. This assumption also does not allow for dynamic effects of output, which is standard in the production function literature. Both assumptions \eqref{markovfeedback}(b) and \eqref{markovfeedback}(c) are consistent with the assumptions of \cite{Ericson1995} used to show existence of a Markov-perfect Nash equilibrium in investment, entry, and exit of firms.\\
+
+Using Assumption \eqref{markovfeedback} the Markov law of motion can be factored into:
+
+\begin{equation*}
+    \begin{split}
+        &f(y_{t}, l_{t}, m_{t}, k_{t}, I_{t}, \omega_{t}|y_{t-1}, l_{t-1}, m_{t-1}, k_{t-1}, I_{t-1}, \omega_{t-1}, \mathcal{I}_{<t-1})\\
+        &=f(y_{t}, l_{t}, m_{t}, k_{t}, I_{t}, \omega_{t}|y_{t-1}, l_{t-1}, m_{t-1}, k_{t-1}, I_{t-1}, \omega_{t-1})\\
+        &=f(y_{t}, l_{t}, m_{t}, k_{t}, I_{t}, \omega_{t}|k_{t-1}, I_{t-1}, \omega_{t}, \omega_{t-1})f(\omega_{t}|k_{t-1}, I_{t-1}, \omega_{t-1})
+    \end{split}
+\end{equation*} 
+and 
+\begin{equation*}
+    \begin{split}
+        &f(y_{t}, l_{t}, m_{t}, k_{t}, I_{t}, \omega_{t}|k_{t-1}, I_{t-1}, \omega_{t}, \omega_{t-1})\\
+        &=f(y_{t}, l_{t}, m_{t}, k_{t}, I_{t}, \omega_{t}|k_{t-1}, I_{t-1}, \omega_{t})\\
+        &=f(y_{t}|l_{t}, m_{t}, k_{t}, \omega_{t})f_{l_{t}|k_{t}, \omega_{t}}f(m_{t}|k_{t}, \omega_{t})\\
+        &\times f(I_{t}|k_{t}, \omega_{t})f(k_{t}|k_{t-1}, I_{t-1}, \omega_{t})
+    \end{split}
+\end{equation*} 
+
+\textcolor{red}{Discuss how I factored these densities using the model's assumptions.} \textcolor{blue}{Therefore if we can identify the Markov law of motion, we will have identified the relevant conditional densities of interest. The Markov law of motion and initial conditions are identified for $T\geq 4$ using the assumptions in \cite{Hu2012} using Corollary 2 and 3.}
+
+
+
 \subsection{Discussion}
-It may be possible to extend these identification assumptions to the situation where all inputs are measured with error using the approach of \cite{Song2017}. We introduce the basic approach to identification here for simplicity. Estimation of the model can be naturally extended using the approach of \cite{Wei2009}. Below we discuss examples of the nonlinear production function in \eqref{pf}.}
+It may be possible to extend these identification assumptions to the situation where all inputs are measured with error using the approach of \cite{Song2017}. We introduce the basic approach to identification here for simplicity. Estimation of the model can be naturally extended using the approach of \cite{Wei2009}. Below we discuss examples of the nonlinear production function in \eqref{pf}.
 
 \section{Examples}
 \subsection{Example 1}
@@ -220,7 +254,6 @@ Q_{t}(x_{it}, \omega_{it}, \tau)&=Q(x_{it}, age_{it}, \omega_{it}, \tau)=\\
 \end{equation}
 The above representation of the production function is a simple case. One can also consider more flexible specifications that allow for interactions of productivity and input choices thus allowing for non-Hicks neutral technology changes.
 
-\textcolor{blue}{
 \subsection{Investment Demand}
 We specify the investment process as the censored variable, $I_{t}=\text{max}\{0, I^{*}_{t}\}$ where $I_{t}^{*}=\iota_{t}(\omega_{it}, k_{it}, \zeta_{it})$. We specify the investment demand equation as:
 \begin{equation}\label{imodel}
@@ -229,7 +262,7 @@ We specify the investment process as the censored variable, $I_{t}=\text{max}\{0
 Due to the equivariance of quantiles to monotone transformations we can write the censored investment variable as:
 \begin{equation}\label{censormodel}
 Q(\omega_{it}, k_{it}, \tau)=\text{max}\{0, \iota_{0}(\tau)+\iota_{\omega}(\tau)\omega_{it}+\iota_{k}(\tau)k_{it}+\iota_{a}(\tau)age_{it}\}
-\end{equation}}
+\end{equation}
 
 \subsection{Static Inputs}
 Finally, we specify a reduced-form demand function for the static inputs of $z=m$ and $u$ (in logs) as:

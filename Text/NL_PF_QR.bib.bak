@@ -155,4 +155,56 @@
   publisher = {Elsevier {BV}},
 }
 
+@Article{Just1979,
+  author    = {Richard E. Just and Rulon D. Pope},
+  title     = {Production Function Estimation and Related Risk Considerations},
+  journal   = {American Journal of Agricultural Economics},
+  year      = {1979},
+  volume    = {61},
+  number    = {2},
+  pages     = {276--284},
+  month     = {may},
+  doi       = {10.2307/1239732},
+  publisher = {Wiley},
+}
+
+@Article{Just1978,
+  author    = {Richard E. Just and Rulon D. Pope},
+  title     = {Stochastic specification of production functions and economic implications},
+  journal   = {Journal of Econometrics},
+  year      = {1978},
+  volume    = {7},
+  number    = {1},
+  pages     = {67--86},
+  month     = {feb},
+  doi       = {10.1016/0304-4076(78)90006-4},
+  publisher = {Elsevier {BV}},
+}
+
+@Article{Pope1979,
+  author    = {Rulon D. Pope and Randall A. Kramer},
+  title     = {Production Uncertainty and Factor Demands for the Competitive Firm},
+  journal   = {Southern Economic Journal},
+  year      = {1979},
+  volume    = {46},
+  number    = {2},
+  pages     = {489},
+  month     = {oct},
+  doi       = {10.2307/1057421},
+  publisher = {{JSTOR}},
+}
+
+@Article{Ericson1995,
+  author    = {Richard Ericson and Ariel Pakes},
+  title     = {Markov-Perfect Industry Dynamics: A Framework for Empirical Work},
+  journal   = {The Review of Economic Studies},
+  year      = {1995},
+  volume    = {62},
+  number    = {1},
+  pages     = {53},
+  month     = {jan},
+  doi       = {10.2307/2297841},
+  publisher = {Oxford University Press ({OUP})},
+}
+
 @Comment{jabref-meta: databaseType:bibtex;}
