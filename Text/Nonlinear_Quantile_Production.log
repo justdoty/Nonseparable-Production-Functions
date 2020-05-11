@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.18 (TeX Live 2017) (preloaded format=pdflatex 2017.5.23)  4 MAY 2020 12:53
+This is pdfTeX, Version 3.14159265-2.6-1.40.18 (TeX Live 2017) (preloaded format=pdflatex 2017.5.23)  11 MAY 2020 13:39
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -520,40 +520,41 @@ LaTeX Info: Redefining \cite on input line 694.
 \c@NAT@ctr=\count169
 )
 \c@assump=\count170
+\c@lemma=\count171
 (/usr/local/texlive/2017/texmf-dist/tex/latex/appendix/appendix.sty
 Package: appendix 2009/09/02 v1.2b extra appendix facilities
-\c@@pps=\count171
-\c@@ppsavesec=\count172
-\c@@ppsaveapp=\count173
+\c@@pps=\count172
+\c@@ppsavesec=\count173
+\c@@ppsaveapp=\count174
 )
 (/Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Functio
 n_QR/Code/Nonlinear-Production-Quantile/Text/Nonlinear_Quantile_Production.aux)
 \openout1 = `Nonlinear_Quantile_Production.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 34.
-LaTeX Font Info:    ... okay on input line 34.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 34.
-LaTeX Font Info:    ... okay on input line 34.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 34.
-LaTeX Font Info:    ... okay on input line 34.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 34.
-LaTeX Font Info:    ... okay on input line 34.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 34.
-LaTeX Font Info:    ... okay on input line 34.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 34.
-LaTeX Font Info:    ... okay on input line 34.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 35.
+LaTeX Font Info:    ... okay on input line 35.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 35.
+LaTeX Font Info:    ... okay on input line 35.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 35.
+LaTeX Font Info:    ... okay on input line 35.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 35.
+LaTeX Font Info:    ... okay on input line 35.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 35.
+LaTeX Font Info:    ... okay on input line 35.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 35.
+LaTeX Font Info:    ... okay on input line 35.
 (/usr/local/texlive/2017/texmf-dist/tex/context/base/mkii/supp-pdf.mkii
 [Loading MPS to PDF converter (version 2006.09.02).]
-\scratchcounter=\count174
+\scratchcounter=\count175
 \scratchdimen=\dimen189
 \scratchbox=\box54
-\nofMPsegments=\count175
-\nofMParguments=\count176
+\nofMPsegments=\count176
+\nofMParguments=\count177
 \everyMPshowfont=\toks32
-\MPscratchCnt=\count177
+\MPscratchCnt=\count178
 \MPscratchDim=\dimen190
-\MPnumerator=\count178
-\makeMPintoPDFobject=\count179
+\MPnumerator=\count179
+\makeMPintoPDFobject=\count180
 \everyMPtoPDFconversion=\toks33
 ) (/usr/local/texlive/2017/texmf-dist/tex/generic/oberdiek/pdftexcmds.sty
 Package: pdftexcmds 2017/03/19 v0.25 Utility functions of pdfTeX for LuaTeX (HO
@@ -604,83 +605,64 @@ File: siunitx-abbreviations.cfg 2017/05/19 v2.7g siunitx: Abbreviated units
 )
 Package caption Info: Begin \AtBeginDocument code.
 Package caption Info: End \AtBeginDocument code.
-\c__siunitx_mathsf_int=\count180
-LaTeX Font Info:    Try loading font information for U+msa on input line 34.
+\c__siunitx_mathsf_int=\count181
+LaTeX Font Info:    Try loading font information for U+msa on input line 35.
 (/usr/local/texlive/2017/texmf-dist/tex/latex/amsfonts/umsa.fd
 File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 )
-LaTeX Font Info:    Try loading font information for U+msb on input line 34.
+LaTeX Font Info:    Try loading font information for U+msb on input line 35.
 (/usr/local/texlive/2017/texmf-dist/tex/latex/amsfonts/umsb.fd
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 )
-\c__siunitx_mathtt_int=\count181
-LaTeX Font Info:    Try loading font information for OMS+cmr on input line 35.
+\c__siunitx_mathtt_int=\count182
+LaTeX Font Info:    Try loading font information for OMS+cmr on input line 36.
 (/usr/local/texlive/2017/texmf-dist/tex/latex/base/omscmr.fd
 File: omscmr.fd 2014/09/29 v2.5h Standard LaTeX font definitions
 )
 LaTeX Font Info:    Font shape `OMS/cmr/m/n' in size <8> not available
-(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 35.
+(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 36.
 LaTeX Font Info:    Font shape `OMS/cmr/m/n' in size <6> not available
-(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 35.
+(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 36.
 
-Underfull \hbox (badness 10000) in paragraph at lines 41--43
+Underfull \hbox (badness 10000) in paragraph at lines 42--44
 
  []
 
 [1
 
 {/usr/local/texlive/2017/texmf-var/fonts/map/pdftex/updmap/pdftex.map}]
-Underfull \hbox (badness 10000) in paragraph at lines 62--64
+Underfull \hbox (badness 10000) in paragraph at lines 69--70
 
  []
 
-
-Underfull \hbox (badness 10000) in paragraph at lines 105--106
+LaTeX Font Info:    Try loading font information for U+bbm on input line 94.
+(/usr/local/texlive/2017/texmf-dist/tex/latex/bbm-macros/ubbm.fd
+File: ubbm.fd 1999/03/15 V 1.2 Font definition for bbm font - TH
+)
+Underfull \hbox (badness 10000) in paragraph at lines 98--100
 
  []
 
 [2]
-Underfull \hbox (badness 10000) in paragraph at lines 110--112
-
- []
-
-LaTeX Font Info:    Try loading font information for U+bbm on input line 118.
-(/usr/local/texlive/2017/texmf-dist/tex/latex/bbm-macros/ubbm.fd
-File: ubbm.fd 1999/03/15 V 1.2 Font definition for bbm font - TH
-)
-Underfull \hbox (badness 10000) in paragraph at lines 123--125
-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 148--149
+Underfull \hbox (badness 10000) in paragraph at lines 133--134
 
  []
 
 [3]
-Underfull \hbox (badness 10000) in paragraph at lines 186--188
-
+Overfull \hbox (11.55664pt too wide) in paragraph at lines 160--162
+\OT1/cmr/m/n/10 We pro-vide a few lem-mas that al-low us to rep-re-sent the ob-
+served den-sity $\OML/cmm/m/it/10 f[]$
  []
 
 [4]
-Underfull \hbox (badness 10000) in paragraph at lines 204--206
-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 209--211
-
- []
-
-[5] [6]
-Overfull \hbox (25.78336pt too wide) in paragraph at lines 274--275
+Overfull \hbox (25.78336pt too wide) in paragraph at lines 204--205
 \OT1/cmr/m/n/10 To ease no-ta-tion, let $\OML/cmm/m/it/10 ^^N$ \OT1/cmr/m/n/10 
 de-note a fi-nite di-men-sional pa-ram-e-ter vec-tor that con-tains the func-ti
 ons $\OML/cmm/m/it/10 ^^Z[]; ^^Z[]; ^^Z[]; ^^Z[]; ^^Z[]$
  []
 
 
-Overfull \hbox (61.6387pt too wide) in paragraph at lines 274--275
+Overfull \hbox (61.6387pt too wide) in paragraph at lines 204--205
 \OT1/cmr/m/n/10 and $\OML/cmm/m/it/10 ^^R$ \OT1/cmr/m/n/10 de-note the fi-nite 
 di-men-sional pa-ram-e-ter vec-tor that con-tains the func-tions $\OML/cmm/m/it
 /10 ^^L[]; ^^L[]; ^^L[]; ^^L[]; ^^L[]; ^^L[]; ^^L[]; ^^S[]; ^^M[]; ^^M[]; ^^M[]
@@ -688,42 +670,42 @@ di-men-sional pa-ram-e-ter vec-tor that con-tains the func-tions $\OML/cmm/m/it
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 274--275
+Underfull \hbox (badness 10000) in paragraph at lines 204--205
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 299--300
+Underfull \hbox (badness 10000) in paragraph at lines 229--230
+
+ []
+
+[5]
+Underfull \hbox (badness 10000) in paragraph at lines 231--232
+
+ []
+
+[6]
+Underfull \hbox (badness 10000) in paragraph at lines 313--315
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 301--302
+Underfull \hbox (badness 10000) in paragraph at lines 331--333
 
  []
 
 [7] [8]
-Underfull \hbox (badness 10000) in paragraph at lines 383--385
-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 401--403
-
- []
-
-[9] [10]
 (/Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Functio
 n_QR/Code/Nonlinear-Production-Quantile/Text/Nonlinear_Quantile_Production.bbl)
-[11]
+[9]
 (/Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Functio
 n_QR/Code/Nonlinear-Production-Quantile/Text/Nonlinear_Quantile_Production.aux)
  ) 
 Here is how much of TeX's memory you used:
- 16696 strings out of 492995
- 332409 string characters out of 6132704
- 371951 words of memory out of 5000000
- 20090 multiletter control sequences out of 15000+600000
+ 16663 strings out of 492995
+ 331840 string characters out of 6132704
+ 371991 words of memory out of 5000000
+ 20057 multiletter control sequences out of 15000+600000
  17815 words of font info for 70 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  39i,22n,38p,10524b,378s stack positions out of 5000i,500n,10000p,200000b,80000s
@@ -752,10 +734,10 @@ live/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmti10.pfb></usr/local/texl
 ive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt8.pfb>
 Output written on /Users/justindoty/Documents/Research/Dissertation/Nonlinear_P
 roduction_Function_QR/Code/Nonlinear-Production-Quantile/Text/Nonlinear_Quantil
-e_Production.pdf (11 pages, 287566 bytes).
+e_Production.pdf (9 pages, 280449 bytes).
 PDF statistics:
- 134 PDF objects out of 1000 (max. 8388607)
- 96 compressed objects within 1 object stream
+ 129 PDF objects out of 1000 (max. 8388607)
+ 92 compressed objects within 1 object stream
  0 named destinations out of 1000 (max. 500000)
  1 words of extra memory for PDF output out of 10000 (max. 10000000)
 

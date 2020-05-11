@@ -207,4 +207,40 @@
   publisher = {Oxford University Press ({OUP})},
 }
 
+@Article{Hu2012,
+  author    = {Yingyao Hu and Matthew Shum},
+  title     = {Nonparametric identification of dynamic models with unobserved state variables},
+  journal   = {Journal of Econometrics},
+  year      = {2012},
+  volume    = {171},
+  number    = {1},
+  pages     = {32--44},
+  month     = {nov},
+  doi       = {10.1016/j.jeconom.2012.05.023},
+  publisher = {Elsevier {BV}},
+}
+
+@Article{Doraszelski2013,
+  author    = {U. Doraszelski and J. Jaumandreu},
+  title     = {R{\&}D and Productivity: Estimating Endogenous Productivity},
+  journal   = {The Review of Economic Studies},
+  year      = {2013},
+  volume    = {80},
+  number    = {4},
+  pages     = {1338--1383},
+  month     = {feb},
+  doi       = {10.1093/restud/rdt011},
+  publisher = {Oxford University Press ({OUP})},
+}
+
+@InCollection{Pakesa,
+  author    = {Ariel Pakes},
+  title     = {Dynamic structural models, problems and prospects: mixed continuous discrete controls and market interactions},
+  booktitle = {Advances in Econometrics},
+  publisher = {Cambridge University Press},
+  editor    = {Christopher A. Sims},
+  pages     = {171--274},
+  doi       = {10.1017/ccol0521444608.005},
+}
+
 @Comment{jabref-meta: databaseType:bibtex;}

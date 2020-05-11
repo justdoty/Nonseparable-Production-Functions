@@ -4,44 +4,44 @@ The top-level auxiliary file: Nonlinear_Quantile_Production.aux
 The style file: ecca.bst.bst
 Database file #1: NL_PF_QR.bib
 Reallocated wiz_functions (elt_size=4) to 6000 items from 3000.
-You've used 16 entries,
+You've used 8 entries,
             3231 wiz_defined-function locations,
-            786 strings with 7332 characters,
-and the built_in function-call counts, 13437 in all, are:
-= -- 1104
-> -- 864
-< -- 13
-+ -- 404
-- -- 124
-* -- 1079
-:= -- 2110
-add.period$ -- 47
-call.type$ -- 16
-change.case$ -- 112
-chr.to.int$ -- 16
-cite$ -- 16
-duplicate$ -- 1033
-empty$ -- 710
-format.name$ -- 151
-if$ -- 2371
+            733 strings with 6351 characters,
+and the built_in function-call counts, 6924 in all, are:
+= -- 569
+> -- 418
+< -- 7
++ -- 192
+- -- 69
+* -- 566
+:= -- 1070
+add.period$ -- 24
+call.type$ -- 8
+change.case$ -- 59
+chr.to.int$ -- 8
+cite$ -- 8
+duplicate$ -- 534
+empty$ -- 389
+format.name$ -- 84
+if$ -- 1246
 int.to.chr$ -- 1
 int.to.str$ -- 1
-missing$ -- 135
-newline$ -- 52
-num.names$ -- 64
-pop$ -- 279
+missing$ -- 72
+newline$ -- 28
+num.names$ -- 34
+pop$ -- 153
 preamble$ -- 1
-purify$ -- 95
+purify$ -- 49
 quote$ -- 0
-skip$ -- 510
+skip$ -- 256
 stack$ -- 0
-substring$ -- 731
-swap$ -- 694
-text.length$ -- 292
+substring$ -- 378
+swap$ -- 356
+text.length$ -- 132
 text.prefix$ -- 0
 top$ -- 0
-type$ -- 144
+type$ -- 72
 warning$ -- 0
-while$ -- 92
+while$ -- 49
 width$ -- 0
-write$ -- 176
+write$ -- 91
