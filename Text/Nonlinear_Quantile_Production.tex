@@ -19,8 +19,8 @@
 \usepackage{caption}
 \usepackage{float}
 \usepackage{natbib}
-\newtheorem{assump}{Assumption}[subsection]
-\newtheorem{lemma}{Lemma}[subsection]
+\newtheorem{assump}{Assumption}[section]
+\newtheorem{lemma}{Lemma}[section]
 \usepackage[toc,page]{appendix}
 \pagenumbering{gobble}
 \topmargin 0.0cm
@@ -107,9 +107,9 @@ where the function $\kappa$ is strictly increasing in its last argument and $\up
 
 In each period, a firm chooses investment to maximize its discounted future profits:
 \begin{equation} \label{valuefn}
-I_{t}=I^{*}(K_{t}, \omega_{t}, \zeta_{t})=\underset{I_{t}\geq 0}{\operatorname{argmax}}\Bigg[\Pi_{t}(K_{t}, \omega_{t}, \zeta_{t})-c(I_{t})+\beta\mathbbm{E}\big[V_{t+1}(K_{t+1}, \omega_{t+1}, \zeta_{t+1})|\mathcal{I}_{t}\big]\Bigg],
+I_{t}=I^{*}(K_{t}, \omega_{t}, \zeta_{t})=\underset{I_{t}\geq 0}{\operatorname{argmax}}\Bigg[\Pi_{t}(K_{t}, \omega_{t})-c(I_{t}, \zeta_{t})+\beta\mathbbm{E}\big[V_{t+1}(K_{t+1}, \omega_{t+1}, \zeta_{t+1})|\mathcal{I}_{t}\big]\Bigg],
 \end{equation}
-where $\pi_{t}(\cdot)$ is current period profits as a function of the state variables, $c(I_{t})$ is the cost of current investment and $\beta$ is the firm's discount factor. We introduce an additional state variable $\zeta_{t}$ which could represent other factors that affect firm's investment demand such as capital utilization rates or capital specific technological changes that are iid over time. The optimal investment policy is monotonically increasing in both $\omega_{t}$ and $\zeta_{t}$. This is given by the Bellman equation in \eqref{valuefn} and as long as $\frac{\partial \Pi(K_{t}, \omega_{t}, \zeta_{t})}{\partial K_{t}}$ is increasing in $\zeta_{t}$. A detailed proof is given in the Appendix which follows \cite{Pakesa}. Without loss of generality, we normalize $\zeta_{t}\sim U[0,1]$. In a later section we show how to modify identification and estimation strategies to cases when investment is censored or there is selection bias due to endogenous entry/exit which can be the case in certain industries. Note that the restrictions on the capital accumulation process in \eqref{kaccum} and the investment problem in \eqref{valuefn} satisfy the Limited Feedback condition in Assumption \eqref{markovfeedback}(c).
+where $\pi_{t}(\cdot)$ is current period profits as a function of the state variables, $c(I_{t})$ is the cost of current investment and $\beta$ is the firm's discount factor. We introduce an additional state variable $\zeta_{t}$ which could represent other factors that shift firm's investment costs. \textcolor{red}{We assume the cost function $c(\cdot, \zeta_{t})$ is decreasing in $\zeta_{t}$}. \textcolor{red}{Under certain conditions, the investment policy function is monotonic increasing in $\zeta_{t}$}. Without loss of generality, we normalize $\zeta_{t}\sim U[0,1]$. In a later section we show how to modify identification and estimation strategies to cases when investment is censored or there is selection bias due to endogenous entry/exit which can be the case in certain industries. Note that the restrictions on the capital accumulation process in \eqref{kaccum} and the investment problem in \eqref{valuefn} satisfy the Limited Feedback condition in Assumption \eqref{markovfeedback}(c).
 
 The specifications for the static inputs, labor and intermediate inputs such as materials, fuels, and electricity, are much easier to state. We let optimal labor demand be given by:
 \begin{equation} \label{labordemand}
@@ -154,11 +154,32 @@ The linear operator $L_{V_{t-2},\bar{x}_{t-1},\bar{w}_{t-1},\bar{x}_{t},\bar{w}_
 where $\mathcal{V}_{t}, \mathcal{X}_{t-1}, \mathcal{X}_{t}, \mathcal{W}_{t-1}$ and $\mathcal{W}_{t}$ are the supports of $V_{t}, X_{t-1}, X_{t}, W_{t-1}$ and $W_{t}$ respectively. We also define the diagonal operator as:
 \begin{equation}\label{diagonal}
     \begin{split}
-        (D_{\bar{x}_{t}, \bar{w}_{t}|\bar{x}_{t-1}, \bar{w}_{t-1}, \omega_{t}}h)(\omega_{t})&=f_{X_{t}, W_{t}|, W_{t-1}, \omega_{t}}(\bar{x}_{t}, \bar{w}_{t}|\bar{w}_{t-1}, \omega_{t})h(\omega_{t})\\
+        (D_{\bar{x}_{t}, \bar{w}_{t}|\bar{w}_{t-1}, \omega_{t}}h)(\omega_{t})&=f_{X_{t}, W_{t}|, W_{t-1}, \omega_{t}}(\bar{x}_{t}, \bar{w}_{t}|\bar{w}_{t-1}, \omega_{t})h(\omega_{t})\\
         &h\in \mathcal{L}^{p}(\Omega_{t}), \bar{x}_{t}\in \mathcal{X}_{t}, \bar{w}_{t}\in \mathcal{W}_{t}, \bar{w}_{t-1}\in \mathcal{W}_{t-1}
     \end{split}
 \end{equation}
 We provide a few lemmas that allow us to represent the observed density $f_{X_{t+1}, W_{t+1}, X_{t}, W_{t}, X_{t-1}, W_{t-1}, X_{t-2}, W_{t-2}}$ and the Markov law of motion $f_{X_{t}, W_{t}, \omega_{t}|X_{t-1}, W_{t-1}, \omega_{t-1}}$ using operator notation.
+
+\begin{lemma} (Representation of the Observed Density)
+~
+For any $t\in\{3,\dots, T-1\}$. Assumption \eqref{markovfeedback} implies that, for any $(x_{t}, w_{t}, x_{t-1}, w_{t-1})\in \mathcal{X}_{t}\times \mathcal{W}_{t}\times \mathcal{X}_{t-1}\times \mathcal{W}_{t-1}$,
+\begin{equation}\label{obsoperator}
+L_{V_{t+1},x_{t}, w_{t}, x_{t-1}, w_{t-1}}=L_{V_{t+1}|w_{t}, \omega_{t}}D_{x_{t}, w_{t}|w_{t-1}, \omega_{t}}L_{x_{t-1}, w_{t-1}, V_{t-2}, \omega_{t}}
+\end{equation}
+\end{lemma}
+
+\begin{lemma} (Representation of the Markov Law of Motion)
+~
+For any $t\in\{3,\dots, T-1\}$ and under certain invertibility conditions provided below give, for any $(x_{t}, w_{t}, x_{t-1}, w_{t-1})\in \mathcal{X}_{t}\times \mathcal{W}_{t}\times \mathcal{X}_{t-1}\times \mathcal{W}_{t-1}$,
+\begin{equation}\label{markovoperator}
+L_{x_{t},w_{t},\omega_{t}|w_{t-1},\omega_{t-1}}=L^{-1}_{V_{t+1}|w_{t},\omega_{t}}L_{V_{t+1},x_{t},w_{t},x_{t-1}, w_{t-1}, V_{t-2}}L^{-1}_{V_{t},x_{t-1},w_{t-1},V_{t-2}}L_{V_{t}|w_{t-1},\omega_{t}}
+\end{equation}
+\end{lemma}
+
+The identification argument then depends on the existence and uniqueness a spectral decomposition of the linear operator $L_{V_{t+1},x_{t}, w_{t}, x_{t-1}, w_{t-1}}$ which corresponds to the observed density $f_{X_{t+1}, W_{t+1}, X_{t}, W_{t}, X_{t-1}, W_{t-1}, X_{t-2}, W_{t-2}}$. We state these assumptions and their interpretation in the production function literature and in context of our model.
+
+
+
 
 \section{Estimation Strategy}
 Our estimation strategy does not follow directly from the identification conditions discussed earlier in this paper, but on a set of restrictions discussed in the appendix. Our empirical specification for the Markovian transitions of productivity, output, and capital evolution closely resemble \cite{Arellano2017}. 
