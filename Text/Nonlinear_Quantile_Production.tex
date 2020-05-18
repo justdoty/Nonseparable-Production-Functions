@@ -132,11 +132,7 @@ In order to factorize the density in equation \eqref{1stdensity} we need the fol
 \end{assump}
 Assumption \eqref{inputindependence} is similar to the mutual independence assumptions made by \cite{Hu2019}. In their paper, they provide interpretations of these errors that are likely to satisfy the conditional independence restrictions. For example, this assumption is likely to be valid if we interpret each of these shocks as optimization errors. Unlike \cite{Hu2019} we cannot interpret these shocks as unobserved idiosyncratic cost shocks since this would imply that input demand functions, are decreasing in cost shocks, which violates the monotonically increasing assumption we need for representing these functions by their conditional quantiles.\\
 
-We outline the identification procedure similar to \cite{Hu2012}. First we define a function
-\begin{equation}\label{dimreduce}
-V_{t}\equiv h_{t}(\{X_{t}, W_{t}\}),
-\end{equation}
- where the function $h_{t}:\mathbbm{R}^{d_{X}+d_{W}}\rightarrow \mathbbm{R}$ is known with $d_{X}$ being the dimension of $X_{t}$ and $d_{W}$ being the dimension of $W_{t}$. Under assumption \eqref{markovfeedback}, we can write:
+We outline the identification procedure similar to \cite{Hu2012}. First, let $V_{t}=\{X_{t}, W_{t}\}$. Under assumption \eqref{markovfeedback}, we can write:
  \begin{equation}\label{obsdens}
  f_{X_{t+1}, W_{t+1}, X_{t}, W_{t}, X_{t-1}, W_{t-1}, X_{t-2}, W_{t-2}}=\int f_{X_{t+1},W_{t+1}|W_{t},\omega_{t}}f_{X_{t}, W_{t}|W_{t-1},\omega_{t}}f_{X_{t-1}, W_{t-1}, X_{t-2}, W_{t-2}, \omega_{t}}d\omega_{t}
  \end{equation}
@@ -177,6 +173,16 @@ L_{x_{t},w_{t},\omega_{t}|w_{t-1},\omega_{t-1}}=L^{-1}_{V_{t+1}|w_{t},\omega_{t}
 \end{lemma}
 
 The identification argument then depends on the existence and uniqueness a spectral decomposition of the linear operator $L_{V_{t+1},x_{t}, w_{t}, x_{t-1}, w_{t-1}}$ which corresponds to the observed density $f_{X_{t+1}, W_{t+1}, X_{t}, W_{t}, X_{t-1}, W_{t-1}, X_{t-2}, W_{t-2}}$. We state these assumptions and their interpretation in the production function literature and in context of our model.
+
+\begin{assump}(Invertibility)
+~
+There exists variable(s) $V_{t}$ such that
+    \begin{enumerate}[label=\alph*)]
+    \item For any $w_{t}\in \mathcal{W}_{t}$, $L_{V_{t+1}|w_{t}, \omega_{t}}$ is one-to-one
+    \item For any $(x_{t-1}, w_{t-1})\in \mathcal{X}_{t-1}\times\mathcal{W}_{t-1}$, $L_{V_{t}, x_{t-1}, w_{t-1}, V_{t-2}}$ is one-to-one
+    \item For any $(x_{t}, w_{t})\in \mathcal{X}_{t}\times\mathcal{W}_{t}$, there exists a $(x_{t-1}, w_{t-1})\in \mathcal{X}_{t-1}\times\mathcal{W}_{t-1}$ and a neighborhood $\mathcal{N}^{r}$ around $(x_{t}, w_{t}, x_{t-1}, w_{t-1})$ such that, for any $(\bar{x}_{t}, \bar{w}_{t}, \bar{x}_{t-1}, \bar{w}_{t-1})\in \mathcal{N}^{r}$, $L_{V_{t-2}, \bar{x}_{t}, \bar{w}_{t}, \bar{x}_{t-1}, \bar{w}_{t-1}, V_{t-2}}$ is one-to-one
+    \end{enumerate}
+\end{assump}
 
 
 
