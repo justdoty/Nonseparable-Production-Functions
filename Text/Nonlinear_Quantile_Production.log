@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 This is pdfTeX, Version 3.14159265-2.6-1.40.18 (TeX Live 2017) (preloaded format=pdflatex 2017.5.23)  15 JUN 2020 11:22
+=======
+This is pdfTeX, Version 3.14159265-2.6-1.40.18 (TeX Live 2017) (preloaded format=pdflatex 2017.5.23)  12 MAY 2020 13:42
+>>>>>>> 8bd5a34be27f86fdc55ce55f46a1487db18b0dbe
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -648,25 +652,71 @@ Underfull \hbox (badness 10000) in paragraph at lines 131--132
  []
 
 [3]
+<<<<<<< HEAD
 Overfull \hbox (11.55664pt too wide) in paragraph at lines 154--156
+=======
+Overfull \hbox (11.55664pt too wide) in paragraph at lines 156--158
+>>>>>>> 8bd5a34be27f86fdc55ce55f46a1487db18b0dbe
 \OT1/cmr/m/n/10 We pro-vide a few lem-mas that al-low us to rep-re-sent the ob-
 served den-sity $\OML/cmm/m/it/10 f[]$
  []
 
 
+<<<<<<< HEAD
 Overfull \hbox (55.94095pt too wide) in paragraph at lines 173--174
+=======
+Overfull \hbox (55.94095pt too wide) in paragraph at lines 175--176
+>>>>>>> 8bd5a34be27f86fdc55ce55f46a1487db18b0dbe
 \OT1/cmr/m/n/10 the lin-ear op-er-a-tor $\OML/cmm/m/it/10 L[]$ \OT1/cmr/m/n/10 
 which cor-re-sponds to the ob-served den-sity $\OML/cmm/m/it/10 f[]$\OT1/cmr/m/
 n/10 .
  []
 
 [4]
+<<<<<<< HEAD
 Underfull \hbox (badness 10000) in paragraph at lines 245--246
+=======
+Overfull \hbox (25.78336pt too wide) in paragraph at lines 231--232
+\OT1/cmr/m/n/10 To ease no-ta-tion, let $\OML/cmm/m/it/10 ^^N$ \OT1/cmr/m/n/10 
+de-note a fi-nite di-men-sional pa-ram-e-ter vec-tor that con-tains the func-ti
+ons $\OML/cmm/m/it/10 ^^Z[]; ^^Z[]; ^^Z[]; ^^Z[]; ^^Z[]$
+ []
+
+
+Overfull \hbox (61.6387pt too wide) in paragraph at lines 231--232
+\OT1/cmr/m/n/10 and $\OML/cmm/m/it/10 ^^R$ \OT1/cmr/m/n/10 de-note the fi-nite 
+di-men-sional pa-ram-e-ter vec-tor that con-tains the func-tions $\OML/cmm/m/it
+/10 ^^L[]; ^^L[]; ^^L[]; ^^L[]; ^^L[]; ^^L[]; ^^L[]; ^^S[]; ^^M[]; ^^M[]; ^^M[]
+; ^^T[]$
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 231--232
+>>>>>>> 8bd5a34be27f86fdc55ce55f46a1487db18b0dbe
 
  []
 
 [5]
+<<<<<<< HEAD
 Underfull \hbox (badness 10000) in paragraph at lines 277--278
+=======
+Underfull \hbox (badness 10000) in paragraph at lines 256--257
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 258--259
+
+ []
+
+[6] [7]
+Underfull \hbox (badness 10000) in paragraph at lines 340--342
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 358--360
+>>>>>>> 8bd5a34be27f86fdc55ce55f46a1487db18b0dbe
 
  []
 
@@ -676,11 +726,19 @@ n_QR/Code/Text/Nonlinear_Quantile_Production.bbl) [9]
 (/Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Functio
 n_QR/Code/Text/Nonlinear_Quantile_Production.aux) ) 
 Here is how much of TeX's memory you used:
+<<<<<<< HEAD
  16671 strings out of 492995
  331619 string characters out of 6132704
  372991 words of memory out of 5000000
  20063 multiletter control sequences out of 15000+600000
  18079 words of font info for 72 fonts, out of 8000000 for 9000
+=======
+ 16663 strings out of 492995
+ 331855 string characters out of 6132704
+ 372991 words of memory out of 5000000
+ 20057 multiletter control sequences out of 15000+600000
+ 17815 words of font info for 70 fonts, out of 8000000 for 9000
+>>>>>>> 8bd5a34be27f86fdc55ce55f46a1487db18b0dbe
  1141 hyphenation exceptions out of 8191
  39i,21n,38p,10494b,378s stack positions out of 5000i,500n,10000p,200000b,80000s
  </Users/justindoty/Library/
@@ -709,8 +767,13 @@ pe1/public/amsfonts/cm/cmsy7.pfb></usr/local/texlive/2017/texmf-dist/fonts/type
 public/amsfonts/cm/cmti10.pfb></usr/local/texlive/2017/texmf-dist/fonts/type1/p
 ublic/amsfonts/cm/cmtt8.pfb>
 Output written on /Users/justindoty/Documents/Research/Dissertation/Nonlinear_P
+<<<<<<< HEAD
 roduction_Function_QR/Code/Text/Nonlinear_Quantile_Production.pdf (9 pages, 284
 623 bytes).
+=======
+roduction_Function_QR/Code/Nonlinear-Production-Quantile/Text/Nonlinear_Quantil
+e_Production.pdf (9 pages, 280963 bytes).
+>>>>>>> 8bd5a34be27f86fdc55ce55f46a1487db18b0dbe
 PDF statistics:
  133 PDF objects out of 1000 (max. 8388607)
  95 compressed objects within 1 object stream
