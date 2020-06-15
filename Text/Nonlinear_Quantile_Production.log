@@ -1,13 +1,12 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.18 (TeX Live 2017) (preloaded format=pdflatex 2017.5.23)  12 MAY 2020 11:32
+This is pdfTeX, Version 3.14159265-2.6-1.40.18 (TeX Live 2017) (preloaded format=pdflatex 2017.5.23)  15 JUN 2020 11:22
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
 **/Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Functi
-on_QR/Code/Nonlinear-Production-Quantile/Text/Nonlinear_Quantile_Production.tex
-
+on_QR/Code/Text/Nonlinear_Quantile_Production.tex
 
 (/Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Functio
-n_QR/Code/Nonlinear-Production-Quantile/Text/Nonlinear_Quantile_Production.tex
+n_QR/Code/Text/Nonlinear_Quantile_Production.tex
 LaTeX2e <2017-04-15>
 Babel <3.10> and hyphenation patterns for 84 language(s) loaded.
 (/usr/local/texlive/2017/texmf-dist/tex/latex/base/article.cls
@@ -528,7 +527,7 @@ Package: appendix 2009/09/02 v1.2b extra appendix facilities
 \c@@ppsaveapp=\count174
 )
 (/Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Functio
-n_QR/Code/Nonlinear-Production-Quantile/Text/Nonlinear_Quantile_Production.aux)
+n_QR/Code/Text/Nonlinear_Quantile_Production.aux)
 \openout1 = `Nonlinear_Quantile_Production.aux'.
 
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 35.
@@ -631,120 +630,90 @@ Underfull \hbox (badness 10000) in paragraph at lines 42--44
 [1
 
 {/usr/local/texlive/2017/texmf-var/fonts/map/pdftex/updmap/pdftex.map}]
-Underfull \hbox (badness 10000) in paragraph at lines 69--70
+Underfull \hbox (badness 10000) in paragraph at lines 67--68
 
  []
 
-LaTeX Font Info:    Try loading font information for U+bbm on input line 94.
+LaTeX Font Info:    Try loading font information for U+bbm on input line 92.
 (/usr/local/texlive/2017/texmf-dist/tex/latex/bbm-macros/ubbm.fd
 File: ubbm.fd 1999/03/15 V 1.2 Font definition for bbm font - TH
 )
-Underfull \hbox (badness 10000) in paragraph at lines 98--100
+Underfull \hbox (badness 10000) in paragraph at lines 96--98
 
  []
 
 [2]
-Underfull \hbox (badness 10000) in paragraph at lines 133--134
+Underfull \hbox (badness 10000) in paragraph at lines 131--132
 
  []
 
 [3]
-Overfull \hbox (11.55664pt too wide) in paragraph at lines 160--162
+Overfull \hbox (11.55664pt too wide) in paragraph at lines 154--156
 \OT1/cmr/m/n/10 We pro-vide a few lem-mas that al-low us to rep-re-sent the ob-
 served den-sity $\OML/cmm/m/it/10 f[]$
  []
 
 
-Overfull \hbox (55.94095pt too wide) in paragraph at lines 179--180
+Overfull \hbox (55.94095pt too wide) in paragraph at lines 173--174
 \OT1/cmr/m/n/10 the lin-ear op-er-a-tor $\OML/cmm/m/it/10 L[]$ \OT1/cmr/m/n/10 
 which cor-re-sponds to the ob-served den-sity $\OML/cmm/m/it/10 f[]$\OT1/cmr/m/
 n/10 .
  []
 
 [4]
-Overfull \hbox (25.78336pt too wide) in paragraph at lines 225--226
-\OT1/cmr/m/n/10 To ease no-ta-tion, let $\OML/cmm/m/it/10 ^^N$ \OT1/cmr/m/n/10 
-de-note a fi-nite di-men-sional pa-ram-e-ter vec-tor that con-tains the func-ti
-ons $\OML/cmm/m/it/10 ^^Z[]; ^^Z[]; ^^Z[]; ^^Z[]; ^^Z[]$
- []
-
-
-Overfull \hbox (61.6387pt too wide) in paragraph at lines 225--226
-\OT1/cmr/m/n/10 and $\OML/cmm/m/it/10 ^^R$ \OT1/cmr/m/n/10 de-note the fi-nite 
-di-men-sional pa-ram-e-ter vec-tor that con-tains the func-tions $\OML/cmm/m/it
-/10 ^^L[]; ^^L[]; ^^L[]; ^^L[]; ^^L[]; ^^L[]; ^^L[]; ^^S[]; ^^M[]; ^^M[]; ^^M[]
-; ^^T[]$
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 225--226
+Underfull \hbox (badness 10000) in paragraph at lines 245--246
 
  []
 
 [5]
-Underfull \hbox (badness 10000) in paragraph at lines 250--251
+Underfull \hbox (badness 10000) in paragraph at lines 277--278
 
  []
 
-
-Underfull \hbox (badness 10000) in paragraph at lines 252--253
-
- []
-
-[6] [7]
-Underfull \hbox (badness 10000) in paragraph at lines 334--336
-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 352--354
-
- []
-
-[8]
+[6] [7] [8]
 (/Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Functio
-n_QR/Code/Nonlinear-Production-Quantile/Text/Nonlinear_Quantile_Production.bbl)
-[9]
+n_QR/Code/Text/Nonlinear_Quantile_Production.bbl) [9]
 (/Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Functio
-n_QR/Code/Nonlinear-Production-Quantile/Text/Nonlinear_Quantile_Production.aux)
- ) 
+n_QR/Code/Text/Nonlinear_Quantile_Production.aux) ) 
 Here is how much of TeX's memory you used:
- 16665 strings out of 492995
- 331882 string characters out of 6132704
+ 16671 strings out of 492995
+ 331619 string characters out of 6132704
  372991 words of memory out of 5000000
- 20059 multiletter control sequences out of 15000+600000
- 17815 words of font info for 70 fonts, out of 8000000 for 9000
+ 20063 multiletter control sequences out of 15000+600000
+ 18079 words of font info for 72 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 39i,22n,38p,10524b,378s stack positions out of 5000i,500n,10000p,200000b,80000s
- </Users/justindoty/Library/texlive/2017/texmf-var/fonts/pk/ljfour/public/bbm
-/bbm10.600pk></usr/local/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm
-/cmbx10.pfb></usr/local/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/
-cmbx12.pfb></usr/local/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/c
-mcsc10.pfb></usr/local/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/c
-mex10.pfb></usr/local/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cm
-mi10.pfb></usr/local/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmm
-i5.pfb></usr/local/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi7
-.pfb></usr/local/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmmib10
-.pfb></usr/local/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cmextra/cm
-mib7.pfb></usr/local/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmr
-10.pfb></usr/local/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12
-.pfb></usr/local/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmr17.p
-fb></usr/local/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmr5.pfb>
-</usr/local/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb></u
-sr/local/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb></usr/
-local/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/l
-ocal/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy5.pfb></usr/loc
-al/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy6.pfb></usr/local
-/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb></usr/local/t
-exlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy8.pfb></usr/local/tex
-live/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmti10.pfb></usr/local/texl
-ive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt8.pfb>
+ 39i,21n,38p,10494b,378s stack positions out of 5000i,500n,10000p,200000b,80000s
+ </Users/justindoty/Library/
+texlive/2017/texmf-var/fonts/pk/ljfour/public/bbm/bbm10.600pk></usr/local/texli
+ve/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb></usr/local/texliv
+e/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb></usr/local/texlive
+/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmcsc10.pfb></usr/local/texlive
+/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb></usr/local/texlive/
+2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/local/texlive/2
+017/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi5.pfb></usr/local/texlive/201
+7/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi7.pfb></usr/local/texlive/2017/
+texmf-dist/fonts/type1/public/amsfonts/cm/cmmib10.pfb></usr/local/texlive/2017/
+texmf-dist/fonts/type1/public/amsfonts/cmextra/cmmib7.pfb></usr/local/texlive/2
+017/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/local/texlive/201
+7/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb></usr/local/texlive/2017/
+texmf-dist/fonts/type1/public/amsfonts/cm/cmr17.pfb></usr/local/texlive/2017/te
+xmf-dist/fonts/type1/public/amsfonts/cm/cmr5.pfb></usr/local/texlive/2017/texmf
+-dist/fonts/type1/public/amsfonts/cm/cmr6.pfb></usr/local/texlive/2017/texmf-di
+st/fonts/type1/public/amsfonts/cm/cmr7.pfb></usr/local/texlive/2017/texmf-dist/
+fonts/type1/public/amsfonts/cm/cmr8.pfb></usr/local/texlive/2017/texmf-dist/fon
+ts/type1/public/amsfonts/cm/cmsy10.pfb></usr/local/texlive/2017/texmf-dist/font
+s/type1/public/amsfonts/cm/cmsy5.pfb></usr/local/texlive/2017/texmf-dist/fonts/
+type1/public/amsfonts/cm/cmsy6.pfb></usr/local/texlive/2017/texmf-dist/fonts/ty
+pe1/public/amsfonts/cm/cmsy7.pfb></usr/local/texlive/2017/texmf-dist/fonts/type
+1/public/amsfonts/cm/cmsy8.pfb></usr/local/texlive/2017/texmf-dist/fonts/type1/
+public/amsfonts/cm/cmti10.pfb></usr/local/texlive/2017/texmf-dist/fonts/type1/p
+ublic/amsfonts/cm/cmtt8.pfb>
 Output written on /Users/justindoty/Documents/Research/Dissertation/Nonlinear_P
-roduction_Function_QR/Code/Nonlinear-Production-Quantile/Text/Nonlinear_Quantil
-e_Production.pdf (9 pages, 281129 bytes).
+roduction_Function_QR/Code/Text/Nonlinear_Quantile_Production.pdf (9 pages, 284
+623 bytes).
 PDF statistics:
- 129 PDF objects out of 1000 (max. 8388607)
- 92 compressed objects within 1 object stream
+ 133 PDF objects out of 1000 (max. 8388607)
+ 95 compressed objects within 1 object stream
  0 named destinations out of 1000 (max. 500000)
  1 words of extra memory for PDF output out of 10000 (max. 10000000)
 

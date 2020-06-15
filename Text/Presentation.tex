@@ -1,0 +1,340 @@
+\documentclass{beamer}
+
+\mode<presentation> {
+
+
+%\usetheme{default}
+%\usetheme{AnnArbor}
+%\usetheme{Antibes} 
+%\usetheme{Bergen}
+%\usetheme{Berkeley}
+%\usetheme{Berlin}
+%\usetheme{Boadilla}
+%\usetheme{CambridgeUS}
+%\usetheme{Copenhagen}
+%\usetheme{Darmstadt}
+%\usetheme{Dresden}
+%\usetheme{Frankfurt}
+%\usetheme{Goettingen}
+%\usetheme{Hannover}
+%\usetheme{Ilmenau}
+%\usetheme{JuanLesPins}
+%\usetheme{Luebeck}
+\usetheme{Madrid}
+%\usetheme{Malmoe}
+%\usetheme{Marburg}
+%\usetheme{Montpellier}
+%\usetheme{PaloAlto}
+%\usetheme{Pittsburgh}
+%\usetheme{Rochester}
+%\usetheme{Singapore}
+%\usetheme{Szeged}
+%\usetheme{Warsaw}
+%\usecolortheme{albatross}
+%\usecolortheme{beaver}
+%\usecolortheme{beetle}
+%\usecolortheme{crane}
+%\usecolortheme{dolphin}
+%\usecolortheme{dove}
+%\usecolortheme{fly}
+%\usecolortheme{lily}
+%\usecolortheme{orchid}
+%\usecolortheme{rose}
+%\usecolortheme{seagull}
+%\usecolortheme{seahorse}
+%\usecolortheme{whale}
+%\usecolortheme{wolverine}
+
+%\setbeamertemplate{footline} % To remove the footer line in all slides uncomment this line
+%\setbeamertemplate{footline}[page number] % To replace the footer line in all slides with a simple slide count uncomment this line
+
+%\setbeamertemplate{navigation symbols}{} % To remove the navigation symbols from the bottom of all slides uncomment this line
+}
+
+\usepackage{graphicx} % Allows including images
+\usepackage{booktabs} % Allows the use of \toprule, \midrule and \bottomrule in tables
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{mathrsfs}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{bbm} 
+\usepackage{xcolor}
+%----------------------------------------------------------------------------------------
+%	TITLE PAGE
+%----------------------------------------------------------------------------------------
+
+\title[Nonlinear Production Functions]{A Dynamic Panel Data Framework for Identification and Estimation of Nonlinear Production Functions}
+
+\author{Justin Doty} % 
+\institute[University of Iowa] % Your institution as it will appear on the bottom of every slide, may be shorthand to save space
+{
+\\  
+\medskip % Your email address
+}
+\date{\today} % Date, can be changed to a custom date
+
+\begin{document}
+
+\begin{frame}
+\titlepage % Print the title page as the first slide
+\end{frame}
+
+%----------------------------------------------------------------------------------------
+%	PRESENTATION SLIDES
+%----------------------------------------------------------------------------------------
+
+%------------------------------------------------
+\section{First Section} % Sections can be created in order to organize your presentation into discrete blocks, all sections and subsections are automatically printed in the table of contents as an overview of the talk
+%------------------------------------------------
+
+\subsection{Subsection Example} % A subsection can be created just before a set of slides with a common theme to further break down your presentation into chunks
+
+\begin{frame}
+\frametitle{Introduction}
+\begin{itemize} 
+\item Consider a firm's gross-output production function
+\begin{equation} \label{production}
+Y_{it}=F_{t}(K_{it}, L_{it}, \iota_{t}, \omega_{it}, \eta_{it}),
+\end{equation}
+where $Y_{it}$ denotes a firm's final output, $K_{it}$ denotes capital stock, $L_{it}$ denotes amount of labor used and $\iota_{t}$ is an intermediate input. $\omega_{it}$ is a firm's productivity, a state variable which is unobserved to the econometrician. $\eta_{it}$ is an iid shock, independent of the firms input choices at time $t$
+\item Assume $F_{t}$ is monotonic increasing in $\eta_{it}$
+\item Identification issue: Firms optimal input choices are a function of the unobserved $\omega_{it}$ which leads to simultaneity bias when estimating the production function
+\item Many papers have proposed solutions to the simultaneity problem such as firm fixed effects, IV, control functions, etc.
+\end{itemize}
+\end{frame}
+%------------------------------------------------------------------------------------
+\begin{frame}
+\frametitle{Introduction}
+\begin{itemize}
+\item Many solutions focus on Cobb-Douglas production function (the simple linear case)
+\item Estimates dont account for other unobservable firm-specific heterogeneity
+\item We focus on how to estimate the conditional quantiles of \eqref{production}
+\item Therefore we need a general identification strategy as well as a flexible estimation strategy for the nonlinear model
+\item This paper would be the first to directly apply identification results using the dynamic nature of firm's input decision problems
+\item Then, it will apply an EM algorithm type approach to estimate the production function by integrating over the unobservable productivity term
+\end{itemize}
+\end{frame}
+
+%------------------------------------------------------------------------------------
+\begin{frame}
+\frametitle{Identification}
+\begin{itemize}
+\item For simplicity, let $X_{t}=\{Y_{t}, L_{t}, \iota_{t}\}$ and $W_{t}=\{K_{it}, I_{t}\}$
+\item Our goal is identification of the Markov law of motion $f_{X_{t}, W_{t}, \omega_{t}|X_{t-1}, W_{t-1}, \omega_{t-1}}$ which we assume to be stationary
+\item We assume the researcher observes a panel dataset consisting of i.i.d observations of firm output and input choices with the number of time periods $T\geq 4$
+\item We introduce the following assumptions that simplify the expression for the law of motion. 
+\end{itemize}
+\textbf{Assumption 1}
+\begin{enumerate}
+    \item \textit{Non-dynamic output and inputs:} $f_{X_{t}, W_{t}, \omega_{t}|X_{t-1}, W_{t-1}, \omega_{t-1}}=f_{X_{t}, W_{t}, \omega_{t}|W_{t-1}, \omega_{t-1}}$
+    \item \textit{First-order Markov:} $f_{X_{t}, W_{t}, \omega_{t}|X_{t-1}, W_{t-1}, \omega_{t-1}, \mathcal{I}_{<t-1}}=f_{X_{t}, W_{t}, \omega_{t}|X_{t-1}, W_{t-1}, \omega_{t-1}}$, where $\mathcal{I}_{<t-1}$ is the firm's information set up to time $t-1$
+    \item \textit{Limited Feedback:} $f_{W_{t}|W_{t-1}, \omega_{t}, \omega_{t-1}}=f_{W_{t}|W_{t-1}, \omega_{t}}$ 
+\end{enumerate}
+\end{frame}
+
+%------------------------------------------------------------------------------------
+\begin{frame}
+\frametitle{Identification}
+\begin{itemize}
+\item Using Assumption 1 the Markov law of motion can be factored into:
+\begin{equation} \label{markovfactor}
+    \begin{split}
+        &f(X_{t}, W_{t}, \omega_{t}|X_{t-1}, W_{t-1}, \omega_{t-1}, \mathcal{I}_{<t-1})=f(X_{t}, W_{t}, \omega_{t}|W_{t-1}, \omega_{t-1})\\
+        &=f(X_{t}|W_{t}, \omega_{t}, W_{t-1}, \omega_{t-1})f(W_{t}|\omega_{t}, W_{t-1}, \omega_{t-1})f(\omega_{t}|W_{t-1}, \omega_{t-1})
+    \end{split}
+\end{equation} 
+\item We can simplify the first density on the last line of the equation \eqref{markovfactor} as
+\begin{equation} \label{1stdensity}
+\begin{split}
+&f(X_{t}|W_{t}, \omega_{t}, W_{t-1}, \omega_{t-1})=f(Y_{t}|W_{t}, \omega_{t}, W_{t-1}, \omega_{t-1})\\
+&\times f(L_{t}|W_{t}, \omega_{t}, W_{t-1}, \omega_{t-1})f(\iota_{t}|W_{t}, \omega_{t}, W_{t-1}, \omega_{t-1})\\
+&=f(Y_{t}|L_{t}, \iota_{t}, K_{t}, \omega_{t})f(L_{t}|K_{t}, \omega_{t})f(\iota_{t}|K_{t}, \omega_{t})
+\end{split}
+\end{equation}
+\item Furthermore, the second density on the last line of the equation \eqref{markovfactor} becomes
+\begin{equation} \label{2nddensity}
+    \begin{split}
+        f(W_{t}|\omega_{t}, W_{t-1}, \omega_{t-1})&=f(W_{t}|W_{t-1}, \omega_{t})=f(I_{t}, K_{t}|I_{t-1}, K_{t-1}, \omega_{t})\\
+        &=f(I_{t}|K_{t}, I_{t-1}, K_{t-1}, \omega_{t})f(K_{t}|I_{t-1}, K_{t-1}, \omega_{t})\\
+        &=f(I_{t}|K_{t}, \omega_{t})f(K_{t}|I_{t-1}, K_{t-1}, \omega_{t})
+    \end{split}
+\end{equation} 
+\end{itemize}
+\end{frame}
+
+%------------------------------------------------------------------------------------
+\begin{frame}
+\frametitle{Identification}
+\begin{itemize}
+\item The previous derivations relied on conditional independence assumptions I will mention later
+\item Assumption 1 part 2 and 3 are satisfied from the our dynamic model of firm investment
+\item The evolution process for $\omega_{t}\in \mathbbm{R}$ is given by
+\begin{equation} \label{ar1}
+\omega_{t}=g(\omega_{t-1}, \xi_{t}),
+\end{equation}
+where the function $g(\cdot, \xi_{t})$ is strictly increasing in the iid innovation shock, $\xi_{t}\in \mathbbm{R}$
+\item Equation \eqref{ar1} implies $f_{\omega_{t}|W_{t-1}, \omega_{t-1}}=f_{\omega_{t}|\omega_{t-1}}$ which implies that productivity evolves exogenously
+\item This can be relaxed when we consider productivity enhancing activities such as R\&D
+\end{itemize}
+\end{frame}
+
+%------------------------------------------------------------------------------------
+\begin{frame}
+\frametitle{Identification}
+\begin{itemize}
+\item Capital accumulates according to the following process:
+\begin{equation} \label{kaccum}
+K_{t}=\kappa_{t}(K_{t-1}, I_{t-1}, \upsilon_{t}),
+\end{equation}
+where the function $\kappa$ is strictly increasing in its last argument and $\upsilon_{t}$ denotes an iid shock independent of the other arguments
+\item A special case of equation \eqref{kaccum} is the usual capital accumulation law $K_{t}=(1-\delta)K_{t-1}+I_{t-1}$
+\item Here $\upsilon_{t}$ are other factors that affect the capital accumulation process
+\item In each period, a firm chooses investment to maximize its discounted future profits:
+\footnotesize
+\begin{equation} \label{valuefn}
+I_{t}=I^{*}(K_{t}, \omega_{t}, \zeta_{t})=\underset{I_{t}\geq 0}{\operatorname{argmax}}\Bigg[\Pi_{t}(K_{t}, \omega_{t})-c(I_{t}, \zeta_{t})+\beta\mathbbm{E}\big[V_{t+1}(K_{t+1}, \omega_{t+1}, \zeta_{t+1})|\mathcal{I}_{t}\big]\Bigg],
+\end{equation}
+\normalsize
+where $\pi_{t}(\cdot)$ is current period profits as a function of the state variables, $c(I_{t})$ is the cost of current investment and $\beta$ is the firm's discount factor
+\end{itemize}
+\end{frame}
+
+%------------------------------------------------------------------------------------
+\begin{frame}
+\frametitle{Identification}
+\begin{itemize}
+\item We introduce an additional state variable $\zeta_{t}$ which could represent other factors that shift firm's investment costs
+\item We assume the cost function $c(\cdot, \zeta_{t})$ is decreasing in $\zeta_{t}$. Under certain conditions, the investment policy function is monotonic increasing in $\zeta_{t}$
+\item Without loss of generality, we normalize $\zeta_{t}\sim U[0,1]$
+\item Also considering how to modify identification and estimation strategies to cases when investment is censored or there is selection bias due to endogenous entry/exit
+\item The restrictions on the capital accumulation process in \eqref{kaccum} and the investment problem in \eqref{valuefn} satisfy the Limited Feedback condition in Assumption 1.
+\end{itemize}
+\end{frame}
+
+%------------------------------------------------------------------------------------
+\begin{frame}
+\frametitle{Identification}
+\begin{itemize}
+\item The specifications for the static inputs, labor and intermediate inputs such as materials, fuels, and electricity, are much easier to state. We let optimal labor demand be given by:
+\begin{equation} \label{labordemand}
+l_{t}=\ell(k_{t}, \omega_{t}, \epsilon_{t})
+\end{equation}
+where the function, $\ell(\cdot, \cdot, \epsilon_{t})$ is strictly increasing in $\epsilon_{t}$ which is assumed to be independent of the other arguments. 
+\item We normalize this to be standard uniform each period. We follow a similar model for the intermediate inputs:
+\begin{equation} \label{intdemand}
+\iota_{t}=\iota_{t}(k_{t}, \omega_{t}, \varepsilon_{t})
+\end{equation}
+where the function, $\iota(\cdot, \cdot, \varepsilon_{t})$ is strictly increasing in $\varepsilon_{t}$ which is assumed to be independent of the other arguments. 
+\item We normalize this to be standard uniform each period.
+\end{itemize}
+\end{frame}
+
+%------------------------------------------------------------------------------------
+\begin{frame}
+\frametitle{Identification}
+\begin{itemize}
+\item In order to factorize the density in equation \eqref{1stdensity} we need the following assumptions:\\
+\textbf{Assumption 2}
+\begin{enumerate}
+    \item The production shock $\eta_{t}$, labor shock $\epsilon_{t}$ and intermediate input shock $\varepsilon_{t}$ are mutually independent conditional on $(W_{t}, \omega_{t}, W_{t-1}, \omega_{t-1})$
+    \item The production shock $\eta_{t}$ is independent of $\zeta_{t}$ conditional on $(L_{t}, \iota_{t}, K_{t}, \omega_{t})$
+    \item $\epsilon_{t}$ and $\varepsilon_{t}$ are independent of $\zeta_{t}$ conditional on $(K_{t}, \omega_{t})$
+\end{enumerate}
+\item Assumption 2 is similar to the mutual independence assumptions made by \cite{Hu2019}. 
+\item In their paper, they provide interpretations of these errors that are likely to satisfy the conditional independence restrictions.
+\item For example: optimization errors or measurement error or factor specific innovation shocks
+\end{itemize}
+\end{frame}
+
+%------------------------------------------------------------------------------------
+\begin{frame}
+\frametitle{Identification}
+\begin{itemize}
+\item We outline the identification procedure similar to \cite{Hu2012}. First, let $V_{t}=\{X_{t}, W_{t}\}$. Under Assumption 1, we can write:
+ \begin{equation}\label{obsdens}
+ \begin{split}
+ f_{X_{t+1}, W_{t+1}, X_{t}, W_{t}, X_{t-1}, W_{t-1}, X_{t-2}, W_{t-2}}=&\int f_{X_{t+1},W_{t+1}|W_{t},\omega_{t}}f_{X_{t}, W_{t}|W_{t-1},\omega_{t}}\\
+ &\times f_{X_{t-1}, W_{t-1}, X_{t-2}, W_{t-2}, \omega_{t}}d\omega_{t}
+ \end{split}
+ \end{equation}
+ \item The identification argument then depends on the existence and uniqueness a spectral decomposition of the linear operators associated with the observed density. 
+ \item If we can show the linear operator associated with the Markov Law of Motion can be factored into linear operators corresponding to identified densities we can then say our model is identified
+\end{itemize}
+\end{frame}
+
+%------------------------------------------------------------------------------------
+\begin{frame}
+\frametitle{Identification}
+\begin{itemize}
+\item We define a linear operator $L_{V_{t-2},\bar{x}_{t-1},\bar{w}_{t-1},\bar{x}_{t},\bar{w}_{t}, V_{t+1}}$ as a mapping from the $\mathcal{L}^{p}$ space of functions of $V_{t+1}$ to the $\mathcal{L}^{p}$ space of functions of $V_{t-2}$ as follows:
+\small
+\begin{equation}\label{operator}
+    \begin{split}
+     (&L_{V_{t-2},\bar{x}_{t-1},\bar{w}_{t-1},\bar{x}_{t},\bar{w}_{t}, V_{t+1}}h)(v_{t-2})\\
+     &=\int f_{V_{t-2}, X_{t-1}, W_{t-1}, X_{t}, W_{t}, V_{t+1}}(v_{t-2}, \bar{x}_{t-1}, \bar{w}_{t-1}, \bar{x}_{t}, \bar{w}_{t}, v_{t+1})h(v_{t+1})dv_{t+1},\\
+     &h\in \mathcal{L}^{p}(\mathcal{V}_{t+1}), \bar{x}_{t-1}\in \mathcal{X}_{t-1}, \bar{x}_{t}\in \mathcal{X}_{t}, \bar{w}_{t-1}\in \mathcal{W}_{t-1}, \bar{w}_{t}\in \mathcal{W}_{t},
+    \end{split}
+\end{equation}
+\normalsize
+where $\mathcal{V}_{t}, \mathcal{X}_{t-1}, \mathcal{X}_{t}, \mathcal{W}_{t-1}$ and $\mathcal{W}_{t}$ are the supports of $V_{t}, X_{t-1}, X_{t}, W_{t-1}$ and $W_{t}$ respectively
+\item We also define the diagonal operator as:
+\begin{equation}\label{diagonal}
+    \begin{split}
+        (D_{\bar{x}_{t}, \bar{w}_{t}|\bar{w}_{t-1}, \omega_{t}}h)(\omega_{t})&=f_{X_{t}, W_{t}|, W_{t-1}, \omega_{t}}(\bar{x}_{t}, \bar{w}_{t}|\bar{w}_{t-1}, \omega_{t})h(\omega_{t})\\
+        &h\in \mathcal{L}^{p}(\Omega_{t}), \bar{x}_{t}\in \mathcal{X}_{t}, \bar{w}_{t}\in \mathcal{W}_{t}, \bar{w}_{t-1}\in \mathcal{W}_{t-1}
+    \end{split}
+\end{equation}
+\end{itemize}
+\end{frame}
+
+%------------------------------------------------------------------------------------
+\begin{frame}
+\frametitle{Identification}
+\begin{itemize}
+\item We rely on a few lemmas that allow us to represent the observed density and the Markov Law of Motion via linear operators\\
+\textbf{Lemma 1}
+For any $t\in\{3,\dots, T-1\}$. Assumption 1 implies that, for any $(x_{t}, w_{t}, x_{t-1}, w_{t-1})\in \mathcal{X}_{t}\times \mathcal{W}_{t}\times \mathcal{X}_{t-1}\times \mathcal{W}_{t-1}$,
+\begin{equation}\label{obsoperator}
+L_{V_{t+1},x_{t}, w_{t}, x_{t-1}, w_{t-1}}=L_{V_{t+1}|w_{t}, \omega_{t}}D_{x_{t}, w_{t}|w_{t-1}, \omega_{t}}L_{x_{t-1}, w_{t-1}, V_{t-2}, \omega_{t}}
+\end{equation}
+\textbf{Lemma 2}
+\small
+\begin{equation}\label{markovoperator}
+L_{x_{t},w_{t},\omega_{t}|w_{t-1},\omega_{t-1}}=L^{-1}_{V_{t+1}|w_{t},\omega_{t}}L_{V_{t+1},x_{t},w_{t},x_{t-1}, w_{t-1}, V_{t-2}}L^{-1}_{V_{t},x_{t-1},w_{t-1},V_{t-2}}L_{V_{t}|w_{t-1},\omega_{t}}
+\end{equation}
+\item In what sense are the linear operators invertible?
+\item I will talk about this on the next slide
+\item Intuitively, the Markov Law of Motion is identified if we can $L_{V_{t}|w_{t-1},\omega_{t}}$ using $L_{V_{t+1},x_{t}, w_{t}, x_{t-1}, w_{t-1}}$
+\item The rest of the operators in \eqref{markovoperator} correspond to densities of observed data so those are already identified
+\end{itemize}
+\end{frame}
+
+%------------------------------------------------------------------------------------
+\begin{frame}
+\frametitle{Identification}
+\textbf{Assumption 3}\\
+There exists variable(s) $V_{t}$ such that
+    \begin{enumerate}
+    \item For any $w_{t}\in \mathcal{W}_{t}$, $L_{V_{t+1}|w_{t}, \omega_{t}}$ is one-to-one
+    \item For any $(x_{t-1}, w_{t-1})\in \mathcal{X}_{t-1}\times\mathcal{W}_{t-1}$, $L_{V_{t}, x_{t-1}, w_{t-1}, V_{t-2}}$ is one-to-one
+    \item For any $(x_{t}, w_{t})\in \mathcal{X}_{t}\times\mathcal{W}_{t}$, there exists a $(x_{t-1}, w_{t-1})\in \mathcal{X}_{t-1}\times\mathcal{W}_{t-1}$ and a neighborhood $\mathcal{N}^{r}$ around $(x_{t}, w_{t}, x_{t-1}, w_{t-1})$ such that, for any $(\bar{x}_{t}, \bar{w}_{t}, \bar{x}_{t-1}, \bar{w}_{t-1})\in \mathcal{N}^{r}$, $L_{V_{t-2}, \bar{x}_{t}, \bar{w}_{t}, \bar{x}_{t-1}, \bar{w}_{t-1}, V_{t-2}}$ is one-to-one
+    \end{enumerate}
+\begin{itemize}
+	\item This is a difficult assumption to interpret
+	\item I am trying to find sufficient conditions in context of our model that satisfy injectivity via bounded completeness of the corresponding densities
+	\item Other assumptions include uniqueness of eigenvalues in the decomposition of $L_{V_{t+1},x_{t},w_{t},x_{t-1}, w_{t-1}, V_{t-2}}$ and a normalization assumption
+	\item Also need conditions to identify the initial distributions
+\end{itemize}
+\end{frame}
+
+%------------------------------------------------------------------------------------
+\begin{frame}
+\frametitle{Estimation}
+\begin{itemize}
+\item 
+\end{itemize}
+\end{frame}
+
+\end{document}
+
