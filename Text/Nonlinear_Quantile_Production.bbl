@@ -1,5 +1,11 @@
-\begin{thebibliography}{7}
+\begin{thebibliography}{10}
 \providecommand{\natexlab}[1]{#1}
+
+\bibitem[{Ackerberg \textit{et~al.}(2007)Ackerberg, Benkard, Berry and
+  Pakes}]{Ackerberg2007}
+\textsc{Ackerberg, D.}, \textsc{Benkard, C.~L.}, \textsc{Berry, S.} and
+  \textsc{Pakes, A.} (2007). Chapter 63 econometric tools for analyzing market
+  outcomes. In \textit{Handbook of Econometrics}, Elsevier, pp. 4171--4276.
 
 \bibitem[{Arellano \textit{et~al.}(2017)Arellano, Blundell and
   Bonhomme}]{Arellano2017}
@@ -12,6 +18,13 @@
   via quantile regressions. \textit{The Econometrics Journal}, \textbf{19}~(3),
   C61--C94.
 
+\bibitem[{Blundell \textit{et~al.}(2017)Blundell, Horowitz and
+  Parey}]{Blundell2017}
+\textsc{Blundell, R.}, \textsc{Horowitz, J.} and \textsc{Parey, M.} (2017).
+  Nonparametric estimation of a nonseparable demand function under the slutsky
+  inequality restriction. \textit{The Review of Economics and Statistics},
+  \textbf{99}~(2), 291--304.
+
 \bibitem[{Doraszelski and Jaumandreu(2013)}]{Doraszelski2013}
 \textsc{Doraszelski, U.} and \textsc{Jaumandreu, J.} (2013). R{\&}d and
   productivity: Estimating endogenous productivity. \textit{The Review of
@@ -22,15 +35,21 @@
   dynamics: A framework for empirical work. \textit{The Review of Economic
   Studies}, \textbf{62}~(1), 53.
 
-\bibitem[{Hu \textit{et~al.}(2019)Hu, Huang and Sasaki}]{Hu2019}
-\textsc{Hu, Y.}, \textsc{Huang, G.} and \textsc{Sasaki, Y.} (2019). Estimating
-  production functions with robustness against errors in the proxy variables.
-  \textit{Journal of Econometrics}.
-
 \bibitem[{Hu and Shum(2012)}]{Hu2012}
-\textsc{---} and \textsc{Shum, M.} (2012). Nonparametric identification of
+\textsc{Hu, Y.} and \textsc{Shum, M.} (2012). Nonparametric identification of
   dynamic models with unobserved state variables. \textit{Journal of
   Econometrics}, \textbf{171}~(1), 32--44.
+
+\bibitem[{Hu and Shum(2013)}]{Hu2013}
+\textsc{---} and \textsc{---} (2013). Identifying dynamic games with serially
+  correlated unobservables. In \textit{Structural Econometric Models}, Emerald
+  Group Publishing Limited, pp. 97--113.
+
+\bibitem[{Pakes(1994)}]{Pakesa}
+\textsc{Pakes, A.} (1994). Dynamic structural models, problems and prospects:
+  mixed continuous discrete controls and market interactions. In C.~A. Sims
+  (ed.), \textit{Advances in Econometrics}, Cambridge University Press, pp.
+  171--274.
 
 \bibitem[{Wei and Carroll(2009)}]{Wei2009}
 \textsc{Wei, Y.} and \textsc{Carroll, R.~J.} (2009). Quantile regression with

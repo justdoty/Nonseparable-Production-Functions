@@ -36,11 +36,11 @@
 \maketitle{} 
 \section{Introduction}
 
-Consider a nonlinear model for a firm's gross-output production function (in logs)
+Consider a nonlinear model for a firm's gross-output production function
 \begin{equation}\label{modely}
-y_{it}=\sum_{k=1}^{K_{1}}\beta_{k}(\eta_{it})g_{k}(l_{it}, m_{it}, k_{it}, \omega_{it})
+Y_{it}=\sum_{k=1}^{K_{1}}\beta_{k}(\eta_{it})g_{k}(L_{it}, M_{it}, K_{it}, \omega_{it})
 \end{equation}
-where $y_{it}$ is firm $i$'s' output at time $t$ and $l_{it}, m_{it}, k_{it}$ denotes optimal input choices for labor, materials, and capital respectively. The unobserved productivity is denoted by $\omega_{it}$ which is correlated to input choices of the firm at time $t$. We let the output elasticities $\beta$ to be functionally dependent on unobserved production shocks $\eta_{i1},\dots, \eta_{iT}$ that are uncorrelated to input choices and productivity at time $t$.\\
+where $Y_{it}$ is firm $i$'s' output at time $t$ and $L_{it}, M_{it}, K_{it}$ denotes optimal input choices for labor, materials, and capital respectively. The unobserved productivity is denoted by $\omega_{it}$ which is correlated to input choices of the firm at time $t$. We let the output elasticities $\beta$ to be functionally dependent on unobserved production shocks $\eta_{i1},\dots, \eta_{iT}$ that are uncorrelated to input choices and productivity at time $t$.\\
 
 Without loss of generality we normalize $\eta_{it}$ to be uniformly distributed on the interval $[0,1]$. This model corresponds to a nonlinear random coefficient model where the outcome $y_{it}$ is monotonic in $\eta_{it}$. In practice we can allow for nonlinear interactions between inputs and unobserved productivity at different quantiles so that marginal effects can be modeled as non-Hick's neutral. For empirical simplicity we can model separability in the unobserved productivity to calculate total factor productivity (TFP). The function $g$ is an unknown nonlinear function.
 
@@ -51,84 +51,104 @@ In this model, heterogeneity in production technology across firms is driven by 
 
 where $\xi_{i1},\dots, \xi_{iT}$ are independent uniform random variables which represent innovation shocks to productivity. We assume $\omega_{it}$ is monotonic in $\xi_{it}$ We let $h$ be another unknown nonlinear function that allows the persistence in productivity in firms to be nonlinear across different quantiles.
 
-\section{Identification}
+%-----------------------------------------------------------------------------------------------------
+\section{Econometric Model}
 
-To ease notation, let $X_{t}=\{Y_{t}, L_{t}, \iota_{t}\}$ and $W_{t}=\{K_{it}, I_{t}\}$. Our goal is identification of the Markov law of motion $f_{X_{t}, W_{t}, \omega_{t}|X_{t-1}, W_{t-1}, \omega_{t-1}}$ which we assume to be stationary. We assume the researcher observes a panel dataset consisting of i.i.d observations of firm output and input choices with the number of time periods $T\geq 4$ for a large number of firms. We introduce the following assumptions that simplify the expression for the law of motion. 
-
-\begin{assump}(Production Dynamics)\label{markovfeedback}
-~
-    \begin{enumerate}[label=\alph*)]
-        \item \textit{Non-dynamic output and inputs:} $f_{X_{t}, W_{t}, \omega_{t}|X_{t-1}, W_{t-1}, \omega_{t-1}}=f_{X_{t}, W_{t}, \omega_{t}|W_{t-1}, \omega_{t-1}}$
-        \item \textit{First-order Markov:} $f_{X_{t}, W_{t}, \omega_{t}|X_{t-1}, W_{t-1}, \omega_{t-1}, \mathcal{I}_{<t-1}}=f_{X_{t}, W_{t}, \omega_{t}|X_{t-1}, W_{t-1}, \omega_{t-1}}$, where $\mathcal{I}_{<t-1}$ is the firm's information set up to time $t-1$
-        \item \textit{Limited Feedback:} $f_{W_{t}|W_{t-1}, \omega_{t}, \omega_{t-1}}=f_{W_{t}|W_{t-1}, \omega_{t}}$ 
-    \end{enumerate}
-\end{assump}
-
-Assumption \eqref{markovfeedback}(a) states that input decisions for labor and material inputs maximize profits in the current period and do not have any dynamic implications. This can be relaxed to include cases where labor has dynamic effects due to hiring/firing costs. This assumption also does not allow for dynamic effects of output, which is standard in the production function literature.\\ 
-
-Using Assumption \eqref{markovfeedback} the Markov law of motion can be factored into:
-\begin{equation} \label{markovfactor}
-    \begin{split}
-        &f(X_{t}, W_{t}, \omega_{t}|X_{t-1}, W_{t-1}, \omega_{t-1}, \mathcal{I}_{<t-1})=f(X_{t}, W_{t}, \omega_{t}|W_{t-1}, \omega_{t-1})\\
-        &=f(X_{t}|W_{t}, \omega_{t}, W_{t-1}, \omega_{t-1})f(W_{t}|\omega_{t}, W_{t-1}, \omega_{t-1})f(\omega_{t}|W_{t-1}, \omega_{t-1})
-    \end{split}
-\end{equation} 
-We can simplify the first density on the last line of the equation \eqref{markovfactor} as
-\begin{equation} \label{1stdensity}
-\begin{split}
-f(X_{t}|W_{t}, \omega_{t}, W_{t-1}, \omega_{t-1})&=f(Y_{t}|W_{t}, \omega_{t}, W_{t-1}, \omega_{t-1})f(L_{t}|W_{t}, \omega_{t}, W_{t-1}, \omega_{t-1})f(\iota_{t}|W_{t}, \omega_{t}, W_{t-1}, \omega_{t-1})\\
-&=f(Y_{t}|L_{t}, \iota_{t}, K_{t}, \omega_{t})f(L_{t}|K_{t}, \omega_{t})f(\iota_{t}|K_{t}, \omega_{t})
-\end{split}
-\end{equation}
-Furthermore, the second density on the last line of the equation \eqref{markovfactor} becomes
-\begin{equation} \label{2nddensity}
-    \begin{split}
-        f(W_{t}|\omega_{t}, W_{t-1}, \omega_{t-1})&=f(W_{t}|W_{t-1}, \omega_{t})=f(I_{t}, K_{t}|I_{t-1}, K_{t-1}, \omega_{t})\\
-        &=f(I_{t}|K_{t}, I_{t-1}, K_{t-1}, \omega_{t})f(K_{t}|I_{t-1}, K_{t-1}, \omega_{t})\\
-        &=f(I_{t}|K_{t}, \omega_{t})f(K_{t}|I_{t-1}, K_{t-1}, \omega_{t})
-    \end{split}
-\end{equation} 
-
-To show that both Assumption \eqref{markovfeedback}(b-c) are satisfied, we introduce a dynamic model of firm investment that is a slight modification of \cite{Ericson1995}. We begin by providing the evolution process for $\omega_{t}\in \mathbbm{R}$ which is given by:
+We introduce a dynamic model of firm investment that is a slight modification of \cite{Ericson1995}. We begin by providing the evolution process for $\omega_{t}\in \mathbbm{R}$ which is given by:
 
 \begin{equation} \label{ar1}
 \omega_{t}=g(\omega_{t-1}, \xi_{t}),
 \end{equation}
-where the function $g(\cdot, \xi_{t})$ is strictly increasing in the iid innovation shock, $\xi_{t}\in \mathbbm{R}$. Note that equation \eqref{ar1} implies $f_{\omega_{t}|W_{t-1}, \omega_{t-1}}=f_{\omega_{t}|\omega_{t-1}}$ which implies that productivity evolves exogenously. This can be relaxed when we consider productivity enhancing activities such as R\&D similar to \cite{Doraszelski2013}.\\
+where the function $g(\cdot, \xi_{t})$ is strictly increasing in the iid innovation shock, $\xi_{t}\in \mathbbm{R}$. The exogeneity of the productivity process can be relaxed when we consider productivity enhancing activities such as R\&D similar to \cite{Doraszelski2013}.\\
 
 Capital accumulates according to the following process:
 
 \begin{equation} \label{kaccum}
 K_{t}=\kappa_{t}(K_{t-1}, I_{t-1}, \upsilon_{t}),
 \end{equation}
-where the function $\kappa$ is strictly increasing in its last argument and $\upsilon_{t}$ denotes an iid shock independent of the other arguments. A special case of equation \eqref{kaccum} is the usual capital accumulation law $K_{t}=(1-\delta)K_{t-1}+I_{t-1}+\upsilon_{t}$. Here $\upsilon_{t}$ are other factors that affect the capital accumulation process \textcolor{red}{need better examples of these}.
+where the function $\kappa$ is strictly increasing in its last argument and $\upsilon_{t}$ denotes an iid shock independent of the other arguments. A special case of equation \eqref{kaccum} is the usual capital accumulation law $K_{t}=(1-\delta)K_{t-1}+I_{t-1}+\upsilon_{t}$. Here $\upsilon_{t}$ are other factors that affect the capital accumulation process. Breaking this deterministic relationship in the capital accumulation process allows for variation in investment $I_{t}$ conditional on $K_{t+1}$ and $K_{t}$ which will be important in the identification results in the next section. 
 
-In each period, a firm chooses investment to maximize its discounted future profits:
+The investment decision problem is an extension of the \cite{Ericson1995} framework which can also be found in \cite{Hu2013} and \cite{Ackerberg2007}. In each period, a firm chooses investment to maximize its discounted future profits:
 \begin{equation} \label{valuefn}
-I_{t}=I^{*}(K_{t}, \omega_{t}, \zeta_{t})=\underset{I_{t}\geq 0}{\operatorname{argmax}}\Bigg[\Pi_{t}(K_{t}, \omega_{t})-c(I_{t}, \zeta_{t})+\beta\mathbbm{E}\big[V_{t+1}(K_{t+1}, \omega_{t+1}, \zeta_{t+1})|\mathcal{I}_{t}\big]\Bigg],
+I_{t}=I^{*}(K_{t}, \omega_{t}, \zeta_{t})=\underset{I_{t}\geq 0}{\operatorname{argmax}}\Bigg[\Pi_{t}(K_{t}, \omega_{t}, \zeta_{it})-c(I_{t})+\beta\mathbbm{E}\big[V_{t+1}(K_{t+1}, \omega_{t+1}, \zeta_{t+1})|\mathcal{I}_{t}\big]\Bigg],
 \end{equation}
-where $\pi_{t}(\cdot)$ is current period profits as a function of the state variables, $c(I_{t})$ is the cost of current investment and $\beta$ is the firm's discount factor. We introduce an additional state variable $\zeta_{t}$ which could represent other factors that shift firm's investment costs. \textcolor{red}{We assume the cost function $c(\cdot, \zeta_{t})$ is decreasing in $\zeta_{t}$}. \textcolor{red}{Under certain conditions, the investment policy function is monotonic increasing in $\zeta_{t}$}. Without loss of generality, we normalize $\zeta_{t}\sim U[0,1]$. In a later section we show how to modify identification and estimation strategies to cases when investment is censored or there is selection bias due to endogenous entry/exit which can be the case in certain industries. Note that the restrictions on the capital accumulation process in \eqref{kaccum} and the investment problem in \eqref{valuefn} satisfy the Limited Feedback condition in Assumption \eqref{markovfeedback}(c).
+where $\pi_{t}(\cdot)$ is current period profits as a function of the state variables and an unobservable demand shock $\zeta_{it}$. These are shocks to a firm's product demand which are privately observed by each firm and i.i.d across $i$ and $t$. We assume these shocks are independent from the firm's state variables. Current costs to investment are given by $c(I_{t})$ and $\beta$ is the firm's discount factor. \cite{Pakesa} provides specific conditions for which the investment policy function is strictly increasing in its scalar unobservable component. However, the difference here is that we require the condition to be on the unobservable demand shock, as opposed to the unobserved productivity shock, $\omega_{it}$. We require that the firm's individual demand function is strictly increasing in $\zeta_{it}$ which is required in the quantile regression literature for demand functions, see for example \citep{Blundell2017} regarding non-separable demand functions.\textcolor{red}{We can interpret conditions for strict monotonicity here and leave a detailed explanation in the appendix.} Without loss of generality, we normalize $\zeta_{t}\sim U[0,1]$. In a later section we show how to modify identification and estimation strategies to cases when investment is censored or there is selection bias due to endogenous entry/exit which can be the case in certain industries.
 
-The specifications for the static inputs, labor and intermediate inputs such as materials, fuels, and electricity, are much easier to state. We let optimal labor demand be given by:
+The specifications for the static inputs, labor and material are much easier to state. We let optimal labor demand be given by:
 \begin{equation} \label{labordemand}
 l_{t}=\ell(k_{t}, \omega_{t}, \epsilon_{t})
 \end{equation}
-where the function, $\ell(\cdot, \cdot, \epsilon_{t})$ is strictly increasing in $\epsilon_{t}$ which is assumed to be independent of the other arguments. We normalize this to be standard uniform each period. We follow a similar model for the intermediate inputs:
-\begin{equation} \label{intdemand}
-\iota_{t}=\iota_{t}(k_{t}, \omega_{t}, \varepsilon_{t})
+where the function, $\ell(\cdot, \cdot, \epsilon_{t})$ is strictly increasing in $\epsilon_{t}$ which is assumed to be independent of the other arguments. We normalize this to be standard uniform each period. We follow a similar model for materials:
+\begin{equation} \label{matdemand}
+m_{t}=m_{t}(k_{t}, \omega_{t}, \varepsilon_{t})
 \end{equation}
-where the function, $\iota(\cdot, \cdot, \varepsilon_{t})$ is strictly increasing in $\varepsilon_{t}$ which is assumed to be independent of the other arguments. We normalize this to be standard uniform each period.
+where the function, $m(\cdot, \cdot, \varepsilon_{t})$ is strictly increasing in $\varepsilon_{t}$ which is assumed to be independent of the other arguments. We normalize this to be standard uniform each period.
 
-In order to factorize the density in equation \eqref{1stdensity} we need the following assumptions:
-\begin{assump}(Conditional Independence)\label{inputindependence}
+%-----------------------------------------------------------------------------------------------------------
+
+\section{Identification}
+
+Our goal is identification of the Markov law of motion $f_{Y_{t}, L_{t}, M_{t}, K_{t}, I_{t} \omega_{t}|Y_{t-1}, L_{t-1}, M_{t-1}, K_{t-1}, I_{t-1} \omega_{t-1}}$ which we allow to be stationary. We assume the researcher observes a panel dataset consisting of i.i.d observations of firm output and input choices with the number of time periods $T\geq 4$ for a large number of firms. We introduce the following assumptions that simplify the expression for the law of motion. 
+
+\begin{assump}(Production Dynamics)\label{markovfeedback}
 ~
-    \begin{enumerate}[label=\alph*)]
-        \item The production shock $\eta_{t}$, labor shock $\epsilon_{t}$ and intermediate input shock $\varepsilon_{t}$ are mutually independent conditional on $(W_{t}, \omega_{t}, W_{t-1}, \omega_{t-1})$
-        \item The production shock $\eta_{t}$ is independent of $\zeta_{t}$ conditional on $(L_{t}, \iota_{t}, K_{t}, \omega_{t})$
-        \item $\epsilon_{t}$ and $\varepsilon_{t}$ are independent of $\zeta_{t}$ conditional on $(K_{t}, \omega_{t})$
+    \begin{enumerate}
+        \item \textit{Non-dynamic output and inputs:} $f_{Y_{t}, L_{t}, M_{t}, K_{t}, I_{t}, \omega_{t}|Y_{t-1}, L_{t-1}, M_{t-1}, K_{t-1}, I_{t-1} \omega_{t-1}}=f_{Y_{t}, L_{t}, M_{t}, K_{t}, I_{t} \omega_{t}|K_{t-1}, I_{t-1} \omega_{t-1}}$
+        \item \textit{First-order Markov:} $f_{Y_{t}, L_{t}, M_{t}, K_{t}, I_{t} \omega_{t}|K_{t-1}, I_{t-1} \omega_{t-1}, \mathcal{I}_{<t-1}}=f_{Y_{t}, L_{t}, M_{t}, K_{t}, I_{t} \omega_{t}|K_{t-1}, I_{t-1} \omega_{t-1}}$, where $\mathcal{I}_{<t-1}$ is the firm's information set up to time $t-1$
+        \item \textit{Limited Feedback:} $f_{Y_{t}, L_{t}, M_{t}, K_{t}, I_{t}|K_{t-1}, I_{t-1}, \omega_{t}, \omega_{t-1}}=f_{Y_{t}, L_{t}, M_{t}, K_{t}, I_{t}|K_{t-1}, I_{t-1}, \omega_{t}}$ 
+        \item \textcolor{red}{\textit{Mutual Independence:} $\eta_{t}, \epsilon_{t}, \varepsilon_{t}$ and $\zeta_{t}$ are mutually independent conditional on $K_{t}$ and $\omega_{t}$}
     \end{enumerate}
 \end{assump}
-Assumption \eqref{inputindependence} is similar to the mutual independence assumptions made by \cite{Hu2019}. In their paper, they provide interpretations of these errors that are likely to satisfy the conditional independence restrictions. For example, this assumption is likely to be valid if we interpret each of these shocks as optimization errors. Unlike \cite{Hu2019} we cannot interpret these shocks as unobserved idiosyncratic cost shocks since this would imply that input demand functions, are decreasing in cost shocks, which violates the monotonically increasing assumption we need for representing these functions by their conditional quantiles.\\
+
+Assumption \eqref{markovfeedback}(1) states that input decisions for labor and material inputs maximize profits in the current period and do not have any dynamic implications. This can be relaxed to include cases where labor has dynamic effects due to hiring/firing costs. This assumption also does not allow for dynamic effects of output, which is standard in the production function literature. Assumption \eqref{markovfeedback}(2) is a standard condition in Markovian dynamic decision models. Decision and state variables any period before the previous period are irrelevant to the firm given the information contained in last periods decision and state variables. The investment model we introduce in the next few paragraphs satisfies this assumption and is trivially satisfied for any of the static decision variables.\\
+
+Assumption \eqref{markovfeedback}(3) states that previous period's productivity does not directly affect the firms decision and state variables in the current period. Instead, they indirectly affect these variables through the previous periods decision and state variables. \textcolor{red}{Assumption \eqref{markovfeedback}(4) are conditional independence assumptions for output and the flexible input decisions. Conditional on current period labor, materials, and capital, the previous period's capital as well as investment are not relevant in determining output in the current period. Also, capital summarizes the information about investment relevant in determining labor, but also assumes that labor decisions are mutually independent of material input decisions. The latter assumption is satisfied using timing assumptions that are common in the literature.}
+
+We will proceed in steps in factoring the Markov law of motion into the densities we are interested in identying. First, using Assumption \eqref{markovfeedback} 1 and 2:
+\begin{equation} \label{markovfactor}
+    \begin{split}
+        &f(Y_{t}, L_{t}, M_{t}, K_{t}, I_{t}, \omega_{t}|Y_{t-1}, L_{t-1}, M_{t-1}, K_{t-1}, I_{t-1}, \omega_{t-1}, \mathcal{I}_{<t-1})\\
+        &=f(Y_{t}, L_{t}, M_{t}, K_{t}, I_{t}, \omega_{t}|K_{t-1}, I_{t-1}, \omega_{t-1})
+    \end{split}
+\end{equation} 
+We can simplify the density on the last line of the equation \eqref{markovfactor} as
+\begin{equation} \label{1stdensity}
+\begin{split}
+&f(Y_{t}, L_{t}, M_{t}, K_{t}, I_{t}, \omega_{t}|K_{t-1}, I_{t-1}, \omega_{t-1})\\
+&=f(Y_{t}|L_{t}, M_{t}, K_{t}, K_{t-1}, I_{t}, I_{t-1}, \omega_{t}, \omega_{t-1})f(L_{t}|M_{t}, K_{t}, K_{t-1}, I_{t}, I_{t-1}, \omega_{t}, \omega_{t-1})\\
+&\times f(M_{t}|K_{t}, K_{t-1}, I_{t}, I_{t-1}, \omega_{t}, \omega_{t-1})f(K_{t}, I_{t}, \omega_{t}|K_{t-1}, I_{t-1}, \omega_{t-1})
+\end{split}
+\end{equation}
+Using Assumption \eqref{markovfeedback} 3 and 4, equation \eqref{1stdensity} becomes
+\begin{equation} \label{2nddensity}
+    \begin{split}
+        &f(Y_{t}, L_{t}, M_{t}, K_{t}, I_{t}, \omega_{t}|K_{t-1}, I_{t-1}, \omega_{t-1})\\
+        &=f(Y_{t}|L_{t}, M_{t}, K_{t}, \omega_{t})f(L_{t}|K_{t}, \omega_{t})f(M_{t}|K_{t}, \omega_{t})f(K_{t}, I_{t}, \omega_{t}|K_{t-1}, I_{t-1}, \omega_{t-1})
+    \end{split}
+\end{equation} 
+
+The last density on the second line of equation \eqref{2nddensity} is the Markov law of motion for capital, investment, and productivity. It can be factored as:
+\begin{equation} \label{3rddensity}
+    \begin{split}
+        &f(K_{t}, I_{t}, \omega_{t}|K_{t-1}, I_{t-1}, \omega_{t-1})\\
+        &=f(I_{t}|K_{t}, K_{t-1}, I_{t-1}, \omega_{t}, \omega_{t-1})f(K_{t}|I_{t-1}, K_{t-1}, \omega_{t-1})f(\omega_{t}|K_{t}, K_{t-1}, \omega_{t-1})\\
+        &=f(I_{t}|K_{t}, \omega_{t})f(K_{t}|K_{t-1}, I_{t-1})f(\omega_{t}|\omega_{t-1})
+    \end{split}
+\end{equation} 
+The last line of equation \eqref{3rddensity} uses a combination of Assumption \eqref{markovfeedback} 3 and the way investment, capital, and the productivity process in the previous section.  
+
+Combining all of the above assumptions, the density we are interested in identifying is:
+
+\small
+\begin{equation}
+f(Y_{t}, L_{t}, M_{t}, K_{t}, I_{t}, \omega_{t}|K_{t-1}, I_{t-1}, \omega_{t-1})=f(Y_{t}|L_{t}, M_{t}, K_{t}, \omega_{t})f(L_{t}|K_{t}, \omega_{t})f(M_{t}|K_{t}, \omega_{t})f(I_{t}|K_{t}, \omega_{t})f(K_{t}|K_{t-1}, I_{t-1})f(\omega_{t}|\omega_{t-1})
+\end{equation}
+
+%---------------------------------------------------------------------------------------------------------
+
+\subsection{Hu and Shum (2012) Identification}
+
+\textcolor{red}{STILL A WORK IN PROGRESS, THESE DO NOT REFLECT MOST RECENT CHANGES ABOVE}
 
 We outline the identification procedure similar to \cite{Hu2012}. First, let $V_{t}=\{X_{t}, W_{t}\}$. Under assumption \eqref{markovfeedback}, we can write:
  \begin{equation}\label{obsdens}
@@ -181,10 +201,6 @@ There exists variable(s) $V_{t}$ such that
     \item For any $(x_{t}, w_{t})\in \mathcal{X}_{t}\times\mathcal{W}_{t}$, there exists a $(x_{t-1}, w_{t-1})\in \mathcal{X}_{t-1}\times\mathcal{W}_{t-1}$ and a neighborhood $\mathcal{N}^{r}$ around $(x_{t}, w_{t}, x_{t-1}, w_{t-1})$ such that, for any $(\bar{x}_{t}, \bar{w}_{t}, \bar{x}_{t-1}, \bar{w}_{t-1})\in \mathcal{N}^{r}$, $L_{V_{t-2}, \bar{x}_{t}, \bar{w}_{t}, \bar{x}_{t-1}, \bar{w}_{t-1}, V_{t-2}}$ is one-to-one
     \end{enumerate}
 \end{assump}
-<<<<<<< HEAD
-=======
-
->>>>>>> 8bd5a34be27f86fdc55ce55f46a1487db18b0dbe
 
 
 %----------------------------------------------------------------------------------------------------------

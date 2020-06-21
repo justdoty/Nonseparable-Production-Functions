@@ -238,10 +238,56 @@
   title     = {Dynamic structural models, problems and prospects: mixed continuous discrete controls and market interactions},
   booktitle = {Advances in Econometrics},
   publisher = {Cambridge University Press},
-  year      = {1},
+  year      = {1994},
   editor    = {Christopher A. Sims},
   pages     = {171--274},
   doi       = {10.1017/ccol0521444608.005},
+}
+
+@InCollection{Hu2013,
+  author    = {Yingyao Hu and Matthew Shum},
+  title     = {Identifying Dynamic Games with Serially Correlated Unobservables},
+  booktitle = {Structural Econometric Models},
+  publisher = {Emerald Group Publishing Limited},
+  year      = {2013},
+  pages     = {97--113},
+  month     = {dec},
+  doi       = {10.1108/s0731-9053(2013)0000032003},
+}
+
+@InCollection{Ackerberg2007,
+  author    = {Daniel Ackerberg and C. Lanier Benkard and Steven Berry and Ariel Pakes},
+  title     = {Chapter 63 Econometric Tools for Analyzing Market Outcomes},
+  booktitle = {Handbook of Econometrics},
+  publisher = {Elsevier},
+  year      = {2007},
+  pages     = {4171--4276},
+  doi       = {10.1016/s1573-4412(07)06063-1},
+}
+
+@Article{Blundell2017,
+  author    = {Richard Blundell and Joel Horowitz and Matthias Parey},
+  title     = {Nonparametric Estimation of a Nonseparable Demand Function under the Slutsky Inequality Restriction},
+  journal   = {The Review of Economics and Statistics},
+  year      = {2017},
+  volume    = {99},
+  number    = {2},
+  pages     = {291--304},
+  month     = {may},
+  doi       = {10.1162/rest_a_00636},
+  publisher = {{MIT} Press - Journals},
+}
+
+@Article{Ackerberg2015,
+  author    = {Daniel A. Ackerberg and Kevin Caves and Garth Frazer},
+  title     = {Identification Properties of Recent Production Function Estimators},
+  journal   = {Econometrica},
+  year      = {2015},
+  volume    = {83},
+  number    = {6},
+  pages     = {2411--2451},
+  doi       = {10.3982/ecta13408},
+  publisher = {The Econometric Society},
 }
 
 @Comment{jabref-meta: databaseType:bibtex;}
