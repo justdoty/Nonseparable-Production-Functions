@@ -278,4 +278,16 @@
   publisher = {{MIT} Press - Journals},
 }
 
+@Article{Ackerberg2015,
+  author    = {Daniel A. Ackerberg and Kevin Caves and Garth Frazer},
+  title     = {Identification Properties of Recent Production Function Estimators},
+  journal   = {Econometrica},
+  year      = {2015},
+  volume    = {83},
+  number    = {6},
+  pages     = {2411--2451},
+  doi       = {10.3982/ecta13408},
+  publisher = {The Econometric Society},
+}
+
 @Comment{jabref-meta: databaseType:bibtex;}

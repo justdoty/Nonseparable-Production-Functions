@@ -21,6 +21,7 @@
 \usepackage{natbib}
 \newtheorem{assump}{Assumption}[section]
 \newtheorem{lemma}{Lemma}[section]
+\newtheorem{theorem}{Theorem}[section]
 \usepackage[toc,page]{appendix}
 \pagenumbering{gobble}
 \topmargin 0.0cm
@@ -35,198 +36,200 @@
 \begin{document}
 \maketitle{} 
 \section{Introduction}
+Introduction here
+\section{The Model of Firm Production}
 
+\subsection{Output}
 Consider a nonlinear model for a firm's gross-output production function
-\begin{equation}\label{modely}
-Y_{it}=\sum_{k=1}^{K_{1}}\beta_{k}(\eta_{it})g_{k}(L_{it}, M_{it}, K_{it}, \omega_{it})
+\begin{equation}\label{modelY}
+Y_{it}=F_{t}(L_{it}, M_{it}, K_{it}, \omega_{it}, \eta_{t})
 \end{equation}
 where $Y_{it}$ is firm $i$'s' output at time $t$ and $L_{it}, M_{it}, K_{it}$ denotes optimal input choices for labor, materials, and capital respectively. The unobserved productivity is denoted by $\omega_{it}$ which is correlated to input choices of the firm at time $t$. We let the output elasticities $\beta$ to be functionally dependent on unobserved production shocks $\eta_{i1},\dots, \eta_{iT}$ that are uncorrelated to input choices and productivity at time $t$.\\
 
 Without loss of generality we normalize $\eta_{it}$ to be uniformly distributed on the interval $[0,1]$. This model corresponds to a nonlinear random coefficient model where the outcome $y_{it}$ is monotonic in $\eta_{it}$. In practice we can allow for nonlinear interactions between inputs and unobserved productivity at different quantiles so that marginal effects can be modeled as non-Hick's neutral. For empirical simplicity we can model separability in the unobserved productivity to calculate total factor productivity (TFP). The function $g$ is an unknown nonlinear function.
 
-In this model, heterogeneity in production technology across firms is driven by the rank of the unobserved production shocks $\eta_{it}$. We specify the productivity process as
+In this model, heterogeneity in production technology across firms is driven by the rank of the unobserved production shocks $\eta_{it}$. We specify the following functional forms for the input demand functions.
+
+\subsection{Labor} 
+Labor inputs are chosen to maximize current period profits and therefore are a function of current period state variables
+\begin{equation} \label{modelL}
+L_{it}=\ell_{t}(K_{it}, \omega_{it}, \epsilon_{it})
+\end{equation}
+where $\epsilon_{it}$ is iid and independent of current period state variables. We assume the labor demand function $\ell$ is strictly increasing in $\epsilon_{it}$ which is normalized to be uniformly distributed on the interval $U[0,1]$
+
+\subsection{Materials} 
+Material inputs are chosen to maximize current period profits and therefore are a function of current period state variables
+\begin{equation} \label{modelM}
+M_{it}=\mu_{t}(K_{it}, \omega_{it}, \varepsilon_{it})
+\end{equation}
+where $\varepsilon_{it}$ is iid and independent of current period state variables. We assume the labor demand function $\mu$ is strictly increasing in $\varepsilon_{it}$ which is normalized to be uniformly distributed on the interval $U[0,1]$. We can extend this to the case where labor is chosen prior to choosing material inputs in which case we would include $L_{it}$ as a state variable in equation \eqref{modelM}.
+
+\subsection{Capital Accumulation}
+Capital accumulates to the following generalized law of motion
+\begin{equation} \label{modelK}
+K_{it}=\kappa_{t}(K_{it-1}, I_{it-1}, \upsilon_{it-1})
+\end{equation}
+where $I_{it-1}$ denotes firm investment in the prior period. Under this specification, capital is determined in the period $t-1$. We introduce a random error term $\upsilon_{it-1}$ which eliminates the deterministic relationship of capital with respect to previous period state and choice variables. We will show later that this step is crucial for our nonparametric identification result which is used by \cite{Hu2019}. We assume this error term is independent of the arguments in the capital accumulation law and that the function $\kappa$is strictly increasing in this term and is normalized to be uniformly distributed on the interval $U[0,1]$.
+
+\subsection{Productivity}
+Productivity evolves according to the exogenous first order Markov process:
 \begin{equation}\label{modelw}
-\omega_{it}=\sum_{k=1}^{K_{2}}\rho_{k}(\xi_{it})h_{k}(\omega_{it-1})
+\omega_{it}=g(\omega_{it-1}, \xi_{it})
 \end{equation}
 
-where $\xi_{i1},\dots, \xi_{iT}$ are independent uniform random variables which represent innovation shocks to productivity. We assume $\omega_{it}$ is monotonic in $\xi_{it}$ We let $h$ be another unknown nonlinear function that allows the persistence in productivity in firms to be nonlinear across different quantiles.
+where $\xi_{i1},\dots, \xi_{iT}$ are independent uniform random variables which represent innovation shocks to productivity. We assume $\omega_{it}$ is monotonic in $\xi_{it}$ We let $h$ be another unknown nonlinear function that allows the persistence in productivity in firms to be nonlinear across different quantiles. The exogeneity of the productivity process can be relaxed when we consider productivity enhancing activities such as R\&D similar to \cite{Doraszelski2013}.
 
-%-----------------------------------------------------------------------------------------------------
-\section{Econometric Model}
-
-We introduce a dynamic model of firm investment that is a slight modification of \cite{Ericson1995}. We begin by providing the evolution process for $\omega_{t}\in \mathbbm{R}$ which is given by:
-
-\begin{equation} \label{ar1}
-\omega_{t}=g(\omega_{t-1}, \xi_{t}),
-\end{equation}
-where the function $g(\cdot, \xi_{t})$ is strictly increasing in the iid innovation shock, $\xi_{t}\in \mathbbm{R}$. The exogeneity of the productivity process can be relaxed when we consider productivity enhancing activities such as R\&D similar to \cite{Doraszelski2013}.\\
-
-Capital accumulates according to the following process:
-
-\begin{equation} \label{kaccum}
-K_{t}=\kappa_{t}(K_{t-1}, I_{t-1}, \upsilon_{t}),
-\end{equation}
-where the function $\kappa$ is strictly increasing in its last argument and $\upsilon_{t}$ denotes an iid shock independent of the other arguments. A special case of equation \eqref{kaccum} is the usual capital accumulation law $K_{t}=(1-\delta)K_{t-1}+I_{t-1}+\upsilon_{t}$. Here $\upsilon_{t}$ are other factors that affect the capital accumulation process. Breaking this deterministic relationship in the capital accumulation process allows for variation in investment $I_{t}$ conditional on $K_{t+1}$ and $K_{t}$ which will be important in the identification results in the next section. 
-
-The investment decision problem is an extension of the \cite{Ericson1995} framework which can also be found in \cite{Hu2013} and \cite{Ackerberg2007}. In each period, a firm chooses investment to maximize its discounted future profits:
+\subsection{Investment} \label{investment}
+We introduce a dynamic model of firm investment that is a slight modification of \cite{Ericson1995} which can also be found in \cite{Hu2013} and \cite{Ackerberg2007}. In each period, a firm chooses investment to maximize its discounted future profits:
 \begin{equation} \label{valuefn}
-I_{t}=I^{*}(K_{t}, \omega_{t}, \zeta_{t})=\underset{I_{t}\geq 0}{\operatorname{argmax}}\Bigg[\Pi_{t}(K_{t}, \omega_{t}, \zeta_{it})-c(I_{t})+\beta\mathbbm{E}\big[V_{t+1}(K_{t+1}, \omega_{t+1}, \zeta_{t+1})|\mathcal{I}_{t}\big]\Bigg],
+I_{it}=I^{*}(K_{it}, \omega_{it}, \zeta_{it})=\underset{I_{t}\geq 0}{\operatorname{argmax}}\Bigg[\Pi_{t}(K_{it}, \omega_{it}, \zeta_{it})-c(I_{it})+\beta\mathbbm{E}\big[V_{t+1}(K_{it+1}, \omega_{it+1}, \zeta_{it+1})|\mathcal{I}_{t}\big]\Bigg],
 \end{equation}
-where $\pi_{t}(\cdot)$ is current period profits as a function of the state variables and an unobservable demand shock $\zeta_{it}$. These are shocks to a firm's product demand which are privately observed by each firm and i.i.d across $i$ and $t$. We assume these shocks are independent from the firm's state variables. Current costs to investment are given by $c(I_{t})$ and $\beta$ is the firm's discount factor. \cite{Pakesa} provides specific conditions for which the investment policy function is strictly increasing in its scalar unobservable component. However, the difference here is that we require the condition to be on the unobservable demand shock, as opposed to the unobserved productivity shock, $\omega_{it}$. We require that the firm's individual demand function is strictly increasing in $\zeta_{it}$ which is required in the quantile regression literature for demand functions, see for example \citep{Blundell2017} regarding non-separable demand functions.\textcolor{red}{We can interpret conditions for strict monotonicity here and leave a detailed explanation in the appendix.} Without loss of generality, we normalize $\zeta_{t}\sim U[0,1]$. In a later section we show how to modify identification and estimation strategies to cases when investment is censored or there is selection bias due to endogenous entry/exit which can be the case in certain industries.
-
-The specifications for the static inputs, labor and material are much easier to state. We let optimal labor demand be given by:
-\begin{equation} \label{labordemand}
-l_{t}=\ell(k_{t}, \omega_{t}, \epsilon_{t})
-\end{equation}
-where the function, $\ell(\cdot, \cdot, \epsilon_{t})$ is strictly increasing in $\epsilon_{t}$ which is assumed to be independent of the other arguments. We normalize this to be standard uniform each period. We follow a similar model for materials:
-\begin{equation} \label{matdemand}
-m_{t}=m_{t}(k_{t}, \omega_{t}, \varepsilon_{t})
-\end{equation}
-where the function, $m(\cdot, \cdot, \varepsilon_{t})$ is strictly increasing in $\varepsilon_{t}$ which is assumed to be independent of the other arguments. We normalize this to be standard uniform each period.
-
-%-----------------------------------------------------------------------------------------------------------
-
+where $\pi_{t}(\cdot)$ is current period profits as a function of the state variables and an unobservable demand shock $\zeta_{it}$. These are shocks to a firm's product demand which are privately observed by each firm and i.i.d across $i$ and $t$. We assume these shocks are independent from the firm's state variables. Current costs to investment are given by $c(I_{t})$ and $\beta$ is the firm's discount factor. \cite{Pakesa} provides specific conditions for which the investment policy function is strictly increasing in its unobservable components.\textcolor{red}{We can interpret conditions for strict monotonicity here and leave a detailed explanation in the appendix.} Without loss of generality, we normalize $\zeta_{t}\sim U[0,1]$
+%-----------------------------------------------------------------------------------------------------
 \section{Identification}
 
-Our goal is identification of the Markov law of motion $f_{Y_{t}, L_{t}, M_{t}, K_{t}, I_{t} \omega_{t}|Y_{t-1}, L_{t-1}, M_{t-1}, K_{t-1}, I_{t-1} \omega_{t-1}}$ which we allow to be stationary. We assume the researcher observes a panel dataset consisting of i.i.d observations of firm output and input choices with the number of time periods $T\geq 4$ for a large number of firms. We introduce the following assumptions that simplify the expression for the law of motion. 
+Our goal is identification of the Markov law of motion $f_{Y_{t}, L_{t}, M_{t}, K_{t}, I_{t} \omega_{t}|Y_{t-1}, L_{t-1}, M_{t-1}, K_{t-1}, I_{t-1} \omega_{t-1}}$ which we assume to be stationary. We assume the researcher observes a panel dataset consisting of i.i.d observations of firm output and input choices with the number of time periods $T\geq 3$ for a large number of firms. We formalize the independence conditions stated in the earlier section as well as conditional independence assumptions for identification. For ease of notation we drop the $i$ subscript and let $X_{t}=(Y_{t}, K_{t}, L_{t}, M_{t}, I_{t})$ denote all the observable data and $V_{t}=(Y_{t}. L_{t}, M_{t}, I_{t})$ denote the variables that depend only on the current state variables $(K_{t}, \omega_{t})$.
 
-\begin{assump}(Production Dynamics)\label{markovfeedback}
+\begin{assump}(Production Dynamics)\label{pdynamics}
 ~
-    \begin{enumerate}
-        \item \textit{Non-dynamic output and inputs:} $f_{Y_{t}, L_{t}, M_{t}, K_{t}, I_{t}, \omega_{t}|Y_{t-1}, L_{t-1}, M_{t-1}, K_{t-1}, I_{t-1} \omega_{t-1}}=f_{Y_{t}, L_{t}, M_{t}, K_{t}, I_{t} \omega_{t}|K_{t-1}, I_{t-1} \omega_{t-1}}$
-        \item \textit{First-order Markov:} $f_{Y_{t}, L_{t}, M_{t}, K_{t}, I_{t} \omega_{t}|K_{t-1}, I_{t-1} \omega_{t-1}, \mathcal{I}_{<t-1}}=f_{Y_{t}, L_{t}, M_{t}, K_{t}, I_{t} \omega_{t}|K_{t-1}, I_{t-1} \omega_{t-1}}$, where $\mathcal{I}_{<t-1}$ is the firm's information set up to time $t-1$
-        \item \textit{Limited Feedback:} $f_{Y_{t}, L_{t}, M_{t}, K_{t}, I_{t}|K_{t-1}, I_{t-1}, \omega_{t}, \omega_{t-1}}=f_{Y_{t}, L_{t}, M_{t}, K_{t}, I_{t}|K_{t-1}, I_{t-1}, \omega_{t}}$ 
-        \item \textcolor{red}{\textit{Mutual Independence:} $\eta_{t}, \epsilon_{t}, \varepsilon_{t}$ and $\zeta_{t}$ are mutually independent conditional on $K_{t}$ and $\omega_{t}$}
+    \begin{enumerate}[label=(\roman*)]
+        \item \textit{First-Order Markov} $f_{X_{t}, \omega_{t}|X_{t-1}, \omega_{t-1}, \mathcal{I}_{t<t-1}}=f_{X_{t}, \omega_{t}|X_{t-1}, \omega_{t-1}}$
+        \item \textit{Markov Decision Rules:} $f_{V_{t}|K_{t}, X_{t-1}, \omega_{t}}=f_{V_{t}|K_{t}, \omega_{t}}$
+        \item \textit{Limited Feedback:} $f_{X_{t}|X_{t-1}, \omega_{t}, \omega_{t-1}}=f_{X_{t}|X_{t-1}, \omega_{t}}$
+        \item \textit{Independence}
+        \begin{enumerate}[label=(\alph*)] 
+            \item $\eta_{t}, \epsilon_{t}$ and $\varepsilon_{t}$ are mutually independent of $\zeta_{t}$ conditional on $(K_{t}, L_{t}, M_{t}, \omega_{t})$
+            \item $\eta_{t}$ is mutually independent of $\upsilon_{t-2}, \epsilon_{t-1}, \varepsilon_{t-1}$, and $\zeta_{t-1}$ conditional on $(K_{t}, L_{t}, M_{t}, \omega_{t})$
+            \item The error terms $(\eta_{t}, \epsilon_{t}, \varepsilon_{t}, \upsilon_{t}, \xi_{t}, \zeta_{t})$ are independent of their respective functional arguments
+        \end{enumerate}
     \end{enumerate}
 \end{assump}
 
-Assumption \eqref{markovfeedback}(1) states that input decisions for labor and material inputs maximize profits in the current period and do not have any dynamic implications. This can be relaxed to include cases where labor has dynamic effects due to hiring/firing costs. This assumption also does not allow for dynamic effects of output, which is standard in the production function literature. Assumption \eqref{markovfeedback}(2) is a standard condition in Markovian dynamic decision models. Decision and state variables any period before the previous period are irrelevant to the firm given the information contained in last periods decision and state variables. The investment model we introduce in the next few paragraphs satisfies this assumption and is trivially satisfied for any of the static decision variables.\\
+Assumption \eqref{pdynamics}(a) is a first-order Markov assumption that states that conditional on last periods choice and state variables, any information the firm has in the period $t-2$ is not relevant. This is satisfied for our Markov decision variables for labor, materials, and investment which is further elaborated in Assumption \eqref{pdynamics}(b). Then this assumption also limits feedback in the production function and capital accumulation process. Assumption \eqref{pdynamics}(b) which we have mentioned, further restricts the previous assumption to the firms decisions of labor, materials, and investment to depend on only current period state variables. This assumption is satisfied for labor and materials which are assumed to maximize current period profits. It is satisfied for investment in our Markovian dynamic model outlined in Section \eqref{investment}\\
 
-Assumption \eqref{markovfeedback}(3) states that previous period's productivity does not directly affect the firms decision and state variables in the current period. Instead, they indirectly affect these variables through the previous periods decision and state variables. \textcolor{red}{Assumption \eqref{markovfeedback}(4) are conditional independence assumptions for output and the flexible input decisions. Conditional on current period labor, materials, and capital, the previous period's capital as well as investment are not relevant in determining output in the current period. Also, capital summarizes the information about investment relevant in determining labor, but also assumes that labor decisions are mutually independent of material input decisions. The latter assumption is satisfied using timing assumptions that are common in the literature.}
 
-We will proceed in steps in factoring the Markov law of motion into the densities we are interested in identying. First, using Assumption \eqref{markovfeedback} 1 and 2:
-\begin{equation} \label{markovfactor}
+Assumption \eqref{pdynamics}(c) states that previous period's productivity does not directly affect the firms decision and state variables in the current period. Instead, they indirectly affect these variables through the previous periods decision and state variables. Assumption \eqref{pdynamics}(4(i)) is a conditional independence assumption for output and the input decisions. Conditional on current period labor, materials, and capital, investment is not relevant in determining output, labor, or material input decisions in the current period. That is, capital summarizes the information about investment that determines these variables. Assumption \eqref{pdynamics}(4(ii)) restricts last periods choice and state variables from determining output conditional on current period variables. This is a common assumption in the literature which says that output does not have any dynamic implications. Lastly, \eqref{pdynamics}(4(iii)) are independence restrictions that are needed to form moment restrictions used for estimation.
+
+We will proceed in steps in factoring the Markov law of motion into the densities we are interested in identifying. Using Assumption \eqref{pdynamics}:
+\begin{equation} \label{motion}
     \begin{split}
-        &f(Y_{t}, L_{t}, M_{t}, K_{t}, I_{t}, \omega_{t}|Y_{t-1}, L_{t-1}, M_{t-1}, K_{t-1}, I_{t-1}, \omega_{t-1}, \mathcal{I}_{<t-1})\\
-        &=f(Y_{t}, L_{t}, M_{t}, K_{t}, I_{t}, \omega_{t}|K_{t-1}, I_{t-1}, \omega_{t-1})
+        f_{X_{t}, \omega_{t}|X_{t-1}, \omega_{t-1}}&=f_{Y_{t}|K_{t}, L_{t}, M_{t}, \omega_{t}}f_{K_{t}|K_{t-1}, I_{t-1}}f_{I_{t}|K_{t}, \omega_{t}}\\
+        &\times f_{L_{t}|K_{t}, \omega_{t}}f_{M_{t}|K_{t}, \omega_{t}}f_{\omega_{t}|\omega_{t-1}}
     \end{split}
 \end{equation} 
-We can simplify the density on the last line of the equation \eqref{markovfactor} as
-\begin{equation} \label{1stdensity}
-\begin{split}
-&f(Y_{t}, L_{t}, M_{t}, K_{t}, I_{t}, \omega_{t}|K_{t-1}, I_{t-1}, \omega_{t-1})\\
-&=f(Y_{t}|L_{t}, M_{t}, K_{t}, K_{t-1}, I_{t}, I_{t-1}, \omega_{t}, \omega_{t-1})f(L_{t}|M_{t}, K_{t}, K_{t-1}, I_{t}, I_{t-1}, \omega_{t}, \omega_{t-1})\\
-&\times f(M_{t}|K_{t}, K_{t-1}, I_{t}, I_{t-1}, \omega_{t}, \omega_{t-1})f(K_{t}, I_{t}, \omega_{t}|K_{t-1}, I_{t-1}, \omega_{t-1})
-\end{split}
+
+\textit{Proof:} See Appendix A\\
+
+We use the identification results of \cite{Hu2012} to identify the Markov law of motion in equation \eqref{motion} using the fact that investment depends only on current state variables which allows us to use three repeated measures of investment $(I_{t}, I_{t-1}, I_{t-2})$ for identification. We begin by relating a joint density of observables to unobserved densities. Let $Z_{t}=(Y_{t}, L_{t}, M_{t})$ denote the variables that are functions of the current state variables excluding investment.
+\begin{equation} \label{obs}
+f_{X_{t}|X_{t-1}, X_{t-2}}=\int f_{I_{t}|K_{t}, \omega_{t}}f_{Z_{t}|K_{t}, \omega_{t}}f_{K_{t}|K_{t-1}, I_{t-1}}f_{\omega_{t}|X_{t-1}, X_{t-2}}d\omega_{t}
 \end{equation}
-Using Assumption \eqref{markovfeedback} 3 and 4, equation \eqref{1stdensity} becomes
-\begin{equation} \label{2nddensity}
-    \begin{split}
-        &f(Y_{t}, L_{t}, M_{t}, K_{t}, I_{t}, \omega_{t}|K_{t-1}, I_{t-1}, \omega_{t-1})\\
-        &=f(Y_{t}|L_{t}, M_{t}, K_{t}, \omega_{t})f(L_{t}|K_{t}, \omega_{t})f(M_{t}|K_{t}, \omega_{t})f(K_{t}, I_{t}, \omega_{t}|K_{t-1}, I_{t-1}, \omega_{t-1})
-    \end{split}
-\end{equation} 
+\textit{Proof:} See Appendix A\\
 
-The last density on the second line of equation \eqref{2nddensity} is the Markov law of motion for capital, investment, and productivity. It can be factored as:
-\begin{equation} \label{3rddensity}
-    \begin{split}
-        &f(K_{t}, I_{t}, \omega_{t}|K_{t-1}, I_{t-1}, \omega_{t-1})\\
-        &=f(I_{t}|K_{t}, K_{t-1}, I_{t-1}, \omega_{t}, \omega_{t-1})f(K_{t}|I_{t-1}, K_{t-1}, \omega_{t-1})f(\omega_{t}|K_{t}, K_{t-1}, \omega_{t-1})\\
-        &=f(I_{t}|K_{t}, \omega_{t})f(K_{t}|K_{t-1}, I_{t-1})f(\omega_{t}|\omega_{t-1})
-    \end{split}
-\end{equation} 
-The last line of equation \eqref{3rddensity} uses a combination of Assumption \eqref{markovfeedback} 3 and the way investment, capital, and the productivity process in the previous section.  
+We define an integral operator mapping $g\in Supp(I_{t-2})$ to $L_{Z_{t}, K_{t}, I_{t}|Z_{t-1}, K_{t-1}, I_{t-1}, Z_{t-2}, K_{t-2} I_{t-2}}\circ g \in Supp(I_{t})$ for a given $(Z_{t}, K_{t}, I_{t-1}, Z_{t-1}, K_{t-1})\in Supp(Z_{t}, K_{t}, I_{t-1}, Z_{t-1}, K_{t-1})$ as
+\begin{equation*}
+[L_{Z_{t}, K_{t}, I_{t}|Z_{t-1}, K_{t-1}, I_{t-1}, Z_{t-2}, K_{t-2}, I_{t-2}}\circ g](I_{t})\equiv\int f_{Z_{t}, I_{t}|Z_{t-1}, I_{t-1}, Z_{t-2}, I_{t-2}}(Z_{t}, I_{t}|Z_{t-1}, I_{t-1}, Z_{t-2}, I_{t-2})g(I_{t-2})dI_{t-2}
+\end{equation*}
+We also define a diagonal operator $\Delta_{Z_{t}|K_{t}, \omega_{t}}$ which maps $g\in Supp(\omega_{t})$ to $\Delta_{Z_{t}|K_{t}, \omega_{t}}\circ g\in Supp(\omega_{t})$ for a given $(Z_{t}, K_{t})\in Supp(Z_{t}, K_{t})$ as
+\begin{equation*}
+\Delta_{Z_{t}|K_{t}, \omega_{t}}\circ g\equiv f_{Z_{t}|K_{t}, \omega_{t}}(Z_{t}|K_{t}, \omega_{t})g(\omega_{t})d\omega_{t}
+\end{equation*}
+Then, the observed density in \eqref{obs} can be written in operator notation
+\begin{equation} \label{obsop}
+L_{X_{t}|X_{t-1}, X_{t-2}}=L_{I_{t}|K_{t}, \omega_{t}}\Delta_{Z_{t}|K_{t}, \omega_{t}}\Delta_{K_{t}|K_{t-1}, I_{t-1}}L_{\omega_{t}|X_{t-1}, X_{t-2}}
+\end{equation}
+We will show that under a set of assumptions, the Markov law of motion in \eqref{motion} is identified from a eigenvalue-eigenfunction decomposition of \eqref{obsop} using the arguments of \cite{Hu2008}.
 
-Combining all of the above assumptions, the density we are interested in identifying is:
+\begin{assump} (Boundedness) \label{bounded}
+~
+The joint density of $X_{t+1}, X_{t}$ and $X_{t-1}$ is bounded. All conditional and marginal densities are also bounded.
+\end{assump}
 
-\small
+\begin{assump} (Injectivity) \label{injectivity}
+~
+The operators $L_{I_{t}|K_{t}, \omega_{t}}$, $L_{\omega_{t}|X_{t-1}, X_{t-2}}$, $\Delta_{Z_{t}|K_{t}, \omega_{t}}$ and $\Delta_{K_{t}|K_{t-1}, I_{t-1}}$ are injective
+\end{assump}
+The above assumption allows us to take inverses of the operators. Consider the operator $L_{I_{t}|K_{t}, \omega_{t}}$, following \cite{Hu2008}, injectivity of this operator can be interpreted as its corresponding density $f_{I_{t}|K_{t}, \omega_{t}}(I_{t}|K_{t}, \omega_{t})$ having sufficient variation in $\omega_{t}$ given $K_{t}$. This assumption is often phrased as completeness condition in the nonparametric IV literature on the density $f_{I_{t}|K_{t}, \omega_{t}}(I_{t}|K_{t}, \omega_{t})$. More formally, for a given $K_{t}\in Supp(K_{t})$
 \begin{equation}
-f(Y_{t}, L_{t}, M_{t}, K_{t}, I_{t}, \omega_{t}|K_{t-1}, I_{t-1}, \omega_{t-1})=f(Y_{t}|L_{t}, M_{t}, K_{t}, \omega_{t})f(L_{t}|K_{t}, \omega_{t})f(M_{t}|K_{t}, \omega_{t})f(I_{t}|K_{t}, \omega_{t})f(K_{t}|K_{t-1}, I_{t-1})f(\omega_{t}|\omega_{t-1})
+\int f_{I_{t}|K_{t}, \omega_{t}}(I_{t}|K_{t}, \omega_{t})g(\omega_{t})d\omega_{t}=0
 \end{equation}
+for all $I_{t}$ implies $g(\omega_{t})=0$ for all $\omega_{t}$\\
 
-%---------------------------------------------------------------------------------------------------------
+Sufficient conditions for injectivity can be found in the convolution literature. In our econometric model discussed in the next section, we consider specifications that satisfy these conditions without placing extensive restrictions on the economic primitives governing the investment process and productivity evolution.\\
 
-\subsection{Hu and Shum (2012) Identification}
+Injectivity of the operator $L_{\omega_{t}|X_{t-1}, X_{t-2}}$ is equivalent to showing the injectivity of $L_{\omega_{t}|X_{t-1}, X_{t-2}}=L_{\omega_{t}|, \omega_{t-1}}L_{\omega_{t-1}, X_{t-1}, X_{t-2}}$. Therefore we require injectivity of both $L_{\omega_{t}|, \omega_{t-1}}$ and $L_{\omega_{t-1}, X_{t-1}, X_{t-2}}$. The first operator corresponds to the Markov process for productivity $f_{\omega_{t}|\omega_{t-1}}$. For the second operator, we show in Appendix B, that it is injective when productivity evolves exogenously as specified in our model.
 
-\textcolor{red}{STILL A WORK IN PROGRESS, THESE DO NOT REFLECT MOST RECENT CHANGES ABOVE}
+Invertibility of the diagonal operators $\Delta_{Z_{t}|K_{t}, \omega_{t}}$ and $\Delta_{K_{t}|K_{t-1}, I_{t-1}}$ requires the kernels of these operators to be nonzero along its support. This is satisfied in our model since we assume $Y_{t}, L_{t}, M_{t}, K_{t}$ to be strictly increasing in $\eta_{t}, \epsilon_{t}, \varepsilon_{t}, \upsilon_{t-1}$ respectively. It assumed that the densities of these error terms are nonzero so that each density is nonzero and furthermore bounded above according to Assumption \eqref{bounded}.\\ 
 
-We outline the identification procedure similar to \cite{Hu2012}. First, let $V_{t}=\{X_{t}, W_{t}\}$. Under assumption \eqref{markovfeedback}, we can write:
- \begin{equation}\label{obsdens}
- f_{X_{t+1}, W_{t+1}, X_{t}, W_{t}, X_{t-1}, W_{t-1}, X_{t-2}, W_{t-2}}=\int f_{X_{t+1},W_{t+1}|W_{t},\omega_{t}}f_{X_{t}, W_{t}|W_{t-1},\omega_{t}}f_{X_{t-1}, W_{t-1}, X_{t-2}, W_{t-2}, \omega_{t}}d\omega_{t}
- \end{equation}
- \textcolor{red}{Should this be factored further?}
-
-The linear operator $L_{V_{t-2},\bar{x}_{t-1},\bar{w}_{t-1},\bar{x}_{t},\bar{w}_{t}, V_{t+1}}$ as a mapping from the $\mathcal{L}^{p}$ space of functions of $V_{t+1}$ to the $\mathcal{L}^{p}$ space of functions of $V_{t-2}$ is defined as
-
-\begin{equation}\label{operator}
-    \begin{split}
-     (&L_{V_{t-2},\bar{x}_{t-1},\bar{w}_{t-1},\bar{x}_{t},\bar{w}_{t}, V_{t+1}}h)(v_{t-2})\\
-     &=\int f_{V_{t-2}, X_{t-1}, W_{t-1}, X_{t}, W_{t}, V_{t+1}}(v_{t-2}, \bar{x}_{t-1}, \bar{w}_{t-1}, \bar{x}_{t}, \bar{w}_{t}, v_{t+1})h(v_{t+1})dv_{t+1}:\\
-     &h\in \mathcal{L}^{p}(\mathcal{V}_{t+1}), \bar{x}_{t-1}\in \mathcal{X}_{t-1}, \bar{x}_{t}\in \mathcal{X}_{t}, \bar{w}_{t-1}\in \mathcal{W}_{t-1}, \bar{w}_{t}\in \mathcal{W}_{t},
-    \end{split}
-\end{equation}
-where $\mathcal{V}_{t}, \mathcal{X}_{t-1}, \mathcal{X}_{t}, \mathcal{W}_{t-1}$ and $\mathcal{W}_{t}$ are the supports of $V_{t}, X_{t-1}, X_{t}, W_{t-1}$ and $W_{t}$ respectively. We also define the diagonal operator as:
-\begin{equation}\label{diagonal}
-    \begin{split}
-        (D_{\bar{x}_{t}, \bar{w}_{t}|\bar{w}_{t-1}, \omega_{t}}h)(\omega_{t})&=f_{X_{t}, W_{t}|, W_{t-1}, \omega_{t}}(\bar{x}_{t}, \bar{w}_{t}|\bar{w}_{t-1}, \omega_{t})h(\omega_{t})\\
-        &h\in \mathcal{L}^{p}(\Omega_{t}), \bar{x}_{t}\in \mathcal{X}_{t}, \bar{w}_{t}\in \mathcal{W}_{t}, \bar{w}_{t-1}\in \mathcal{W}_{t-1}
-    \end{split}
-\end{equation}
-We provide a few lemmas that allow us to represent the observed density $f_{X_{t+1}, W_{t+1}, X_{t}, W_{t}, X_{t-1}, W_{t-1}, X_{t-2}, W_{t-2}}$ and the Markov law of motion $f_{X_{t}, W_{t}, \omega_{t}|X_{t-1}, W_{t-1}, \omega_{t-1}}$ using operator notation.
-
-\begin{lemma} (Representation of the Observed Density)
+Our next assumption places mild restrictions on the operator $\Delta_{Z_{t}|K_{t}, \omega_{t}}$ so that the eigenvalues of our decomposition argument are unique.
+\begin{assump} (Uniqueness) \label{unique}
 ~
-For any $t\in\{3,\dots, T-1\}$. Assumption \eqref{markovfeedback} implies that, for any $(x_{t}, w_{t}, x_{t-1}, w_{t-1})\in \mathcal{X}_{t}\times \mathcal{W}_{t}\times \mathcal{X}_{t-1}\times \mathcal{W}_{t-1}$,
-\begin{equation}\label{obsoperator}
-L_{V_{t+1},x_{t}, w_{t}, x_{t-1}, w_{t-1}}=L_{V_{t+1}|w_{t}, \omega_{t}}D_{x_{t}, w_{t}|w_{t-1}, \omega_{t}}L_{x_{t-1}, w_{t-1}, V_{t-2}, \omega_{t}}
-\end{equation}
-\end{lemma}
-
-\begin{lemma} (Representation of the Markov Law of Motion)
-~
-For any $t\in\{3,\dots, T-1\}$ and under certain invertibility conditions provided below give, for any $(x_{t}, w_{t}, x_{t-1}, w_{t-1})\in \mathcal{X}_{t}\times \mathcal{W}_{t}\times \mathcal{X}_{t-1}\times \mathcal{W}_{t-1}$,
-\begin{equation}\label{markovoperator}
-L_{x_{t},w_{t},\omega_{t}|w_{t-1},\omega_{t-1}}=L^{-1}_{V_{t+1}|w_{t},\omega_{t}}L_{V_{t+1},x_{t},w_{t},x_{t-1}, w_{t-1}, V_{t-2}}L^{-1}_{V_{t},x_{t-1},w_{t-1},V_{t-2}}L_{V_{t}|w_{t-1},\omega_{t}}
-\end{equation}
-\end{lemma}
-
-The identification argument then depends on the existence and uniqueness a spectral decomposition of the linear operator $L_{V_{t+1},x_{t}, w_{t}, x_{t-1}, w_{t-1}}$ which corresponds to the observed density $f_{X_{t+1}, W_{t+1}, X_{t}, W_{t}, X_{t-1}, W_{t-1}, X_{t-2}, W_{t-2}}$. We state these assumptions and their interpretation in the production function literature and in context of our model.
-
-\begin{assump}(Invertibility)
-~
-There exists variable(s) $V_{t}$ such that
-    \begin{enumerate}[label=\alph*)]
-    \item For any $w_{t}\in \mathcal{W}_{t}$, $L_{V_{t+1}|w_{t}, \omega_{t}}$ is one-to-one
-    \item For any $(x_{t-1}, w_{t-1})\in \mathcal{X}_{t-1}\times\mathcal{W}_{t-1}$, $L_{V_{t}, x_{t-1}, w_{t-1}, V_{t-2}}$ is one-to-one
-    \item For any $(x_{t}, w_{t})\in \mathcal{X}_{t}\times\mathcal{W}_{t}$, there exists a $(x_{t-1}, w_{t-1})\in \mathcal{X}_{t-1}\times\mathcal{W}_{t-1}$ and a neighborhood $\mathcal{N}^{r}$ around $(x_{t}, w_{t}, x_{t-1}, w_{t-1})$ such that, for any $(\bar{x}_{t}, \bar{w}_{t}, \bar{x}_{t-1}, \bar{w}_{t-1})\in \mathcal{N}^{r}$, $L_{V_{t-2}, \bar{x}_{t}, \bar{w}_{t}, \bar{x}_{t-1}, \bar{w}_{t-1}, V_{t-2}}$ is one-to-one
-    \end{enumerate}
+For any $Z_{t}, K_{t}$ and any $\bar{\omega_{t}}\neq \tilde{\omega_{t}}$:
+ $k(Z_{t}, K_{t}, \bar{\omega_{t}})\neq k(Z_{t}, K_{t}, \tilde{\omega_{t}})$ where,\\
+        \begin{equation}
+        \begin{split}
+        k(Z_{t}, K_{t}, \omega_{t})&=f_{Z_{t}|K_{t}, \omega_{t}}(Z_{t}|K_{t}, \omega_{t})=f_{Y_{t}|K_{t}, L_{t}, M_{t}, \omega_{t}}(Y_{t}|K_{t}, L_{t}, M_{t}, \omega_{t})\\
+        &\times f_{L_{t}|K_{t}, \omega_{t}}(L_{t}|K_{t}, \omega_{t})f_{M_{t}|K_{t}, \omega_{t}}(M_{t}|K_{t}, \omega_{t})
+        \end{split}
+        \end{equation}
 \end{assump}
+Assumption \eqref{unique} requires the density $f_{Z_{t}|K_{t}, \omega_{t}}$ be nonidentical and different values of $\omega_{t}$. This corresponds to the densities $f_{Y_{t}|K_{t}, L_{t}, M_{t}, \omega_{t}}, f_{L_{t}|K_{t}, \omega_{t}}$ and $f_{M_{t}|K_{t}, \omega_{t}}$ being nonidentical and different values of $\omega_{t}$. It is satisfied when either $Y_{t}, L_{t}, M_{t}$ are strictly increasing in $\omega_{t}$ or if their respective error terms are conditionally heteroskedastic.
+
+
+\begin{assump} (Monotonicity and Normalization) \label{normalize}
+~
+For any $K_{t}\in Supp(K_{t})$, there exists a known functional $M$ such that $M[f_{I_{t}|K_{t}, \omega_{t}}(I_{t}|K_{t}, \omega_{t})]$ is monotonic in $\omega_{t}$. This functional is normalized such that $M[f_{I_{t}|K_{t}, \omega_{t}}(I_{t}|K_{t}, \omega_{t})]=\omega_{t}$
+\end{assump}
+The above assumption is used to pin down the eigenfunctions to each unobserved $\omega_{t}$. In practice, this functional can be the mean, median, mode, or any quantile of the distribution $f_{I_{t}|K_{t}, \omega_{t}}(I_{t}|K_{t}, \omega_{t})$. In either case, this places restrictions on the parameters of the investment process which we discuss in the next section.\\
+
+Integrating \eqref{obs} with respect to $(Y_{t}, L_{t}, M_{t})$ gives us in operator notation:
+\begin{equation} \label{plugin}
+L_{I_{t}, K_{t}|X_{t-1}, X_{t-2}}=L_{I_{t}|K_{t}, \omega_{t}}\Delta_{K_{t}|K_{t-1}, I_{t-1}}L_{\omega_{t}|X_{t-1}, X_{t-2}}
+\end{equation}
+Combining equation \eqref{obsop} and \eqref{plugin} and using Assumption \eqref{injectivity} gives
+\begin{equation} \label{decomp}
+L_{I_{t}, K_{t}|X_{t-1}, X_{t-2}}L^{-1}_{X_{t}|X_{t-1}, X_{t-2}}=L_{I_{t}|K_{t}, \omega_{t}}\Delta_{Z_{t}|K_{t}, \omega_{t}}L^{-1}_{I_{t}|K_{t}, \omega_{t}}
+\end{equation}
+The left hand side of equation \eqref{decomp} is a function of observable data whereas the right-hand side are the unobservable densities of interest indexed by the unobservable $\omega_{t}$. The following theorem of \cite{Hu2008} gives us our main identification result.\\
+
+\begin{theorem} \label{identification}
+~
+Under assumptions \eqref{pdynamics}, \eqref{bounded}, \eqref{injectivity}, \eqref{unique}, and \eqref{normalize}, the density $f_{X_{t}|X_{t-1}, X_{t-2}}$ uniquely determines the Markov law of Motion in equation \eqref{motion}.
+\end{theorem}
+
+\textit{Proof}: The identification results of \cite{Hu2008} directly identify the densities $f_{I_{t}|K_{t}, \omega_{t}}$, $f_{Y_{t}|K_{t}, L_{t}, \omega_{t}}$, $f_{L_{t}|K_{t}, \omega_{t}}$, $f_{M_{t}|K_{t}, \omega_{t}}$, $f_{K_{t}|K_{t-1}, I_{t-1}}$ and $f_{\omega_{t}|X_{t-1}, X_{t-2}}$. The latter density identifies the Markov law of motion from the equivalence $f_{\omega_{t}|X_{t-1}, X_{t-2}}=\int f_{\omega_{t}|\omega_{t-1}}f_{\omega_{t-1}, X_{t-1}, X_{t-2}}d\omega_{t-1}$
 
 
 %----------------------------------------------------------------------------------------------------------
 
 \section{Estimation Strategy}
 
-Our empirical specification for the Markovian transitions of productivity, output, and capital evolution closely resemble \cite{Arellano2017}. Let $z_{it}=(l_{it}, m_{it})$ denote the flexible input choices for notational simplicity.
-
-\subsection{Persistent Productivity}
-Let $age_{it}$ denote the age of firm $i$ at time $t$, we specify productivity to transition according to:
-\begin{equation}\label{omegamodel}
-Q_{t}(\omega_{it-1}, \tau)=Q(\omega_{it-1}, age_{it}, \tau)=\sum_{k=1}^{K}\rho_{k}(\tau)g_{k}(\omega_{it-1}, age_{it})
-\end{equation}
-
-\noindent The quantile function for $\omega_{i1}$ is specified in a similar way
-\begin{equation}
-\label{omega1model}
-Q_{\omega_{1}}(age_{i1}, \tau)=\sum_{k=0}^{K}\rho_{k}^{1}(\tau)g_{k}(age_{i1})
-\end{equation}
+Our empirical specification for the Markovian transitions of productivity, output, and capital evolution closely resemble \cite{Arellano2017}. We let $(y_{it}, k_{it}, l_{it}, m_{it}, i_{it})$ denote the logarithms of $(Y_{it}, K_{it}, L_{it}, M_{it}, I_{it})$ respectively.
 
 \subsection{Output}
-We specify the output equation as follows:
+Let $age_{it}$ denote the age of firm $i$ at time $t$. We specify the output equation as follows:
 \begin{equation}\label{ymodel}
 \begin{split}
-Q_{t}(z_{it}, k_{it} \omega_{it}, \tau)&=Q(z_{it}, k_{it}, age_{it}, \omega_{it}, \tau)\\
-&=\sum_{k=1}^{K}\beta_{k}g_{k}(z_{it}, k_{it}, age_{it}, \omega_{it})+\beta_{0}(\tau)
+Q_{t}(y_{it}|k_{it}, l_{it}, m_{it}, \omega_{it}, \tau)&=Q(y_{it}|k_{it}, l_{it}, m_{it}, \omega_{it}, age_{it}, \tau)\\
+&=\sum_{j=1}^{J}\beta_{j}(\tau)\psi_{j}(k_{it}, l_{it}, m_{it}, \omega_{it}, age_{it})
+\end{split}
+\end{equation}
+
+\subsection{Labor Input}
+We specify the labor input demand equation as follows:
+\begin{equation} \label{lmodel}
+\begin{split}
+Q_{t}(l_{it}|k_{it}, \omega_{it}, \tau)&=Q(l_{it}|k_{it}, \omega_{it}, age_{it}, \tau)\\
+&=\sum_{j=1}^{J}\gamma_{j}(\tau)\psi_{j}(k_{it}, \omega_{it}, age_{it})
+\end{split}
+\end{equation}
+
+\subsection{Material Input}
+We specify the material input demand equation as follows:
+\begin{equation}\label{mmodel}
+\begin{split}
+Q_{t}(m_{it}|k_{it}, \omega_{it}, \tau)&=Q(m_{it}|k_{it}, \omega_{it}, age_{it}, \tau)\\
+&=\sum_{j=1}^{J}\delta_{j}(\tau)\psi_{j}(k_{it}, \omega_{it}, age_{it})
 \end{split}
 \end{equation}
 
@@ -234,153 +237,312 @@ Q_{t}(z_{it}, k_{it} \omega_{it}, \tau)&=Q(z_{it}, k_{it}, age_{it}, \omega_{it}
 We specify the investment demand equation as:
 \begin{equation}\label{imodel}
 \begin{split}
-\iota_{t}(\omega_{it}, k_{it}, \tau)&=\iota(\omega_{it}, k_{it}, age_{it}, \tau)\\
-&=\sum_{k=1}^{K}\iota_{k}g_{k}(\omega_{it}, k_{it}, age_{it})+\iota_{0}(\tau)
+i_{t}=\iota_{t}(k_{it}, \omega_{it}, \zeta_{it})&=\iota(k_{it}, \omega_{it}, age_{it}, \zeta_{it})\\
+&=\iota_{0}+\sum_{j=1}^{J}\iota_{j}\psi_{j}(k_{it}, \omega_{it}, age_{it})+\zeta_{it},
 \end{split}
+\end{equation}
+where $E[\zeta_{it}|k_{it}, \omega_{it}]=0$. The above specification is a nonlinear regression model. The corresponding conditional quantile function is $Q_{\tau}(i_{it}|k_{it}, \omega_{it})=\iota_{0}(\tau)+\sum_{j=1}^{J}\iota_{j}\psi_{j}(k_{it}, \omega_{it}, age_{it})$ where $\iota_{0}(\tau)=\iota_{0}+\sigma_{\zeta}F^{-1}(\tau)$. Hence we choose a simple location shift model to estimate the investment process where, for example, $F$ is log-normally distributed with variance $\sigma^{2}_{\zeta}$. While this specification is not sufficient for injectivity, it is necessary according to Lemma 5 in \cite{Hu2012}. The conditional mean zero assumption provides the normalization assumption required in \eqref{normalize}\footnote{We can relax the additive error assumption in equation \eqref{imodel} and its corresponding parametric distribution by considering a sieve approximation for the density $f_{i_{t}|k_{t}, \omega_{t}}(i_{t}|k_{t}, \omega_{t})$ with restrictions on the parameters of this sieve according to assumption \eqref{normalize} following \cite{Hu2008}.}. Similar to \cite{Olley1996} we assume $\iota_{t}(K_{t}, \omega_{t})$ is strictly increasing in $\omega_{t}$.\\
+
+\subsection{Persistent Productivity}
+We specify productivity to transition according to:
+\begin{equation}\label{omegamodel}
+\omega_{it}=g_{t}(\omega_{it-1}, \xi_{it})=g(\omega_{it-1}, age_{it}, \xi_{it})=\rho_{0}+\sum_{j=1}^{J}\rho_{j}\psi_{j}(\omega_{it-1}, age_{it})+\xi_{it},
 \end{equation}
 
-\subsection{Capital}
-We specify the distribution of initial capital as:
-\begin{equation}\label{kinitial}
-Q_{\kappa}(\omega_{i1}, age_{i1}, \tau)=\sum_{k=0}^{K}\kappa_{k}^{1}g_{k}(\omega_{i1}, age_{i1})
-\end{equation}
-The evolution of capital is specified as:
-\begin{equation}\label{kevolution}
-\begin{split}
-\kappa_{t}(\omega_{it}, K_{it-1}, I_{it-1}, \tau)&=\kappa_{t}(\omega_{it}, K_{it-1}, I_{it-1}, age_{it}, \tau)\\
-&=\sum_{k=1}^{K}\kappa_{k}g_{k}(\omega_{it}, K_{it-1}, I_{it-1}, age_{it})+\kappa_{0}(\tau)
-\end{split}
+
+\noindent where $E[\xi_{it}|\omega_{it-1}]=0$. The quantile function for $\omega_{i1}$ is specified in a similar way
+\begin{equation}{}
+\label{omega1model}
+\omega_{i1}=g_{\omega_{1}}(age_{i1}, \tau)=\rho^{1}_{0}+\sum_{j=0}^{J}\rho_{j}^{1}\psi_{j}(age_{i1})+\xi_{i1},
 \end{equation}
 
-\subsection{Static Inputs}
-Finally, we specify a reduced-form demand function for the static inputs of $z=(m, l, u)$ (in logs) as:
-\begin{equation}\label{staticmodel}
-\begin{split}
-\mu_{t}^{z}(k_{it}, \omega_{it}, \tau)&=\mu^{z}(k_{it}, \omega_{it}, age_{it}, \tau)\\
-&=\sum_{k=1}^{K}\mu_{zk}g_{k}(\omega_{it}, k_{it}, age_{it})+\mu_{z0}(\tau)
-\end{split}
-\end{equation}
+ Similar to the investment process, we specify productivity as a nonlinear regression model. Here we allow $\xi_{it}$ follow a normal distribution such that the corresponding quantiles are given by $Q_{\tau}(\omega_{it}| \omega_{it-1})=\rho_{0}(\tau)+\sum_{j=1}^{J}\rho_{j}\psi_{j}(\omega_{it-1}, age_{it})$ where $\rho_{0}(\tau)=\rho_{0}+\sigma_{\xi}F^{-1}(\tau)$. We assume a similar specification for initial productivity $\omega_{i1}$.
 
 \section{Implementation}
-To ease notation, we let $\rho_{k}, \rho_{k}, \beta_{0}, \iota_{0}, \kappa_{0}, \mu_{z0}$ be indexed by a finite dimensional parameter vector $\theta$ that also contains $\beta_{1},\dots,\beta_{K}, \iota_{1},\dots,\iota_{K}, \kappa_{1},\dots, \kappa_{K}$ and $ \mu_{z1},\dots,\mu_{zK}$. We model the functional parameters using \cite{Wei2009} and \cite{Arellano2016}. For example, the function $\rho_{\omega}$ is modeled as a piecewise-polynomial interpolating splines on a grid $[\tau_{1},\tau_{2}], [\tau_{3},\tau_{4}],\dots, [\tau_{J-1},\tau_{J}]$, contained in the unit interval and is constant on $[0, \tau_{1}]$ and $[\tau_{J}, 1)$ The intercept coefficient $\rho_{0}$ is specified as the quantile of an exponential distribution on $(0,\tau_{1}]$ (indexed by $\lambda_{\omega}^{-}$) and $[\tau_{J-1}, 1)$ (indexed by $\lambda_{\omega}^{+}$).\\
-
-The function $\rho_{\omega}$ is modeled as piecewise linear on $[\tau_{1}, \tau_{J}]$.The remaining functional parameters are modeled similarly. We take $J=11$ and $\tau_{j}=\frac{j}{J+1}$. Following \cite{Arellano2017} we parameterize the distribution of $\eta$ to be log-normal so we set, for example, $\beta_{0}(\tau)=\alpha_{0}+\sigma\Phi^{-1}(\tau)$. Similar parameterizations for made for $\iota_{0}, \kappa_{0}$ and $\mu_{z0}$.  In the following section we outline the model's restrictions and a feasible estimation strategy.
+To ease notation, we let the finite and functional parameters be indexed by a finite dimensional parameter vector $\theta$. We model the functional parameters using \cite{Wei2009} and \cite{Arellano2016}. For example, the function $\beta_{j}(\tau_{q})$ is modeled as a piecewise-polynomial interpolating splines on a grid $[\tau_{1},\tau_{2}], [\tau_{3},\tau_{4}],\dots, [\tau_{Q-1},\tau_{Q}]$, contained in the unit interval and is constant on $[0, \tau_{1}]$ and $[\tau_{Q}, 1)$ The intercept coefficient $\beta_{0}$ is specified as the quantile of an exponential distribution on $(0,\tau_{1}]$ (indexed by $\lambda^{-}$) and $[\tau_{Q-1}, 1)$ (indexed by $\lambda^{+}$). The remaining functional parameters are modeled similarly. We take $Q=11$ and $\tau_{q}=\frac{q}{Q+1}$. Following \cite{Arellano2017} we parameterize the distribution of $\zeta_{it}$ to be log-normal so we set, for example, $\iota_{0}(\tau_{q})=\iota_{0}+\sigma_{\zeta}\Phi^{-1}(\tau_{q})$. In the following section we outline the model's restrictions and a feasible estimation strategy.
 
 \subsection{Model Restrictions}
-Let $\Psi_{\tau}(u)=\tau-\mathbbm{1}\{u<0\}$ denote the first derivative of the quantile check function $\psi_{\tau}(u)=(\tau-\mathbbm{1}\{u<0\})u$. The following conditional moment restrictions hold as an implication of the conditional independence restrictions in section 2. Therefore, we estimate the parameters of interest from the following conditional moment restrictions. For $t\geq 2$
+Let $\Psi_{\tau}(u)=\tau-\mathbbm{1}\{u<0\}$ denote the first derivative of the quantile check function $\psi_{\tau}(u)=(\tau-\mathbbm{1}\{u<0\})u$. The following conditional moment restrictions hold as an implication of the conditional independence restrictions in Assumption \eqref{pdynamics}. Therefore, we estimate the parameters of interest from the following conditional moment restrictions.
 
-\begin{equation}\label{omegaqmoment}
-\mathbbm{E}\Bigg[\Psi_{\tau_{j}}(\xi_{it})\Big|\omega_{it-1}, age_{it}\Bigg]=0
+\begin{equation}\label{ymoment}
+\mathbbm{E}\Bigg[\Psi_{\tau_{q}}(\eta_{it})\Big|k_{it}, l_{it}, m_{it}, age_{it}\Bigg]=0
 \end{equation}
-For initial productivity,
-\begin{equation}\label{omega1qmoment}
-\mathbbm{E}\Bigg[\Psi_{\tau_{j}}(\xi_{i1})\Big|\omega_{i1}, age_{i1}\Bigg]=0
+\begin{equation}\label{lmoment}
+\mathbbm{E}\Bigg[\Psi_{\tau_{q}}(\epsilon_{it})\Big|k_{it}, \omega_{it}, age_{it}\Bigg]=0
 \end{equation}
-and for initial capital
-\begin{equation}\label{k1qmoment}
-\mathbbm{E}\Bigg[\Psi_{\tau_{j}}(\upsilon_{i1})\Big|\omega_{i1}, age_{i1}\Bigg]=0
+\begin{equation}\label{mmoment}
+\mathbbm{E}\Bigg[\Psi_{\tau_{q}}(\varepsilon_{it})\Big|k_{it}, \omega_{it}, age_{it}\Bigg]=0
 \end{equation}
-For the nonlinear specifications we have
-\begin{equation}\label{yemoment}
-\mathbbm{E}\Bigg[\eta_{it}\Big|\omega_{it}, z_{it}, k_{it}, age_{it}\Bigg]=0
-\end{equation}
+For the nonlinear regressions:
 \begin{equation}\label{iemoment}
 \mathbbm{E}\Bigg[\zeta_{it}\Big|\omega_{it}, k_{it}, age_{it}\Bigg]=0
 \end{equation}
-\begin{equation}\label{kemoment}
-\mathbbm{E}\Bigg[\upsilon_{it}\Big|\omega_{it}, K_{it-1}, I_{it-1},  age_{it}\Bigg]=0
-\end{equation}
-\begin{equation}\label{emoment}
-\mathbbm{E}\Bigg[\varepsilon^{Z}_{it}\Big|\omega_{it}, k_{it}, age_{it}\Bigg]=0
-\end{equation}
-
-To fix ideas, we first specify how to estimate the conditional moments for persistent productivity and production.\\
-
-\noindent For $t\geq 2$
+For $t\geq 2$,
 \begin{equation}\label{omegamoment}
-\begin{split}
-\mathbbm{E}\Bigg[&\Psi_{\tau_{j}}(\xi_{it})\Big|\omega_{it-1}, age_{it}\Bigg]=\\
-&\mathbbm{E}\Bigg[\Psi_{\tau_{j}}(\omega_{it}-\sum_{k=1}^{K}\bar{\rho}_{k}(\tau_{j})g_{k}(\omega_{it-1}, age_{it}))\Big|\omega_{it-1}, age_{it}\Bigg]=0
-\end{split}
+\mathbbm{E}\Bigg[\xi_{it}\Big|\omega_{it-1}, age_{it}\Bigg]=0
 \end{equation}
+For initial productivity $(t=1)$,
+\begin{equation}\label{omega1qmoment}
+\mathbbm{E}\Bigg[\xi_{i1}\Big|\omega_{i1}, age_{i1}\Bigg]=0
+\end{equation}
+
+
+
+To fix ideas, we focus on how to estimate the production function and investment equation \footnote{Note that we do not specify the model for capital here because it does not depend on $\omega_{it-1}$ and hence does not enter the posterior distribution for $\omega_{t}$}. \\
 
 \begin{equation}\label{ymoment}
 \begin{split}
-\mathbbm{E}\Bigg[&\eta_{it}\Big|\omega_{it}, z_{it}, k_{it}, age_{it}\Bigg]=\\
-&\mathbbm{E}\Bigg[(y_{it}-\bar{\alpha}-\sum_{k=1}^{K}\bar{\beta}_{k}g_{k}(z_{it}, k_{it}, \omega_{it}, age_{it}))\Big|\omega_{it}, z_{it}, k_{it}, age_{it}\Bigg]=0
+\mathbbm{E}\Bigg[&\Psi_{\tau_{q}}(\eta_{it})\Big|k_{it}, l_{it}, m_{it}, \omega_{it}, age_{it}\Bigg]=\\
+&\mathbbm{E}\Bigg[\Psi_{\tau_{q}}(y_{it}-\sum_{j=1}^{J}\bar{\beta}_{j}(\tau_{q})\psi_{j}(k_{it}, l_{it}, m_{it}, \omega_{it}, age_{it}))\Big|k_{it}, l_{it}, m_{it}, \omega_{it}, age_{it}\Bigg]=0
+\end{split}
+\end{equation}
+and 
+\begin{equation}\label{imoment}
+\begin{split}
+\mathbbm{E}\Bigg[&\zeta_{it}\Big|k_{it}, \omega_{it}, age_{it}\Bigg]=\\
+&\mathbbm{E}\Bigg[i_{it}-\bar{\iota_{0}}-\sum_{j=1}^{J}\bar{\iota}_{j}\psi_{j}(k_{it}, \omega_{it}, age_{it})\Big|k_{it}, \omega_{it}, age_{it}\Bigg]=0
 \end{split}
 \end{equation}
 
-Here $\bar{\rho}_{k}(\tau_{j}), \bar{\beta}_{k}$ and $\bar{\alpha}$ denote the true values of $\rho_{k}(\tau_{j}), \beta_{k}$ and $\alpha$ for $j\in\{1,\dots, J\}$ and $k\in\{1,\dots,K\}$. Clearly, estimating the above conditional moment restrictions are infeasible due to the unobserved productivity component. Therefore, we use the following unconditional moment restrictions and posterior distributions for $\omega_{it}$ to integrate out the unobserved productivity. Due to the law of iterated expectations we now have the following integrated moment conditions:
 
-\begin{equation}\label{omegaimc}
-\mathbbm{E}\Bigg[\int\Bigg(\Psi_{\tau_{j}}(\omega_{it}-\sum_{k=1}^{K}\bar{\rho}_{k}(\tau_{j})g_{k}(\omega_{it-1}, age_{it}))\otimes
+Here $\bar{\beta}_{j}(\tau_{q}), \bar{\iota_{0}}$ and $\bar{\iota_{j}}$ denote the true values of $\beta_{j}(\tau_{q}), \iota_{0}$ and $\iota_{j}$ for $j\in\{1,\dots, J\}$ and $q\in\{1,\dots,Q\}$. Clearly, estimating the above conditional moment restrictions are infeasible due to the unobserved productivity component. Therefore, we use the following unconditional moment restrictions and posterior distributions for $\omega_{it}$ to integrate out the unobserved productivity. Due to the law of iterated expectations we now have the following integrated moment conditions:
+
+\begin{equation}\label{yimc}
+\mathbbm{E}\Bigg[\int\Bigg(\Psi_{\tau_{q}}(y_{it}-\sum_{j=1}^{J}\bar{\beta}_{j}(\tau_{q})\psi_{j}(k_{it}, l_{it}, m_{it}, \omega_{it}, age_{it}))\otimes
 \begin{pmatrix}
-1 \\
-\omega_{it-1}\\
+k_{it} \\
+l_{it}\\
+m_{it} \\
+\omega_{it} \\
 age_{it}
 \end{pmatrix}
-\Bigg)g_{i}(\omega_{it};\bar{\theta})d\omega_{it}\Bigg]=0
+\Bigg)f_{i}(\omega_{it};\bar{\theta})d\omega_{it}\Bigg]=0
 \end{equation}
 and 
-\begin{equation}\label{yimc}
+\begin{equation}\label{iimc}
 \begin{split}
-\mathbbm{E}\Bigg[\int\Bigg((y_{it}&-\bar{\alpha}-\sum_{k=1}^{K}\bar{\beta}_{k}g_{k}(z_{it}, k_{it}, \omega_{it},age_{it}))\otimes
+\mathbbm{E}\Bigg[\int\Bigg((i_{it}-\bar{\iota_{0}}-\sum_{j=1}^{J}\bar{\iota}_{j}\psi_{j}(k_{it}, \omega_{it}, age_{it}))\otimes
 \begin{pmatrix}
 1 \\
+k_{it} \\
 \omega_{it}\\
-z_{it}\\
-k_{it}\\
 age_{it}
 \end{pmatrix}
-\Bigg)g_{i}(\omega_{it};,\bar{\theta})d\omega_{it}\Bigg]=0,
+\Bigg)f_{i}(\omega_{it};,\bar{\theta})d\omega_{it}\Bigg]=0,
 \end{split}
 \end{equation}
 
 where $\bar{\theta}$ denotes the true values of $\theta$. The posterior distribution is specified as (age omitted for ease of notation):
 \begin{equation}\label{posterior}
 \begin{split}
-f_{i}(\omega_{it};\bar{\theta})&=f(\omega_{it}|y_{it}, z_{it}, k_{it}, I_{it}; \bar{\theta}) \propto\\
-&\prod_{t=1}^{T}f(y_{it}|\omega_{it}, z_{it}, k_{it};\bar{\theta})\times
-\prod_{t=1}^{T}f(z_{it}|\omega_{it}, k_{it};\bar{\theta})\times\\
-&\prod_{t=2}^{T}f(K_{it}|\omega_{it}, K_{it-1}, I_{it-1};\bar{\theta})\times \prod_{t=1}^{T}f(I_{it}|\omega_{it}, k_{it}; \bar{\theta})\times \\
-&\prod_{t=2}^{T}f(\omega_{it}|\omega_{it-1};\bar{\theta})\times f(\omega_{i1};\bar{\theta})\times f(K_{i1}|\omega_{i1};\bar{\theta})
+f_{i}(\omega_{it};\bar{\theta})&=f(\omega_{it}|y_{it}, k_{it}, l_{it}, m_{it}; \bar{\theta}) \propto\\
+&\prod_{t=1}^{T}f(y_{it}|k_{it}, l_{it}, m_{it}, \omega_{it};\bar{\theta})f(l_{it}|k_{it}, \omega_{it};\bar{\theta})f(m_{it}|k_{it}, \omega_{it};\bar{\theta}) \\
+&\times f(i_{it}|k_{it}, \omega_{it};\bar{\theta})f(\omega_{i1};\bar{\theta})\prod_{t=2}^{T}f(\omega_{it}|\omega_{it-1};\bar{\theta})
 \end{split}
 \end{equation}
 
-The posterior density in equation \eqref{posterior} is a closed-form expression when using piece-wise linear splines for $\theta(\cdot)$. The estimation is an Expectation Maximization (EM) algorithm. In \cite{Arellano2016} and \cite{Arellano2017}, the ``M-step'' is performed using quantile regression. Given an initial parameter value $\hat{\theta}^{0}$. Iterate on $s=0,1,2,\dots$ in the following two-step procedure until converge to a stationary distribution:
+The posterior density in equation \eqref{posterior} is a closed-form expression when using piecewise linear splines for $\theta(\cdot)$. The estimation is an Expectation Maximization (EM) algorithm. In \cite{Arellano2016} and \cite{Arellano2017}, the ``M-step'' is performed using quantile regression. Given an initial parameter value $\hat{\theta}^{0}$. Iterate on $s=0,1,2,\dots$ in the following two-step procedure until converge to a stationary distribution:
 
 \begin{enumerate}
     \item \textit{Stochastic E-Step}: Draw $M$ values $\omega_{i}^{(m)}=(\omega_{i1}^{(m)}, \omega_{i2}^{(m)},\dots, \omega_{iT}^{(m)})$ from
         \begin{equation*}
         \begin{split}
-            f_{i}(\omega_{it};,\hat{\theta}^{(s)})&=f(\omega_{it}|y_{it}, z_{it}, k_{it}, I_{it}; \hat{\theta}^{(s)}) \propto\\
-            &\prod_{t=1}^{T}f(y_{it}|\omega_{it}, z_{it}, k_{it};\hat{\theta}^{(s)})\times
-            \prod_{t=1}^{T}f(z_{it}|\omega_{it}, k_{it};\hat{\theta}^{(s)})\times\\
-            &\prod_{t=2}^{T}f(K_{it}|\omega_{it}, K_{it-1}, I_{it-1};\hat{\theta}^{(s)})\times \prod_{t=1}^{T}f(I_{it}|\omega_{it}, k_{it}; \hat{\theta}^{(s)})\times \\
-            &\prod_{t=2}^{T}f(\omega_{it}|\omega_{it-1};\hat{\theta}^{(s)})\times f(\omega_{i1};\hat{\theta}^{(s)})\times f(K_{i1}|\omega_{i1};\hat{\theta}^{(s)})
+            f_{i}(\omega_{it};\hat{\theta}^{(s)})&=f(\omega_{it}|y_{it}, k_{it}, l_{it}, m_{it}; \hat{\theta}^{(s)}) \propto\\
+            &\prod_{t=1}^{T}f(y_{it}|k_{it}, l_{it}, m_{it}, \omega_{it};\hat{\theta}^{(s)})f(l_{it}|k_{it}, \omega_{it};\hat{\theta}^{(s)})f(m_{it}|k_{it}, \omega_{it};\hat{\theta}^{(s)}) \\
+            &\times f(i_{it}|k_{it}, \omega_{it};\hat{\theta}^{(s)})f(\omega_{i1};\hat{\theta}^{(s)})\prod_{t=2}^{T}f(\omega_{it}|\omega_{it-1};\hat{\theta}^{(s)})
             \end{split}
         \end{equation*}
-    \item \textit{Maximization Step}: For $j=1,\dots, J$, solve
+    \item \textit{Maximization Step}: For $q=1,\dots, Q$, solve
     \begin{equation*}
     \begin{split}
-    \hat{\boldsymbol\rho}(\tau_{j})^{(s+1)}&=\underset{\boldsymbol\rho(\tau_{j})}{\operatorname{argmin}}\,\sum_{i=1}^{N}\sum_{t=2}^{T}\sum_{m=1}^{M}\Psi_{\tau_{j}}(\omega_{it}^{(m)}-\sum_{k=1}^{K}\rho_{k}g_{k}(\omega_{it-1}^{(m)}, age_{it}))\\
-    \hat{\boldsymbol\rho^{1}}(\tau_{j})^{(s+1)}&=\underset{\boldsymbol\rho^{1}(\tau_{j})}{\operatorname{argmin}}\,\sum_{i=1}^{N}\sum_{m=1}^{M}\Psi_{\tau_{j}}(\omega_{i1}^{(m)}-\sum_{k=1}^{K}\rho_{k}^{1}g_{k}(age_{i1}))\\
-    \hat{\boldsymbol\kappa^{1}}(\tau_{j})^{(s+1)}&=\underset{\boldsymbol\kappa^{1}(\tau_{j})}{\operatorname{argmin}}\,\sum_{i=1}^{N}\sum_{m=1}^{M}\Psi_{\tau_{j}}(K_{i1}-\sum_{k=1}^{K}\kappa_{k}^{1}g_{k}(\omega_{i1}^{(m)}, age_{i1}))\\
+    \hat{\boldsymbol\beta}(\tau_{q})^{(s+1)}&=\underset{\boldsymbol\beta(\tau_{q})}{\operatorname{argmin}}\,\sum_{i=1}^{N}\sum_{t=1}^{T}\sum_{m=1}^{M}\Psi_{\tau_{q}}(y_{it}-\sum_{j=1}^{J}\beta_{j}(\tau_{q})\psi_{j}(k_{it}, l_{it}, m_{it}, \omega_{it}^{(m)}, age_{it}))\\
+    \hat{\boldsymbol\iota}^{(s+1)}&=\underset{\boldsymbol\iota}{\operatorname{argmin}}\,\sum_{i=1}^{N}\sum_{t=1}^{T}\sum_{m=1}^{M}\Psi_{\tau_{q}}(i_{it}-\iota_{0}-\sum_{j=1}^{J}\iota_{j}\psi_{j}(k_{it}, \omega_{it}^{(m)}, age_{it}))\\
     \end{split}
     \end{equation*}
     
-    The parameters of the production function equation in \eqref{yimc} can be estimated using a nonlinear regression for a given draw of $\omega_{it}^{(m)}$. Then, the variance of the shock $\eta$ can be estimated using \footnote{The parameters of the investment equation, capital accumulation process, and static inputs can be estimated similarily, however are omitted for clarity. See appendix for details.}
-     \begin{equation}\label{staticyvar}
-     \hat{\sigma}^{2}=\frac{1}{NTM}\sum_{t=1}^{T}\sum_{i=1}^{N}\sum_{m=1}^{M}\Bigg[\Bigg(y_{it}-\hat{\alpha}-\sum_{k=1}^{K}\hat{\beta}_{k}g_{k}(\omega_{it}^{(m)}, z_{it}, k_{it}, age_{it})\Bigg)^{2}\Bigg]
+    The parameters of the production function equation in \eqref{iimc} can be estimated using a nonlinear regression for a given draw of $\omega_{it}^{(m)}$. Then, the variance of the shock $\zeta_{it}$ can be estimated using \footnote{The parameters of the productivity process can be estimated similarly, however these are omitted for clarity. See Appendix C for details.}
+     \begin{equation}\label{staticivar}
+     \hat{\sigma_{\zeta}}^{2}=\frac{1}{NTM}\sum_{i=1}^{N}\sum_{t=1}^{T}\sum_{m=1}^{M}\Bigg[\Bigg(i_{it}-\hat{\iota_{0}}-\sum_{j=1}^{J}\hat{\iota}_{j}\psi_{j}(k_{it}, \omega_{it}^{(m)}, age_{it})\Bigg)^{2}\Bigg]
      \end{equation}
+     so that $\hat{\iota_{0}}(\tau_{q})=\hat{\iota_{0}}+\hat{\sigma_{\zeta}}\Phi^{-1}(\tau_{q})$
 \end{enumerate}
 
 \pagebreak
 \newpage
-
 \bibliographystyle{ecca.bst}
 \bibliography{NL_PF_QR}
+
+\pagebreak
+\newpage
+
+\appendix
+
+\section*{Appendix A}
+\subsection*{The Markov Law of Motion}
+Under assumption \eqref{pdynamics}, the Markov law of motion 
+\begin{equation*}
+    \begin{split}
+        f_{X_{t}, \omega_{t}|X_{t-1}, \omega_{t-1}}&=f_{Y_{t}|K_{t}, L_{t}, M_{t}, \omega_{t}}f_{K_{t}|K_{t-1}, I_{t-1}}f_{I_{t}|K_{t}, \omega_{t}}\\
+                &\times f_{L_{t}|K_{t}, \omega_{t}}f_{M_{t}|K_{t}, \omega_{t}}f_{\omega_{t}|\omega_{t-1}}
+    \end{split}
+\end{equation*}
+where $X_{t}=(Y_{t}, K_{t}, L_{t}, M_{t}, I_{t})$.\\
+
+\noindent \textbf{Proof}:\\
+\noindent Plugging in for $X_{t}$ and using the Law of Total Probability:
+\begin{equation*}
+\begin{split}
+f_{X_{t}, \omega_{t}|X_{t-1}, \omega_{t-1}}&=f_{Y_{t}, K_{t}, L_{t}, M_{t}, I_{t}, \omega_{t}|Y_{t-1}, K_{t-1}, L_{t-1}, M_{t-1}, I_{t-1}, \omega_{t-1}}\\
+&= f_{Y_{t}|K_{t}, L_{t}, M_{t}, I_{t}, \omega_{t}, \omega_{t-1}, Y_{t-1}, K_{t-1}, L_{t-1}, M_{t-1}, I_{t-1}}\\
+&\times f_{L_{t}|K_{t}, \omega_{t}, M_{t}, I_{t}, \omega_{t-1},  Y_{t-1}, K_{t-1}, L_{t-1}, M_{t-1}, I_{t-1}}\\
+&\times f_{M_{t}|K_{t}, \omega_{t}, I_{t}, \omega_{t-1},  Y_{t-1}, K_{t-1}, L_{t-1}, M_{t-1}, I_{t-1}}\\
+&\times f_{I_{t}|K_{t}, \omega_{t}, \omega_{t-1},  Y_{t-1}, K_{t-1}, L_{t-1}, M_{t-1}, I_{t-1}}\\
+&\times f_{K_{t}|\omega_{t}, \omega_{t-1},  Y_{t-1}, K_{t-1}, L_{t-1}, M_{t-1}, I_{t-1}}\\
+& \times f_{\omega_{t}|\omega_{t-1},  Y_{t-1}, K_{t-1}, L_{t-1}, M_{t-1}, I_{t-1}}
+\end{split}
+\end{equation*}
+Then applying Assumption \eqref{pdynamics}(ii)
+\begin{equation*}
+\begin{split}
+f_{X_{t}, \omega_{t}|X_{t-1}, \omega_{t-1}}&= f_{Y_{t}|K_{t}, L_{t}, M_{t}, I_{t}, \omega_{t}}f_{L_{t}|K_{t}, \omega_{t}, M_{t}, I_{t}}f_{M_{t}|K_{t}, \omega_{t}, I_{t}}f_{I_{t}|K_{t}, \omega_{t}}\\
+&\times f_{K_{t}|\omega_{t}, \omega_{t-1},  Y_{t-1}, K_{t-1}, L_{t-1}, M_{t-1}, I_{t-1}}f_{\omega_{t}|\omega_{t-1},  Y_{t-1}, K_{t-1}, L_{t-1}, M_{t-1}, I_{t-1}}
+\end{split}
+\end{equation*}
+Then applying Assumption \eqref{pdynamics}(iii) and \eqref{pdynamics}(iv)(a and b)
+\begin{equation*}
+f_{X_{t}, \omega_{t}|X_{t-1}, \omega_{t-1}}= f_{Y_{t}|K_{t}, L_{t}, M_{t}, \omega_{t}}f_{L_{t}|K_{t}, \omega_{t}}f_{M_{t}|K_{t}, \omega_{t}}f_{I_{t}|K_{t}, \omega_{t}}f_{K_{t}|K_{t-1}, I_{t-1}}f_{\omega_{t}|\omega_{t-1}}
+\end{equation*}
+\subsection*{The Observed Density}
+Under assumption \eqref{pdynamics}, the conditional density $f_{X_{t}|X_{t-1}, X_{t-2}}$ can be written as
+\begin{equation*}
+f_{X_{t}|X_{t-1}, X_{t-2}}=\int f_{I_{t}|K_{t}, \omega_{t}}f_{Z_{t}|K_{t}, \omega_{t}}f_{K_{t}|K_{t-1}, I_{t-1}}f_{\omega_{t}|X_{t-1}, X_{t-2}}d\omega_{t}
+\end{equation*}
+\textbf{Proof:} \\
+\noindent We can write the joint density of $X_{t}, X_{t-1}, X_{t-2}$ as
+\begin{equation*}
+f_{X_{t},X_{t-1}, X_{t-2}}=\int\int f_{X_{t},X_{t-1}, X_{t-2}, \omega_{t}, \omega_{t-1}}d\omega_{t}d\omega_{t-1}
+\end{equation*}
+Plugging in for $X_{t}$ and using the Law of Total Probability:
+\begin{equation*}
+\begin{split}
+f_{X_{t},X_{t-1}, X_{t-2}}&=\int\int f_{Y_{t}, K_{t}, L_{t}, M_{t}, I_{t}, Y_{t-1}, K_{t-1}, L_{t-1}, M_{t-1}, I_{t-1}, Y_{t-2}, K_{t-2}, L_{t-2}, M_{t-2}, I_{t-2}, \omega_{t}, \omega_{t-1}}d\omega_{t}d\omega_{t-1}\\
+&=\int\int f_{I_{t}|Y_{t}, K_{t}, L_{t}, M_{t}, Y_{t-1}, K_{t-1}, L_{t-1}, M_{t-1}, I_{t-1}, Y_{t-2}, K_{t-2}, L_{t-2}, M_{t-2}, I_{t-2}, \omega_{t}, \omega_{t-1}}\\
+&\times f_{Y_{t}, L_{t}, M_{t}|K_{t}, Y_{t-1}, K_{t-1}, L_{t-1}, M_{t-1}, I_{t-1}, Y_{t-2}, K_{t-2}, L_{t-2}, M_{t-2}, I_{t-2}, \omega_{t}, \omega_{t-1}}\\
+&\times f_{K_{t}|Y_{t-1}, K_{t-1}, L_{t-1}, M_{t-1}, I_{t-1}, Y_{t-2}, K_{t-2}, L_{t-2}, M_{t-2}, I_{t-2}, \omega_{t}, \omega_{t-1}}\\
+&\times f_{Y_{t-1}, K_{t-1}, L_{t-1}, M_{t-1}, I_{t-1}, Y_{t-2}, K_{t-2}, L_{t-2}, M_{t-2}, I_{t-2}, \omega_{t}, \omega_{t-1}}d\omega_{t}d\omega_{t-1}
+\end{split}
+\end{equation*}
+Using Assumption \eqref{pdynamics}(i)
+\begin{equation*}
+\begin{split}
+f_{X_{t},X_{t-1}, X_{t-2}}&=\int\int f_{I_{t}|Y_{t}, K_{t}, L_{t}, M_{t}, Y_{t-1}, K_{t-1}, L_{t-1}, M_{t-1}, I_{t-1}, \omega_{t}, \omega_{t-1}}\\
+&\times f_{Y_{t}, L_{t}, M_{t}|K_{t}, Y_{t-1}, K_{t-1}, L_{t-1}, M_{t-1}, I_{t-1}, \omega_{t}, \omega_{t-1}}\\
+&\times f_{K_{t}|Y_{t-1}, K_{t-1}, L_{t-1}, M_{t-1}, I_{t-1}, \omega_{t}, \omega_{t-1}}\\
+&\times f_{Y_{t-1}, K_{t-1}, L_{t-1}, M_{t-1}, I_{t-1}, Y_{t-2}, K_{t-2}, L_{t-2}, M_{t-2}, I_{t-2}, \omega_{t}, \omega_{t-1}}d\omega_{t}d\omega_{t-1}
+\end{split}
+\end{equation*}
+Using Assumption \eqref{pdynamics}(ii)
+\begin{equation*}
+\begin{split}
+f_{X_{t},X_{t-1}, X_{t-2}}&=\int\int f_{I_{t}|Y_{t}, K_{t}, L_{t}, M_{t}, \omega_{t}}f_{Y_{t}, L_{t}, M_{t}|K_{t}, \omega_{t}}f_{K_{t}|Y_{t-1}, K_{t-1}, L_{t-1}, M_{t-1}, I_{t-1}, \omega_{t}, \omega_{t-1}}\\
+&\times f_{Y_{t-1}, K_{t-1}, L_{t-1}, M_{t-1}, I_{t-1}, Y_{t-2}, K_{t-2}, L_{t-2}, M_{t-2}, I_{t-2}, \omega_{t}, \omega_{t-1}}d\omega_{t}d\omega_{t-1}
+\end{split}
+\end{equation*}
+Then applying Assumption \eqref{pdynamics}(iii) and \eqref{pdynamics}(iv)(a and b)
+\begin{equation*}
+\begin{split}
+f_{X_{t},X_{t-1}, X_{t-2}}&=\int f_{I_{t}|K_{t}, \omega_{t}}f_{Y_{t}, L_{t}, M_{t}|K_{t}, \omega_{t}}f_{K_{t}|K_{t-1}, I_{t-1}}\\
+&\times \Bigg(\int f_{Y_{t-1}, K_{t-1}, L_{t-1}, M_{t-1}, I_{t-1}, Y_{t-2}, K_{t-2}, L_{t-2}, M_{t-2}, I_{t-2}, \omega_{t}, \omega_{t-1}}d\omega_{t-1}\Bigg) d\omega_{t}\\
+&=\int f_{I_{t}|K_{t}, \omega_{t}}f_{Y_{t}, L_{t}, M_{t}|K_{t}, \omega_{t}}f_{K_{t}|K_{t-1}, I_{t-1}}\\
+&\times f_{Y_{t-1}, K_{t-1}, L_{t-1}, M_{t-1}, I_{t-1}, Y_{t-2}, K_{t-2}, L_{t-2}, M_{t-2}, I_{t-2}, \omega_{t}} d\omega_{t}\\
+&=\int f_{I_{t}|K_{t}, \omega_{t}}f_{Y_{t}, L_{t}, M_{t}|K_{t}, \omega_{t}}f_{K_{t}|K_{t-1}, I_{t-1}}f_{X_{t-1}, X_{t-2}, \omega_{t}} d\omega_{t}
+\end{split}
+\end{equation*}
+Or similarly
+\begin{equation*}
+f_{X_{t}|X_{t-1}, X_{t-2}}=\int f_{I_{t}|K_{t}, \omega_{t}}f_{Z_{t}|K_{t}, \omega_{t}}f_{K_{t}|K_{t-1}, I_{t-1}}f_{\omega_{t}|X_{t-1}, X_{t-2}} d\omega_{t}
+\end{equation*}
+where $Z_{t}=(Y_{t}, L_{t}, M_{t})$
+\subsection*{Main Identification Result}
+The operator corresponding to the conditional density $f_{X_{t}|X_{t-1}, X_{t-2}}$ can be written as
+\begin{equation*}
+\begin{split}
+[L_{X_{t}|X_{t-1}, X_{t-2}}\circ g](I_{t})&=\int f_{X_{t}|X_{t-1}, X_{t-2}}g(I_{t-2})dI_{t-2}\\
+&=\int\int f_{I_{t}|K_{t}, \omega_{t}}f_{Z_{t}|K_{t}, \omega_{t}}f_{K_{t}|K_{t-1}, I_{t-1}}f_{\omega_{t}|X_{t-1}, X_{t-2}}d\omega_{t}g(I_{t-2})dI_{t-2}\\
+&=\int f_{I_{t}|K_{t}, \omega_{t}}f_{Z_{t}|K_{t}, \omega_{t}}f_{K_{t}|K_{t-1}, I_{t-1}}\Bigg[\int f_{\omega_{t}|X_{t-1}, X_{t-2}}g(I_{t-2})dI_{t-2}\Bigg]d\omega_{t}\\
+&=\int f_{I_{t}|K_{t}, \omega_{t}}f_{Z_{t}|K_{t}, \omega_{t}}f_{K_{t}|K_{t-1}, I_{t-1}}[L_{\omega_{t}|X_{t-1}, X_{t-2}}\circ g](\omega_{t})d\omega_{t}\\
+&=\int f_{I_{t}|K_{t}, \omega_{t}}[\Delta_{Z_{t}|K_{t}, \omega_{t}}\Delta_{K_{t}|K_{t-1}, I_{t-1}}L_{\omega_{t}|X_{t-1}, X_{t-2}}\circ g](\omega_{t})d\omega_{t}\\
+&=[L_{I_{t}|K_{t}, \omega_{t}}\Delta_{Z_{t}|K_{t}, \omega_{t}}\Delta_{K_{t}|K_{t-1}, I_{t-1}}L_{\omega_{t}|X_{t-1}, X_{t-2}}\circ g](I_{t})
+\end{split}
+\end{equation*}
+Thus we have the operator representation:
+\begin{equation*}
+L_{X_{t}|X_{t-1}, X_{t-2}}=L_{I_{t}|K_{t}, \omega_{t}}\Delta_{Z_{t}|K_{t}, \omega_{t}}\Delta_{K_{t}|K_{t-1}, I_{t-1}}L_{\omega_{t}|X_{t-1}, X_{t-2}}
+\end{equation*}
+Integrating the conditional density in Equation \eqref{obs} with respect to $Z_{t}$ and writing in operator notation yields:
+\begin{equation*}
+L_{I_{t}, K_{t}|X_{t-1}, X_{t-2}}=L_{I_{t}|K_{t}, \omega_{t}}\Delta_{K_{t}|K_{t-1}, I_{t-1}}L_{\omega_{t}|X_{t-1}, X_{t-2}}
+\end{equation*}
+Then if Assumption \eqref{injectivity} is satisfied we can rearrange the above equation which yields:
+\begin{equation*}
+L_{\omega_{t}|X_{t-1}, X_{t-2}}=\Delta^{-1}_{K_{t}|K_{t-1}, I_{t-1}}L^{-1}_{I_{t}|K_{t}, \omega_{t}}L_{I_{t}, K_{t}|X_{t-1}, X_{t-2}}
+\end{equation*}
+Plugging the above equation into equation \eqref{obsop} yields
+\begin{equation*}
+\begin{split}
+L_{X_{t}|X_{t-1}, X_{t-2}}&=L_{I_{t}|K_{t}, \omega_{t}}\Delta_{Z_{t}|K_{t}, \omega_{t}}\Delta_{K_{t}|K_{t-1}, I_{t-1}}\Bigg(\Delta^{-1}_{K_{t}|K_{t-1}, I_{t-1}}L^{-1}_{I_{t}|K_{t}, \omega_{t}}L_{I_{t}, K_{t}|X_{t-1}, X_{t-2}}\Bigg)\\
+&=L_{I_{t}|K_{t}, \omega_{t}}\Delta_{Z_{t}|K_{t}, \omega_{t}}L^{-1}_{I_{t}|K_{t}, \omega_{t}}L_{I_{t}, K_{t}|X_{t-1}, X_{t-2}}
+\end{split}
+\end{equation*}
+Then provided $L_{I_{t}, K_{t}|X_{t-1}, X_{t-2}}$ is injective according to Assumption \eqref{injectivity} we have that:
+\begin{equation*}
+L_{X_{t}|X_{t-1}, X_{t-2}}L^{-1}_{I_{t}, K_{t}|X_{t-1}, X_{t-2}}=L_{I_{t}|K_{t}, \omega_{t}}\Delta_{Z_{t}|K_{t}, \omega_{t}}L^{-1}_{I_{t}|K_{t}, \omega_{t}}
+\end{equation*}
+Which is the decomposition in \eqref{decomp}. Then using the results of \cite{Hu2008} combined with assumptions \eqref{bounded}, \eqref{unique}, and \eqref{normalize} the densities $f_{I_{t}|K_{t}, \omega_{t}}$, $f_{Y_{t}|K_{t}, L_{t}, M_{t}, \omega_{t}}$, $f_{L_{t}|K_{t}, \omega_{t}}$, $f_{M_{t}|K_{t}, \omega_{t}}$, $f_{K_{t}|K_{t-1}, I_{t-1}}$ and $f_{\omega_{t}|\omega_{t-1}}$ are identified.
+
+\section*{Appendix B}
+\subsection*{Injectivity of $L_{\omega_{t-1}, X_{t-1}, X_{t-2}}$}
+First we write the corresponding density as:
+\begin{equation*}
+\begin{split}
+f_{\omega_{t-1}, X_{t-1}, X_{t-2}}&=\int f_{\omega_{t-1}, \omega_{t-2}, X_{t-1}, X_{t-2}}d\omega_{t-2}\\
+&=\int f_{X_{t-1}|\omega_{t-1}, \omega_{t-2}, X_{t-2}}f_{\omega_{t-1}, \omega_{t-2}, X_{t-2}}d\omega_{t-2}\\
+&=\int f_{X_{t-1}|\omega_{t-1}, X_{t-2}}f_{\omega_{t-1}|\omega_{t-2}}f_{\omega_{t-2}, X_{t-2}}d\omega_{t-2}\\
+\end{split}
+\end{equation*}
+
+Where the simplification from the second line to the third line is a consequence of assumption \eqref{pdynamics}(iii). Then we write:
+\begin{equation*}
+\begin{split}
+f_{\omega_{t-1}, X_{t-1}, X_{t-2}}&=f_{X_{t-1}|\omega_{t-1}, X_{t-2}}f_{X_{t-2}}\int f_{\omega_{t-1}|\omega_{t-2}}f_{\omega_{t-2}}d\omega_{t-2}\\
+&=f_{X_{t-1}|\omega_{t-1}, X_{t-2}}f_{X_{t-2}}f_{\omega_{t-1}}
+\end{split}
+\end{equation*}
+The first density in the above equation simplifies to
+\begin{equation*}
+\begin{split}
+f_{X_{t-1}|\omega_{t-1}, X_{t-2}}&=f_{Y_{t-1}, K_{t-1}, L_{t-1}, M_{t-1}, I_{t-1}|\omega_{t-1}, Y_{t-2}, K_{t-2}, L_{t-2}, M_{t-2}, I_{t-2}}\\
+&=f_{Y_{t-1}|K_{t-1}, L_{t-1}, M_{t-1}, I_{t-1}, \omega_{t-1}, Y_{t-2}, K_{t-2}, L_{t-2}, M_{t-2}, I_{t-2}}\\
+&\times f_{L_{t-1}|K_{t-1}, M_{t-1}, I_{t-1}, \omega_{t-1}, Y_{t-2}, K_{t-2}, L_{t-2}, M_{t-2}, I_{t-2}} \\
+& \times f_{M_{t-1}|K_{t-1}, I_{t-1}, \omega_{t-1}, Y_{t-2}, K_{t-2}, L_{t-2}, M_{t-2}, I_{t-2}}\\
+&\times f_{I_{t-1}|K_{t-1}, \omega_{t-1}, Y_{t-2}, K_{t-2}, L_{t-2}, M_{t-2}, I_{t-2}}\\
+&\times f_{K_{t-1}|\omega_{t-1}, Y_{t-2}, K_{t-2}, L_{t-2}, M_{t-2}, I_{t-2}}
+\end{split}
+\end{equation*}
+Using Assumption \eqref{pdynamics}(ii-iv) this simplifies to
+\begin{equation*}
+f_{X_{t-1}|\omega_{t-1}, X_{t-2}}=f_{Y_{t-1}|K_{t-1}, L_{t-1}, M_{t-1}}f_{L_{t-1}|K_{t-1}, \omega_{t-1}}f_{M_{t-1}|K_{t-1}, \omega_{t-1}}f_{I_{t-1}|K_{t-1}, \omega_{t-1}}f_{K_{t-1}|K_{t-2}, I_{t-2}}
+\end{equation*}
+So we may express in operator notation the joint density of $f_{\omega_{t-1}, X_{t-1}, X_{t-2}}$
+\begin{equation*}
+L_{\omega_{t-1}, X_{t-1}, X_{t-2}}=L_{I_{t-1}|K_{t-1}, \omega_{t-1}}\Delta_{Z_{t-1}|K_{t-1}, \omega_{t-1}}\Delta_{K_{t-1}|K_{t-2}, I_{t-2}}\Delta_{X_{t-2}}\Delta_{\omega_{t-1}}
+\end{equation*}
+We have already assumed the invertibility of $L_{I_{t-1}|K_{t-1}, \omega_{t-1}}$, $\Delta_{Z_{t-1}|K_{t-1}, \omega_{t-1}}$ and $\Delta_{K_{t-1}|K_{t-2}, I_{t-2}}$. Both $\Delta_{X_{t-2}}$ and $\Delta_{\omega_{t-1}}$ are invertible if their corresponding densities are nonzero and bounded as required by Assumption \eqref{bounded}.                                               
+
+
+
+
+
 
 
 \end{document}

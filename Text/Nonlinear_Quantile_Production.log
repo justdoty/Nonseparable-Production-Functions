@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.18 (TeX Live 2017) (preloaded format=pdflatex 2017.5.23)  20 JUN 2020 19:56
+This is pdfTeX, Version 3.14159265-2.6-1.40.18 (TeX Live 2017) (preloaded format=pdflatex 2017.5.23)  15 AUG 2020 12:30
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -520,40 +520,48 @@ LaTeX Info: Redefining \cite on input line 694.
 )
 \c@assump=\count170
 \c@lemma=\count171
+\c@theorem=\count172
 (/usr/local/texlive/2017/texmf-dist/tex/latex/appendix/appendix.sty
 Package: appendix 2009/09/02 v1.2b extra appendix facilities
-\c@@pps=\count172
-\c@@ppsavesec=\count173
-\c@@ppsaveapp=\count174
+\c@@pps=\count173
+\c@@ppsavesec=\count174
+\c@@ppsaveapp=\count175
 )
 (/Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Functio
-n_QR/Code/Text/Nonlinear_Quantile_Production.aux)
+n_QR/Code/Text/Nonlinear_Quantile_Production.aux
+
+LaTeX Warning: Label `ymoment' multiply defined.
+
+
+LaTeX Warning: Label `ymoment@cref' multiply defined.
+
+)
 \openout1 = `Nonlinear_Quantile_Production.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 35.
-LaTeX Font Info:    ... okay on input line 35.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 35.
-LaTeX Font Info:    ... okay on input line 35.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 35.
-LaTeX Font Info:    ... okay on input line 35.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 35.
-LaTeX Font Info:    ... okay on input line 35.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 35.
-LaTeX Font Info:    ... okay on input line 35.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 35.
-LaTeX Font Info:    ... okay on input line 35.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 36.
+LaTeX Font Info:    ... okay on input line 36.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 36.
+LaTeX Font Info:    ... okay on input line 36.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 36.
+LaTeX Font Info:    ... okay on input line 36.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 36.
+LaTeX Font Info:    ... okay on input line 36.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 36.
+LaTeX Font Info:    ... okay on input line 36.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 36.
+LaTeX Font Info:    ... okay on input line 36.
 (/usr/local/texlive/2017/texmf-dist/tex/context/base/mkii/supp-pdf.mkii
 [Loading MPS to PDF converter (version 2006.09.02).]
-\scratchcounter=\count175
+\scratchcounter=\count176
 \scratchdimen=\dimen189
 \scratchbox=\box54
-\nofMPsegments=\count176
-\nofMParguments=\count177
+\nofMPsegments=\count177
+\nofMParguments=\count178
 \everyMPshowfont=\toks32
-\MPscratchCnt=\count178
+\MPscratchCnt=\count179
 \MPscratchDim=\dimen190
-\MPnumerator=\count179
-\makeMPintoPDFobject=\count180
+\MPnumerator=\count180
+\makeMPintoPDFobject=\count181
 \everyMPtoPDFconversion=\toks33
 ) (/usr/local/texlive/2017/texmf-dist/tex/generic/oberdiek/pdftexcmds.sty
 Package: pdftexcmds 2017/03/19 v0.25 Utility functions of pdfTeX for LuaTeX (HO
@@ -604,139 +612,154 @@ File: siunitx-abbreviations.cfg 2017/05/19 v2.7g siunitx: Abbreviated units
 )
 Package caption Info: Begin \AtBeginDocument code.
 Package caption Info: End \AtBeginDocument code.
-\c__siunitx_mathsf_int=\count181
-LaTeX Font Info:    Try loading font information for U+msa on input line 35.
+\c__siunitx_mathsf_int=\count182
+LaTeX Font Info:    Try loading font information for U+msa on input line 36.
 (/usr/local/texlive/2017/texmf-dist/tex/latex/amsfonts/umsa.fd
 File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 )
-LaTeX Font Info:    Try loading font information for U+msb on input line 35.
+LaTeX Font Info:    Try loading font information for U+msb on input line 36.
 (/usr/local/texlive/2017/texmf-dist/tex/latex/amsfonts/umsb.fd
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 )
-\c__siunitx_mathtt_int=\count182
-LaTeX Font Info:    Try loading font information for OMS+cmr on input line 36.
+\c__siunitx_mathtt_int=\count183
+LaTeX Font Info:    Try loading font information for OMS+cmr on input line 37.
 (/usr/local/texlive/2017/texmf-dist/tex/latex/base/omscmr.fd
 File: omscmr.fd 2014/09/29 v2.5h Standard LaTeX font definitions
 )
 LaTeX Font Info:    Font shape `OMS/cmr/m/n' in size <8> not available
-(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 36.
+(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 37.
 LaTeX Font Info:    Font shape `OMS/cmr/m/n' in size <6> not available
-(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 36.
+(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 37.
 
-Underfull \hbox (badness 10000) in paragraph at lines 42--44
-
- []
-
-LaTeX Font Info:    Try loading font information for U+bbm on input line 57.
-(/usr/local/texlive/2017/texmf-dist/tex/latex/bbm-macros/ubbm.fd
-File: ubbm.fd 1999/03/15 V 1.2 Font definition for bbm font - TH
-)
-Underfull \hbox (badness 10000) in paragraph at lines 61--63
+Underfull \hbox (badness 10000) in paragraph at lines 46--48
 
  []
 
 [1
 
 {/usr/local/texlive/2017/texmf-var/fonts/map/pdftex/updmap/pdftex.map}]
-Overfull \hbox (38.71735pt too wide) in paragraph at lines 96--97
-[]\OT1/cmr/m/it/10 Non-dynamic out-put and in-puts: $\OML/cmm/m/it/10 f[] \OT1/
-cmr/m/n/10 = \OML/cmm/m/it/10 f[]$ 
- []
-
-[2]
-Overfull \hbox (4.66945pt too wide) in paragraph at lines 97--98
-[]\OT1/cmr/m/it/10 First-order Markov: $\OML/cmm/m/it/10 f[] \OT1/cmr/m/n/10 = 
-\OML/cmm/m/it/10 f[]$\OT1/cmr/m/it/10 , where $\OMS/cmsy/m/n/10 I[]$
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 103--104
+LaTeX Font Info:    Try loading font information for U+bbm on input line 85.
+(/usr/local/texlive/2017/texmf-dist/tex/latex/bbm-macros/ubbm.fd
+File: ubbm.fd 1999/03/15 V 1.2 Font definition for bbm font - TH
+) [2]
+Underfull \hbox (badness 10000) in paragraph at lines 108--109
 
  []
 
 
-Overfull \hbox (53.35558pt too wide) detected at line 145
-\OML/cmm/m/it/9 f\OT1/cmr/m/n/9 (\OML/cmm/m/it/9 Y[]; L[]; M[]; K[]; I[]; ![]\O
-MS/cmsy/m/n/9 j\OML/cmm/m/it/9 K[]; I[]; ![]\OT1/cmr/m/n/9 ) = \OML/cmm/m/it/9 
-f\OT1/cmr/m/n/9 (\OML/cmm/m/it/9 Y[]\OMS/cmsy/m/n/9 j\OML/cmm/m/it/9 L[]; M[]; 
-K[]; ![]\OT1/cmr/m/n/9 )\OML/cmm/m/it/9 f\OT1/cmr/m/n/9 (\OML/cmm/m/it/9 L[]\OM
-S/cmsy/m/n/9 j\OML/cmm/m/it/9 K[]; ![]\OT1/cmr/m/n/9 )\OML/cmm/m/it/9 f\OT1/cmr
-/m/n/9 (\OML/cmm/m/it/9 M[]\OMS/cmsy/m/n/9 j\OML/cmm/m/it/9 K[]; ![]\OT1/cmr/m/
-n/9 )\OML/cmm/m/it/9 f\OT1/cmr/m/n/9 (\OML/cmm/m/it/9 I[]\OMS/cmsy/m/n/9 j\OML/
-cmm/m/it/9 K[]; ![]\OT1/cmr/m/n/9 )\OML/cmm/m/it/9 f\OT1/cmr/m/n/9 (\OML/cmm/m/
-it/9 K[]\OMS/cmsy/m/n/9 j\OML/cmm/m/it/9 K[]; I[]\OT1/cmr/m/n/9 )\OML/cmm/m/it/
-9 f\OT1/cmr/m/n/9 (\OML/cmm/m/it/9 ![]\OMS/cmsy/m/n/9 j\OML/cmm/m/it/9 ![]\OT1/
-cmr/m/n/9 )
+Underfull \hbox (badness 10000) in paragraph at lines 121--122
+
  []
 
 [3]
-Overfull \hbox (2.04076pt too wide) in paragraph at lines 193--194
-\OT1/cmr/m/n/9 ear op-er-a-tor $\OML/cmm/m/it/9 L[]$ \OT1/cmr/m/n/9 which cor-r
-e-sponds to the ob-served den-sity $\OML/cmm/m/it/9 f[]$\OT1/cmr/m/n/9 .
+Underfull \hbox (badness 10000) in paragraph at lines 126--128
+
+ []
+
+
+Overfull \hbox (35.28242pt too wide) detected at line 132
+\OT1/cmr/m/n/10 [\OML/cmm/m/it/10 L[] \OMS/cmsy/m/n/10 ^^N \OML/cmm/m/it/10 g\O
+T1/cmr/m/n/10 ](\OML/cmm/m/it/10 I[]\OT1/cmr/m/n/10 ) \OMS/cmsy/m/n/10 ^^Q [] \
+OML/cmm/m/it/10 f[]\OT1/cmr/m/n/10 (\OML/cmm/m/it/10 Z[]; I[]\OMS/cmsy/m/n/10 j
+\OML/cmm/m/it/10 Z[]; I[]; Z[]; I[]\OT1/cmr/m/n/10 )\OML/cmm/m/it/10 g\OT1/cmr/
+m/n/10 (\OML/cmm/m/it/10 I[]\OT1/cmr/m/n/10 )\OML/cmm/m/it/10 dI[]
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 155--157
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 158--159
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 162--163
+
  []
 
 [4]
-Underfull \hbox (badness 10000) in paragraph at lines 265--266
+Underfull \hbox (badness 10000) in paragraph at lines 165--169
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 183--184
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 192--194
 
  []
 
 [5]
-Underfull \hbox (badness 10000) in paragraph at lines 297--298
+Underfull \hbox (badness 10000) in paragraph at lines 243--245
 
  []
 
-[6] [7] [8]
+[6] [7]
+Underfull \hbox (badness 10000) in paragraph at lines 291--292
+
+ []
+
+[8] [9]
 (/Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Functio
-n_QR/Code/Text/Nonlinear_Quantile_Production.bbl) [9]
+n_QR/Code/Text/Nonlinear_Quantile_Production.bbl) [10]
+Underfull \hbox (badness 10000) in paragraph at lines 388--390
+
+ []
+
+[11] [12] [13] [14]
 (/Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Functio
-n_QR/Code/Text/Nonlinear_Quantile_Production.aux) ) 
+n_QR/Code/Text/Nonlinear_Quantile_Production.aux)
+
+LaTeX Warning: There were multiply-defined labels.
+
+ ) 
 Here is how much of TeX's memory you used:
- 16700 strings out of 492995
- 331952 string characters out of 6132704
- 373991 words of memory out of 5000000
- 20083 multiletter control sequences out of 15000+600000
- 20888 words of font info for 83 fonts, out of 8000000 for 9000
+ 16693 strings out of 492995
+ 331808 string characters out of 6132704
+ 370058 words of memory out of 5000000
+ 20084 multiletter control sequences out of 15000+600000
+ 18210 words of font info for 73 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  39i,21n,38p,10494b,378s stack positions out of 5000i,500n,10000p,200000b,80000s
- </Users/justindoty/Library/
-texlive/2017/texmf-var/fonts/pk/ljfour/public/bbm/bbm9.600pk> </Users/justindot
-y/Library/texlive/2017/texmf-var/fonts/pk/ljfour/public/bbm/bbm10.600pk></usr/l
-ocal/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb></usr/lo
-cal/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb></usr/loc
-al/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx9.pfb></usr/local
-/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmcsc10.pfb></usr/local
-/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb></usr/local/
-texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cmextra/cmex9.pfb></usr/loc
-al/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/loca
-l/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi5.pfb></usr/local/
-texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi6.pfb></usr/local/te
-xlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi7.pfb></usr/local/texl
-ive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi9.pfb></usr/local/texliv
-e/2017/texmf-dist/fonts/type1/public/amsfonts/cmextra/cmmib6.pfb></usr/local/te
-xlive/2017/texmf-dist/fonts/type1/public/amsfonts/cmextra/cmmib9.pfb></usr/loca
-l/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/local/
-texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb></usr/local/te
-xlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmr17.pfb></usr/local/texl
-ive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmr5.pfb></usr/local/texlive
-/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmr6.pfb></usr/local/texlive/20
-17/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb></usr/local/texlive/2017/
-texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb></usr/local/texlive/2017/tex
-mf-dist/fonts/type1/public/amsfonts/cm/cmr9.pfb></usr/local/texlive/2017/texmf-
-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/local/texlive/2017/texmf-d
-ist/fonts/type1/public/amsfonts/cm/cmsy5.pfb></usr/local/texlive/2017/texmf-dis
-t/fonts/type1/public/amsfonts/cm/cmsy6.pfb></usr/local/texlive/2017/texmf-dist/
-fonts/type1/public/amsfonts/cm/cmsy7.pfb></usr/local/texlive/2017/texmf-dist/fo
-nts/type1/public/amsfonts/cm/cmsy8.pfb></usr/local/texlive/2017/texmf-dist/font
-s/type1/public/amsfonts/cm/cmsy9.pfb></usr/local/texlive/2017/texmf-dist/fonts/
-type1/public/amsfonts/cm/cmti10.pfb></usr/local/texlive/2017/texmf-dist/fonts/t
-ype1/public/amsfonts/cm/cmti9.pfb></usr/local/texlive/2017/texmf-dist/fonts/typ
-e1/public/amsfonts/cm/cmtt8.pfb>
+ </Users/justindoty/Library/texlive/2017/texmf-var/fonts/pk/ljfour/public/bbm
+/bbm10.600pk></usr/local/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm
+/cmbx10.pfb></usr/local/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/
+cmbx12.pfb></usr/local/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/c
+mcsc10.pfb></usr/local/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/c
+mex10.pfb></usr/local/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cm
+mi10.pfb></usr/local/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmm
+i12.pfb></usr/local/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi
+5.pfb></usr/local/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi6.
+pfb></usr/local/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi7.pf
+b></usr/local/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi8.pfb>
+</usr/local/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmmib10.pfb>
+</usr/local/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cmextra/cmmib7.
+pfb></usr/local/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pf
+b></usr/local/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb>
+</usr/local/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmr17.pfb></
+usr/local/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmr5.pfb></usr
+/local/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmr6.pfb></usr/lo
+cal/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb></usr/local
+/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb></usr/local/te
+xlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/local/tex
+live/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy5.pfb></usr/local/texli
+ve/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy6.pfb></usr/local/texlive
+/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb></usr/local/texlive/2
+017/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy8.pfb></usr/local/texlive/201
+7/texmf-dist/fonts/type1/public/amsfonts/cm/cmti10.pfb></usr/local/texlive/2017
+/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt8.pfb>
 Output written on /Users/justindoty/Documents/Research/Dissertation/Nonlinear_P
-roduction_Function_QR/Code/Text/Nonlinear_Quantile_Production.pdf (9 pages, 371
-977 bytes).
+roduction_Function_QR/Code/Text/Nonlinear_Quantile_Production.pdf (14 pages, 32
+6988 bytes).
 PDF statistics:
- 167 PDF objects out of 1000 (max. 8388607)
- 120 compressed objects within 2 object streams
+ 161 PDF objects out of 1000 (max. 8388607)
+ 115 compressed objects within 2 object streams
  0 named destinations out of 1000 (max. 500000)
  1 words of extra memory for PDF output out of 10000 (max. 10000000)
 

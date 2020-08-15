@@ -1,4 +1,4 @@
-\begin{thebibliography}{10}
+\begin{thebibliography}{12}
 \providecommand{\natexlab}[1]{#1}
 
 \bibitem[{Ackerberg \textit{et~al.}(2007)Ackerberg, Benkard, Berry and
@@ -18,13 +18,6 @@
   via quantile regressions. \textit{The Econometrics Journal}, \textbf{19}~(3),
   C61--C94.
 
-\bibitem[{Blundell \textit{et~al.}(2017)Blundell, Horowitz and
-  Parey}]{Blundell2017}
-\textsc{Blundell, R.}, \textsc{Horowitz, J.} and \textsc{Parey, M.} (2017).
-  Nonparametric estimation of a nonseparable demand function under the slutsky
-  inequality restriction. \textit{The Review of Economics and Statistics},
-  \textbf{99}~(2), 291--304.
-
 \bibitem[{Doraszelski and Jaumandreu(2013)}]{Doraszelski2013}
 \textsc{Doraszelski, U.} and \textsc{Jaumandreu, J.} (2013). R{\&}d and
   productivity: Estimating endogenous productivity. \textit{The Review of
@@ -35,8 +28,18 @@
   dynamics: A framework for empirical work. \textit{The Review of Economic
   Studies}, \textbf{62}~(1), 53.
 
+\bibitem[{Hu \textit{et~al.}(2019)Hu, Huang and Sasaki}]{Hu2019}
+\textsc{Hu, Y.}, \textsc{Huang, G.} and \textsc{Sasaki, Y.} (2019). Estimating
+  production functions with robustness against errors in the proxy variables.
+  \textit{Journal of Econometrics}.
+
+\bibitem[{Hu and Schennach(2008)}]{Hu2008}
+\textsc{---} and \textsc{Schennach, S.~M.} (2008). Instrumental variable
+  treatment of nonclassical measurement error models. \textit{Econometrica},
+  \textbf{76}~(1), 195--216.
+
 \bibitem[{Hu and Shum(2012)}]{Hu2012}
-\textsc{Hu, Y.} and \textsc{Shum, M.} (2012). Nonparametric identification of
+\textsc{---} and \textsc{Shum, M.} (2012). Nonparametric identification of
   dynamic models with unobserved state variables. \textit{Journal of
   Econometrics}, \textbf{171}~(1), 32--44.
 
@@ -44,6 +47,11 @@
 \textsc{---} and \textsc{---} (2013). Identifying dynamic games with serially
   correlated unobservables. In \textit{Structural Econometric Models}, Emerald
   Group Publishing Limited, pp. 97--113.
+
+\bibitem[{Olley and Pakes(1996)}]{Olley1996}
+\textsc{Olley, G.~S.} and \textsc{Pakes, A.} (1996). The dynamics of
+  productivity in the telecommunications equipment industry.
+  \textit{Econometrica}, \textbf{64}~(6), 1263.
 
 \bibitem[{Pakes(1994)}]{Pakesa}
 \textsc{Pakes, A.} (1994). Dynamic structural models, problems and prospects:
