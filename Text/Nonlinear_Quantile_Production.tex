@@ -42,7 +42,7 @@ Introduction here
 \subsection{Output}
 Consider a nonlinear model for a firm's gross-output production function
 \begin{equation}\label{modelY}
-Y_{it}=F_{t}(L_{it}, M_{it}, K_{it}, \omega_{it}, \eta_{t})
+Y_{it}=F_{t}(K_{it}, L_{it}, M_{it}, \omega_{it}, \eta_{t})
 \end{equation}
 where $Y_{it}$ is firm $i$'s' output at time $t$ and $L_{it}, M_{it}, K_{it}$ denotes optimal input choices for labor, materials, and capital respectively. The unobserved productivity is denoted by $\omega_{it}$ which is correlated to input choices of the firm at time $t$. We let the output elasticities $\beta$ to be functionally dependent on unobserved production shocks $\eta_{i1},\dots, \eta_{iT}$ that are uncorrelated to input choices and productivity at time $t$.\\
 
@@ -197,7 +197,7 @@ The left hand side of equation \eqref{decomp} is a function of observable data w
 Under assumptions \eqref{pdynamics}, \eqref{bounded}, \eqref{injectivity}, \eqref{unique}, and \eqref{normalize}, the density $f_{X_{t}|X_{t-1}, X_{t-2}}$ uniquely determines the Markov law of Motion in equation \eqref{motion}.
 \end{theorem}
 
-\textit{Proof}: The identification results of \cite{Hu2008} directly identify the densities $f_{I_{t}|K_{t}, \omega_{t}}$, $f_{Y_{t}|K_{t}, L_{t}, \omega_{t}}$, $f_{L_{t}|K_{t}, \omega_{t}}$, $f_{M_{t}|K_{t}, \omega_{t}}$, $f_{K_{t}|K_{t-1}, I_{t-1}}$ and $f_{\omega_{t}|X_{t-1}, X_{t-2}}$. The latter density identifies the Markov law of motion from the equivalence $f_{\omega_{t}|X_{t-1}, X_{t-2}}=\int f_{\omega_{t}|\omega_{t-1}}f_{\omega_{t-1}, X_{t-1}, X_{t-2}}d\omega_{t-1}$
+\textit{Proof}: The identification results of \cite{Hu2008} directly identify the densities $f_{I_{t}|K_{t}, \omega_{t}}$, $f_{Y_{t}|K_{t}, L_{t}, M_{t}, \omega_{t}}$, $f_{L_{t}|K_{t}, \omega_{t}}$, $f_{M_{t}|K_{t}, \omega_{t}}$, $f_{K_{t}|K_{t-1}, I_{t-1}}$ and $f_{\omega_{t}|X_{t-1}, X_{t-2}}$. The latter density identifies the Markov law of motion from the equivalence $f_{\omega_{t}|X_{t-1}, X_{t-2}}=\int f_{\omega_{t}|\omega_{t-1}}f_{\omega_{t-1}, X_{t-1}, X_{t-2}}d\omega_{t-1}$
 
 
 %----------------------------------------------------------------------------------------------------------
@@ -355,8 +355,8 @@ The posterior density in equation \eqref{posterior} is a closed-form expression 
     \item \textit{Maximization Step}: For $q=1,\dots, Q$, solve
     \begin{equation*}
     \begin{split}
-    \hat{\boldsymbol\beta}(\tau_{q})^{(s+1)}&=\underset{\boldsymbol\beta(\tau_{q})}{\operatorname{argmin}}\,\sum_{i=1}^{N}\sum_{t=1}^{T}\sum_{m=1}^{M}\Psi_{\tau_{q}}(y_{it}-\sum_{j=1}^{J}\beta_{j}(\tau_{q})\psi_{j}(k_{it}, l_{it}, m_{it}, \omega_{it}^{(m)}, age_{it}))\\
-    \hat{\boldsymbol\iota}^{(s+1)}&=\underset{\boldsymbol\iota}{\operatorname{argmin}}\,\sum_{i=1}^{N}\sum_{t=1}^{T}\sum_{m=1}^{M}\Psi_{\tau_{q}}(i_{it}-\iota_{0}-\sum_{j=1}^{J}\iota_{j}\psi_{j}(k_{it}, \omega_{it}^{(m)}, age_{it}))\\
+    \hat{\boldsymbol\beta}(\tau_{q})^{(s+1)}&=\underset{\boldsymbol\beta(\tau_{q})}{\operatorname{argmin}}\,\sum_{i=1}^{N}\sum_{t=1}^{T}\sum_{m=1}^{M}\Psi_{\tau_{q}}\bigg(y_{it}-\sum_{j=1}^{J}\beta_{j}(\tau_{q})\psi_{j}(k_{it}, l_{it}, m_{it}, \omega_{it}^{(m)}, age_{it})\bigg)\\
+    \hat{\boldsymbol\iota}^{(s+1)}&=\underset{\boldsymbol\iota}{\operatorname{argmin}}\,\sum_{i=1}^{N}\sum_{t=1}^{T}\sum_{m=1}^{M}\bigg(i_{it}-\iota_{0}-\sum_{j=1}^{J}\iota_{j}\psi_{j}(k_{it}, \omega_{it}^{(m)}, age_{it})\bigg)^{2}\\
     \end{split}
     \end{equation*}
     
