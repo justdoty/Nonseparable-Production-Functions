@@ -1,14 +1,1 @@
-\beamer@slide {production}{2}
-\beamer@slide {markovfactor}{5}
-\beamer@slide {1stdensity}{5}
-\beamer@slide {2nddensity}{5}
-\beamer@slide {ar1}{6}
-\beamer@slide {kaccum}{7}
-\beamer@slide {valuefn}{7}
-\beamer@slide {labordemand}{9}
-\beamer@slide {intdemand}{9}
-\beamer@slide {obsdens}{11}
-\beamer@slide {operator}{12}
-\beamer@slide {diagonal}{12}
-\beamer@slide {obsoperator}{13}
-\beamer@slide {markovoperator}{13}
+\beamer@slide {pfrc}{2}

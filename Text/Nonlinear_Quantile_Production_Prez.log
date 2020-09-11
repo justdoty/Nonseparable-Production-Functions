@@ -1,12 +1,12 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.18 (TeX Live 2017) (preloaded format=pdflatex 2017.5.23)  2 SEP 2020 15:16
+This is pdfTeX, Version 3.14159265-2.6-1.40.18 (TeX Live 2017) (preloaded format=pdflatex 2017.5.23)  3 SEP 2020 18:15
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
 **/Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Functi
-on_QR/Code/Text/Presentation.tex
+on_QR/Code/Text/Nonlinear_Quantile_Production_Prez.tex
 
 (/Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Functio
-n_QR/Code/Text/Presentation.tex
+n_QR/Code/Text/Nonlinear_Quantile_Production_Prez.tex
 LaTeX2e <2017-04-15>
 Babel <3.10> and hyphenation patterns for 84 language(s) loaded.
 (/usr/local/texlive/2017/texmf-dist/tex/latex/beamer/beamer.cls
@@ -675,50 +675,251 @@ LaTeX Font Info:    Overwriting math alphabet `\mathbbm' in version `bold'
 (Font)                  U/bbm/m/n --> U/bbm/bx/n on input line 33.
 LaTeX Font Info:    Overwriting math alphabet `\mathbbmss' in version `bold'
 (Font)                  U/bbmss/m/n --> U/bbmss/bx/n on input line 35.
+) (/usr/local/texlive/2017/texmf-dist/tex/latex/biblatex/biblatex.sty
+Package: biblatex 2016/12/05 v3.7 programmable bibliographies (PK/JW/AB)
+(/usr/local/texlive/2017/texmf-dist/tex/latex/logreq/logreq.sty
+Package: logreq 2010/08/04 v1.0 xml request logger
+\lrq@indent=\count161
+(/usr/local/texlive/2017/texmf-dist/tex/latex/logreq/logreq.def
+File: logreq.def 2010/08/04 v1.0 logreq spec v1.0
+)) (/usr/local/texlive/2017/texmf-dist/tex/latex/base/ifthen.sty
+Package: ifthen 2014/09/29 v1.1c Standard LaTeX ifthen package (DPC)
+) (/usr/local/texlive/2017/texmf-dist/tex/generic/xstring/xstring.sty (/usr/loc
+al/texlive/2017/texmf-dist/tex/generic/xstring/xstring.tex
+\@xs@message=\write5
+\integerpart=\count162
+\decimalpart=\count163
+)
+Package: xstring 2013/10/13  v1.7c  String manipulations (C Tellechea)
+)
+\c@tabx@nest=\count164
+\c@listtotal=\count165
+\c@listcount=\count166
+\c@liststart=\count167
+\c@liststop=\count168
+\c@citecount=\count169
+\c@citetotal=\count170
+\c@multicitecount=\count171
+\c@multicitetotal=\count172
+\c@instcount=\count173
+\c@maxnames=\count174
+\c@minnames=\count175
+\c@maxitems=\count176
+\c@minitems=\count177
+\c@citecounter=\count178
+\c@savedcitecounter=\count179
+\c@uniquelist=\count180
+\c@uniquename=\count181
+\c@refsection=\count182
+\c@refsegment=\count183
+\c@maxextratitle=\count184
+\c@maxextratitleyear=\count185
+\c@maxextrayear=\count186
+\c@maxextraalpha=\count187
+\c@abbrvpenalty=\count188
+\c@highnamepenalty=\count189
+\c@lownamepenalty=\count190
+\c@maxparens=\count191
+\c@parenlevel=\count192
+\blx@tempcnta=\count193
+\blx@tempcntb=\count194
+\blx@tempcntc=\count195
+\blx@maxsection=\count196
+\blx@maxsegment@0=\count197
+\blx@notetype=\count198
+\blx@parenlevel@text=\count199
+\blx@parenlevel@foot=\count266
+\blx@sectionciteorder@0=\count267
+\labelnumberwidth=\skip57
+\labelalphawidth=\skip58
+\biblabelsep=\skip59
+\bibitemsep=\skip60
+\bibnamesep=\skip61
+\bibinitsep=\skip62
+\bibparsep=\skip63
+\bibhang=\skip64
+\blx@bcfin=\read2
+\blx@bcfout=\write6
+\c@mincomprange=\count268
+\c@maxcomprange=\count269
+\c@mincompwidth=\count270
+Package biblatex Info: Trying to load biblatex default data model...
+Package biblatex Info: ... file 'blx-dm.def' found.
+(/usr/local/texlive/2017/texmf-dist/tex/latex/biblatex/blx-dm.def)
+Package biblatex Info: Trying to load biblatex citestyle data model...
+Package biblatex Info: ... file 'apa.dbx' found.
+(/usr/local/texlive/2017/texmf-dist/tex/latex/biblatex-apa/apa.dbx
+File: apa.dbx 2017/01/06 v7.4 APA biblatex style data model
+)
+Package biblatex Info: Trying to load biblatex bibstyle data model...
+Package biblatex Info: ... file 'authoryear.dbx' not found.
+Package biblatex Info: Trying to load biblatex custom data model...
+Package biblatex Info: ... file 'biblatex-dm.cfg' not found.
+\c@afterword=\count271
+\c@savedafterword=\count272
+\c@annotator=\count273
+\c@savedannotator=\count274
+\c@author=\count275
+\c@savedauthor=\count276
+\c@bookauthor=\count277
+\c@savedbookauthor=\count278
+\c@commentator=\count279
+\c@savedcommentator=\count280
+\c@editor=\count281
+\c@savededitor=\count282
+\c@editora=\count283
+\c@savededitora=\count284
+\c@editorb=\count285
+\c@savededitorb=\count286
+\c@editorc=\count287
+\c@savededitorc=\count288
+\c@foreword=\count289
+\c@savedforeword=\count290
+\c@holder=\count291
+\c@savedholder=\count292
+\c@introduction=\count293
+\c@savedintroduction=\count294
+\c@namea=\count295
+\c@savednamea=\count296
+\c@nameb=\count297
+\c@savednameb=\count298
+\c@namec=\count299
+\c@savednamec=\count300
+\c@translator=\count301
+\c@savedtranslator=\count302
+\c@shortauthor=\count303
+\c@savedshortauthor=\count304
+\c@shorteditor=\count305
+\c@savedshorteditor=\count306
+\c@with=\count307
+\c@savedwith=\count308
+\c@writer=\count309
+\c@savedwriter=\count310
+\c@producer=\count311
+\c@savedproducer=\count312
+\c@execproducer=\count313
+\c@savedexecproducer=\count314
+\c@director=\count315
+\c@saveddirector=\count316
+\c@labelname=\count317
+\c@savedlabelname=\count318
+\c@institution=\count319
+\c@savedinstitution=\count320
+\c@lista=\count321
+\c@savedlista=\count322
+\c@listb=\count323
+\c@savedlistb=\count324
+\c@listc=\count325
+\c@savedlistc=\count326
+\c@listd=\count327
+\c@savedlistd=\count328
+\c@liste=\count329
+\c@savedliste=\count330
+\c@listf=\count331
+\c@savedlistf=\count332
+\c@location=\count333
+\c@savedlocation=\count334
+\c@organization=\count335
+\c@savedorganization=\count336
+\c@origlocation=\count337
+\c@savedoriglocation=\count338
+\c@origpublisher=\count339
+\c@savedorigpublisher=\count340
+\c@publisher=\count341
+\c@savedpublisher=\count342
+\c@language=\count343
+\c@savedlanguage=\count344
+\c@pageref=\count345
+\c@savedpageref=\count346
+\shorthandwidth=\skip65
+\shortjournalwidth=\skip66
+\shortserieswidth=\skip67
+\shorttitlewidth=\skip68
+\shortauthorwidth=\skip69
+\shorteditorwidth=\skip70
+Package biblatex Info: Trying to load compatibility code...
+Package biblatex Info: ... file 'blx-compat.def' found.
+(/usr/local/texlive/2017/texmf-dist/tex/latex/biblatex/blx-compat.def
+File: blx-compat.def 2016/12/05 v3.7 biblatex compatibility (PK/JW/AB)
+)
+Package biblatex Info: Trying to load generic definitions...
+Package biblatex Info: ... file 'biblatex.def' found.
+(/usr/local/texlive/2017/texmf-dist/tex/latex/biblatex/biblatex.def
+File: biblatex.def 2016/12/05 v3.7 biblatex compatibility (PK/JW/AB)
+\c@textcitecount=\count347
+\c@textcitetotal=\count348
+\c@textcitemaxnames=\count349
+\c@biburlnumpenalty=\count350
+\c@biburlucpenalty=\count351
+\c@biburllcpenalty=\count352
+\c@smartand=\count353
+)
+Package biblatex Info: Trying to load bibliography style 'authoryear'...
+Package biblatex Info: ... file 'authoryear.bbx' found.
+(/usr/local/texlive/2017/texmf-dist/tex/latex/biblatex/bbx/authoryear.bbx
+File: authoryear.bbx 2016/12/05 v3.7 biblatex bibliography style (PK/JW/AB)
+Package biblatex Info: Trying to load bibliography style 'standard'...
+Package biblatex Info: ... file 'standard.bbx' found.
+(/usr/local/texlive/2017/texmf-dist/tex/latex/biblatex/bbx/standard.bbx
+File: standard.bbx 2016/12/05 v3.7 biblatex bibliography style (PK/JW/AB)
+\c@bbx:relatedcount=\count354
+\c@bbx:relatedtotal=\count355
+))
+Package biblatex Info: Trying to load citation style 'apa'...
+Package biblatex Info: ... file 'apa.cbx' found.
+(/usr/local/texlive/2017/texmf-dist/tex/latex/biblatex-apa/apa.cbx
+File: apa.cbx 2017/01/06 v7.4 APA biblatex citation style
+Package biblatex Info: Redefining '\parencite'.
+Package biblatex Info: Redefining '\fullcite'.
+Package biblatex Info: Redefining '\citeyear'.
+Package biblatex Info: Redefining '\cite'.
+Package biblatex Info: Redefining '\footcite'.
+Package biblatex Info: Redefining '\textcites'.
+Package biblatex Info: Redefining '\textcite'.
+Package biblatex Info: Redefining '\citeauthor'.
+)
+Package biblatex Info: Trying to load configuration file...
+Package biblatex Info: ... file 'biblatex.cfg' found.
+(/usr/local/texlive/2017/texmf-dist/tex/latex/biblatex/biblatex.cfg
+File: biblatex.cfg 
+))
+Package biblatex Info: Trying to load language 'english'...
+Package biblatex Info: ... file 'english.lbx' found.
+(/usr/local/texlive/2017/texmf-dist/tex/latex/biblatex/lbx/english.lbx
+File: english.lbx 2016/12/05 v3.7 biblatex localization (PK/JW/AB)
 )
 
-! LaTeX Error: Missing \begin{document}.
+Package biblatex Warning: Patching footnotes failed.
+(biblatex)                Footnote detection will not work.
 
-See the LaTeX manual or LaTeX Companion for explanation.
-Type  H <return>  for immediate help.
- ...                                              
-                                                  
-l.71 \title[
-            Quantile Production Functions]{Heterogeneity in Firms:\\
-You're in trouble here.  Try typing  <return>  to proceed.
-If that doesn't work, type  X <return>  to quit.
-
-
-! LaTeX Error: Missing \begin{document}.
-
-See the LaTeX manual or LaTeX Companion for explanation.
-Type  H <return>  for immediate help.
- ...                                              
-                                                  
-l.72 A
-       Proxy Variable Approach to Quantile Production Functions}
-You're in trouble here.  Try typing  <return>  to proceed.
-If that doesn't work, type  X <return>  to quit.
-
+\@quotelevel=\count356
+\@quotereset=\count357
 
 (/Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Functio
-n_QR/Code/Text/Presentation.aux)
-\openout1 = `Presentation.aux'.
+n_QR/Code/Text/Nonlinear_Quantile_Production_Prez.aux
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 82.
-LaTeX Font Info:    ... okay on input line 82.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 82.
-LaTeX Font Info:    ... okay on input line 82.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 82.
-LaTeX Font Info:    ... okay on input line 82.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 82.
-LaTeX Font Info:    ... okay on input line 82.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 82.
-LaTeX Font Info:    ... okay on input line 82.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 82.
-LaTeX Font Info:    ... okay on input line 82.
-LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 82.
-LaTeX Font Info:    ... okay on input line 82.
+LaTeX Warning: Label `omegamodel' multiply defined.
+
+
+LaTeX Warning: Label `ymoment' multiply defined.
+
+)
+\openout1 = `Nonlinear_Quantile_Production_Prez.aux'.
+
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 80.
+LaTeX Font Info:    ... okay on input line 80.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 80.
+LaTeX Font Info:    ... okay on input line 80.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 80.
+LaTeX Font Info:    ... okay on input line 80.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 80.
+LaTeX Font Info:    ... okay on input line 80.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 80.
+LaTeX Font Info:    ... okay on input line 80.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 80.
+LaTeX Font Info:    ... okay on input line 80.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 80.
+LaTeX Font Info:    ... okay on input line 80.
 *geometry* driver: auto-detecting
 *geometry* detected driver: pdftex
 *geometry* verbose mode - [ preamble ] result:
@@ -755,16 +956,16 @@ LaTeX Font Info:    ... okay on input line 82.
 
 (/usr/local/texlive/2017/texmf-dist/tex/context/base/mkii/supp-pdf.mkii
 [Loading MPS to PDF converter (version 2006.09.02).]
-\scratchcounter=\count161
+\scratchcounter=\count358
 \scratchdimen=\dimen264
 \scratchbox=\box53
-\nofMPsegments=\count162
-\nofMParguments=\count163
+\nofMPsegments=\count359
+\nofMParguments=\count360
 \everyMPshowfont=\toks43
-\MPscratchCnt=\count164
+\MPscratchCnt=\count361
 \MPscratchDim=\dimen265
-\MPnumerator=\count165
-\makeMPintoPDFobject=\count166
+\MPnumerator=\count362
+\makeMPintoPDFobject=\count363
 \everyMPtoPDFconversion=\toks44
 ) (/usr/local/texlive/2017/texmf-dist/tex/latex/oberdiek/epstopdf-base.sty
 Package: epstopdf-base 2016/05/15 v2.6 Base part for package epstopdf
@@ -782,77 +983,77 @@ File: epstopdf-sys.cfg 2010/07/13 v1.3 Configuration of (r)epstopdf for TeX Liv
 e
 )) ABD: EveryShipout initializing macros
 \AtBeginShipoutBox=\box54
-Package hyperref Info: Link coloring OFF on input line 82.
+Package hyperref Info: Link coloring OFF on input line 80.
 (/usr/local/texlive/2017/texmf-dist/tex/latex/hyperref/nameref.sty
 Package: nameref 2016/05/21 v2.44 Cross-referencing by name of section
 (/usr/local/texlive/2017/texmf-dist/tex/generic/oberdiek/gettitlestring.sty
 Package: gettitlestring 2016/05/16 v1.5 Cleanup title references (HO)
 )
-\c@section@level=\count167
+\c@section@level=\count364
 )
-LaTeX Info: Redefining \ref on input line 82.
-LaTeX Info: Redefining \pageref on input line 82.
-LaTeX Info: Redefining \nameref on input line 82.
+LaTeX Info: Redefining \ref on input line 80.
+LaTeX Info: Redefining \pageref on input line 80.
+LaTeX Info: Redefining \nameref on input line 80.
 
 (/Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Functio
-n_QR/Code/Text/Presentation.out)
+n_QR/Code/Text/Nonlinear_Quantile_Production_Prez.out)
 (/Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Functio
-n_QR/Code/Text/Presentation.out)
-\@outlinefile=\write5
-\openout5 = `Presentation.out'.
+n_QR/Code/Text/Nonlinear_Quantile_Production_Prez.out)
+\@outlinefile=\write7
+\openout7 = `Nonlinear_Quantile_Production_Prez.out'.
 
 LaTeX Font Info:    Overwriting symbol font `operators' in version `normal'
-(Font)                  OT1/cmr/m/n --> OT1/cmss/m/n on input line 82.
+(Font)                  OT1/cmr/m/n --> OT1/cmss/m/n on input line 80.
 LaTeX Font Info:    Overwriting symbol font `operators' in version `bold'
-(Font)                  OT1/cmr/bx/n --> OT1/cmss/bx/n on input line 82.
+(Font)                  OT1/cmr/bx/n --> OT1/cmss/bx/n on input line 80.
 \symnumbers=\mathgroup7
 \sympureletters=\mathgroup8
 LaTeX Font Info:    Overwriting math alphabet `\mathrm' in version `normal'
-(Font)                  OT1/cmss/m/n --> OT1/cmr/m/n on input line 82.
-LaTeX Font Info:    Redeclaring math alphabet \mathbf on input line 82.
+(Font)                  OT1/cmss/m/n --> OT1/cmr/m/n on input line 80.
+LaTeX Font Info:    Redeclaring math alphabet \mathbf on input line 80.
 LaTeX Font Info:    Overwriting math alphabet `\mathbf' in version `normal'
-(Font)                  OT1/cmr/bx/n --> OT1/cmss/bx/n on input line 82.
+(Font)                  OT1/cmr/bx/n --> OT1/cmss/bx/n on input line 80.
 LaTeX Font Info:    Overwriting math alphabet `\mathbf' in version `bold'
-(Font)                  OT1/cmr/bx/n --> OT1/cmss/bx/n on input line 82.
-LaTeX Font Info:    Redeclaring math alphabet \mathsf on input line 82.
+(Font)                  OT1/cmr/bx/n --> OT1/cmss/bx/n on input line 80.
+LaTeX Font Info:    Redeclaring math alphabet \mathsf on input line 80.
 LaTeX Font Info:    Overwriting math alphabet `\mathsf' in version `normal'
-(Font)                  OT1/cmss/m/n --> OT1/cmss/m/n on input line 82.
+(Font)                  OT1/cmss/m/n --> OT1/cmss/m/n on input line 80.
 LaTeX Font Info:    Overwriting math alphabet `\mathsf' in version `bold'
-(Font)                  OT1/cmss/bx/n --> OT1/cmss/m/n on input line 82.
-LaTeX Font Info:    Redeclaring math alphabet \mathit on input line 82.
+(Font)                  OT1/cmss/bx/n --> OT1/cmss/m/n on input line 80.
+LaTeX Font Info:    Redeclaring math alphabet \mathit on input line 80.
 LaTeX Font Info:    Overwriting math alphabet `\mathit' in version `normal'
-(Font)                  OT1/cmr/m/it --> OT1/cmss/m/it on input line 82.
+(Font)                  OT1/cmr/m/it --> OT1/cmss/m/it on input line 80.
 LaTeX Font Info:    Overwriting math alphabet `\mathit' in version `bold'
-(Font)                  OT1/cmr/bx/it --> OT1/cmss/m/it on input line 82.
-LaTeX Font Info:    Redeclaring math alphabet \mathtt on input line 82.
+(Font)                  OT1/cmr/bx/it --> OT1/cmss/m/it on input line 80.
+LaTeX Font Info:    Redeclaring math alphabet \mathtt on input line 80.
 LaTeX Font Info:    Overwriting math alphabet `\mathtt' in version `normal'
-(Font)                  OT1/cmtt/m/n --> OT1/cmtt/m/n on input line 82.
+(Font)                  OT1/cmtt/m/n --> OT1/cmtt/m/n on input line 80.
 LaTeX Font Info:    Overwriting math alphabet `\mathtt' in version `bold'
-(Font)                  OT1/cmtt/m/n --> OT1/cmtt/m/n on input line 82.
+(Font)                  OT1/cmtt/m/n --> OT1/cmtt/m/n on input line 80.
 LaTeX Font Info:    Overwriting symbol font `numbers' in version `bold'
-(Font)                  OT1/cmss/m/n --> OT1/cmss/bx/n on input line 82.
+(Font)                  OT1/cmss/m/n --> OT1/cmss/bx/n on input line 80.
 LaTeX Font Info:    Overwriting symbol font `pureletters' in version `bold'
-(Font)                  OT1/cmss/m/it --> OT1/cmss/bx/it on input line 82.
+(Font)                  OT1/cmss/m/it --> OT1/cmss/bx/it on input line 80.
 LaTeX Font Info:    Overwriting math alphabet `\mathrm' in version `bold'
-(Font)                  OT1/cmss/bx/n --> OT1/cmr/bx/n on input line 82.
+(Font)                  OT1/cmss/bx/n --> OT1/cmr/bx/n on input line 80.
 LaTeX Font Info:    Overwriting math alphabet `\mathbf' in version `bold'
-(Font)                  OT1/cmss/bx/n --> OT1/cmss/bx/n on input line 82.
+(Font)                  OT1/cmss/bx/n --> OT1/cmss/bx/n on input line 80.
 LaTeX Font Info:    Overwriting math alphabet `\mathsf' in version `bold'
-(Font)                  OT1/cmss/m/n --> OT1/cmss/bx/n on input line 82.
+(Font)                  OT1/cmss/m/n --> OT1/cmss/bx/n on input line 80.
 LaTeX Font Info:    Overwriting math alphabet `\mathit' in version `bold'
-(Font)                  OT1/cmss/m/it --> OT1/cmss/bx/it on input line 82.
+(Font)                  OT1/cmss/m/it --> OT1/cmss/bx/it on input line 80.
 LaTeX Font Info:    Overwriting math alphabet `\mathtt' in version `bold'
-(Font)                  OT1/cmtt/m/n --> OT1/cmtt/bx/n on input line 82.
-LaTeX Font Info:    Redeclaring symbol font `pureletters' on input line 82.
+(Font)                  OT1/cmtt/m/n --> OT1/cmtt/bx/n on input line 80.
+LaTeX Font Info:    Redeclaring symbol font `pureletters' on input line 80.
 LaTeX Font Info:    Overwriting symbol font `pureletters' in version `normal'
 (Font)                  OT1/cmss/m/it --> OT1/mathkerncmss/m/sl on input line 8
-2.
+0.
 LaTeX Font Info:    Overwriting symbol font `pureletters' in version `bold'
 (Font)                  OT1/cmss/bx/it --> OT1/mathkerncmss/m/sl on input line 
-82.
+80.
 LaTeX Font Info:    Overwriting symbol font `pureletters' in version `bold'
 (Font)                  OT1/mathkerncmss/m/sl --> OT1/mathkerncmss/bx/sl on inp
-ut line 82.
+ut line 80.
 
 (/usr/local/texlive/2017/texmf-dist/tex/latex/beamer/translator/dicts/translato
 r-basic-dictionary/translator-basic-dictionary-English.dict
@@ -878,84 +1079,278 @@ Dictionary: translator-numbers-dictionary, Language: English
 r-theorem-dictionary/translator-theorem-dictionary-English.dict
 Dictionary: translator-theorem-dictionary, Language: English 
 )
-LaTeX Info: Redefining \includegraphics on input line 82.
+LaTeX Info: Redefining \includegraphics on input line 80.
 Package caption Info: Begin \AtBeginDocument code.
 Package caption Info: End \AtBeginDocument code.
+Package biblatex Info: No input encoding detected.
+(biblatex)             Assuming 'ascii'.
+Package biblatex Info: Automatic encoding selection.
+(biblatex)             Assuming data encoding 'ascii'.
+\openout6 = `Nonlinear_Quantile_Production_Prez.bcf'.
+
+Package biblatex Info: Trying to load bibliographic data...
+Package biblatex Info: ... file 'Nonlinear_Quantile_Production_Prez.bbl' found.
+
 
 (/Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Functio
-n_QR/Code/Text/Presentation.nav)
-Overfull \vbox (27.72917pt too high) has occurred while \output is active []
+n_QR/Code/Text/Nonlinear_Quantile_Production_Prez.bbl)
+Package biblatex Info: Reference section=0 on input line 80.
+Package biblatex Info: Reference segment=0 on input line 80.
 
+(/Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Functio
+n_QR/Code/Text/Nonlinear_Quantile_Production_Prez.nav)
 
 LaTeX Font Warning: Font shape `OT1/cmss/m/n' in size <4> not available
-(Font)              size <5> substituted on input line 86.
+(Font)              size <5> substituted on input line 84.
 
 [1
 
 {/usr/local/texlive/2017/texmf-var/fonts/map/pdftex/updmap/pdftex.map}]
-LaTeX Font Info:    Try loading font information for U+msa on input line 106.
+LaTeX Font Info:    Try loading font information for U+msa on input line 111.
 (/usr/local/texlive/2017/texmf-dist/tex/latex/amsfonts/umsa.fd
 File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 )
-LaTeX Font Info:    Try loading font information for U+msb on input line 106.
+LaTeX Font Info:    Try loading font information for U+msb on input line 111.
 (/usr/local/texlive/2017/texmf-dist/tex/latex/amsfonts/umsb.fd
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 )
-LaTeX Font Info:    Try loading font information for U+rsfs on input line 106.
+LaTeX Font Info:    Try loading font information for U+rsfs on input line 111.
 (/usr/local/texlive/2017/texmf-dist/tex/latex/jknapltx/ursfs.fd
 File: ursfs.fd 1998/03/24 rsfs font definition file (jk)
 )
 LaTeX Font Info:    Try loading font information for OT1+mathkerncmss on input 
-line 106.
+line 111.
 
 (/usr/local/texlive/2017/texmf-dist/tex/latex/sansmathaccent/ot1mathkerncmss.fd
 File: ot1mathkerncmss.fd 2013/03/27 Fontinst v1.933 font definitions for OT1/ma
 thkerncmss.
 ) [2
 
+] [3
+
+] [4
+
+] [5
+
 ]
-\tf@nav=\write6
-\openout6 = `Presentation.nav'.
+Overfull \hbox (3.74217pt too wide) detected at line 192
+[]\OT1/cmss/m/n/10.95 (\OT1/mathkerncmss/m/sl/10.95 k[]\OML/cmm/m/it/10.95 ; \O
+T1/mathkerncmss/m/sl/10.95 m[]\OT1/cmss/m/n/10.95 ; \OML/cmm/m/it/10.95 ^^\\OT1
+/cmss/m/n/10.95 ) \OMS/cmsy/m/n/10.95 ^^@ \OML/cmm/m/it/10.95 ^^L[]\OT1/cmss/m/
+n/10.95 (\OML/cmm/m/it/10.95 ^^\\OT1/cmss/m/n/10.95 )\OT1/mathkerncmss/m/sl/10.
+95 k[] \OT1/cmss/m/n/10.95 = \OML/cmm/m/it/10.95 ^^L[]\OT1/cmss/m/n/10.95 (\OML
+/cmm/m/it/10.95 ^^\\OT1/cmss/m/n/10.95 ) + \OML/cmm/m/it/10.95 ^^Z\OT1/cmss/m/n
+/10.95 ([](\OT1/mathkerncmss/m/sl/10.95 k[]\OML/cmm/m/it/10.95 ; \OT1/mathkernc
+mss/m/sl/10.95 m[]\OT1/cmss/m/n/10.95 ; \OML/cmm/m/it/10.95 ^^\\OT1/cmss/m/n/10
+.95 ) \OMS/cmsy/m/n/10.95 ^^@ \OML/cmm/m/it/10.95 ^^L[]\OT1/cmss/m/n/10.95 (\OM
+L/cmm/m/it/10.95 ^^\\OT1/cmss/m/n/10.95 )\OT1/mathkerncmss/m/sl/10.95 k[]\OT1/c
+mss/m/n/10.95 ) + \OML/cmm/m/it/10.95 ^^X[]
+ []
 
-\tf@toc=\write7
-\openout7 = `Presentation.toc'.
+[6
 
-\tf@snm=\write8
-\openout8 = `Presentation.snm'.
+]
+LaTeX Font Info:    Try loading font information for U+bbm on input line 213.
+(/usr/local/texlive/2017/texmf-dist/tex/latex/bbm-macros/ubbm.fd
+File: ubbm.fd 1999/03/15 V 1.2 Font definition for bbm font - TH
+) [7
 
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 112.
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 112.
+] [8
+
+] [9
+
+] [10
+
+] [11
+
+] [12
+
+] [13
+
+] [14
+
+] [15
+
+] [16
+
+] [17
+
+] [18
+
+] [19
+
+] [20
+
+] [21
+
+] [22
+
+] [23
+
+pdfTeX warning (ext4): destination with the same identifier (name{omegamodel}) 
+has been already used, duplicate ignored
+
+\@EveryShipout@Output ...@Org@Shipout \box \@cclv 
+                                                  
+l.517 \end{frame}
+                 ] [24
+
+] [25
+
+]pdfTeX warning (ext4): destination with the same identifier (name{ymoment}) ha
+s been already used, duplicate ignored
+<to be read again> 
+                   \relax 
+l.567 \end{frame}
+                 
+Overfull \hbox (11.4353pt too wide) in paragraph at lines 567--567
+[]  
+ []
+
+[26
+
+]
+Overfull \hbox (4.91806pt too wide) detected at line 591
+[][][]\U/bbm/m/n/10 E[] [] []\OT1/cmss/m/n/10 	[](\OT1/mathkerncmss/m/sl/10 y[]
+ \OMS/cmsy/m/n/10 ^^@ [] []\OT1/cmss/m/n/10 (\OML/cmm/m/it/10 ^^\[]\OT1/cmss/m/
+n/10 )\OML/cmm/m/it/10  []\OT1/cmss/m/n/10 (\OT1/mathkerncmss/m/sl/10 k[]\OML/c
+mm/m/it/10 ; \OT1/mathkerncmss/m/sl/10 l[]\OML/cmm/m/it/10 ; \OT1/mathkerncmss/
+m/sl/10 m[]\OML/cmm/m/it/10 ; ![]; \OT1/mathkerncmss/m/sl/10 age[]\OT1/cmss/m/n
+/10 )) \OMS/cmsy/m/n/10 
+ [] []\OT1/mathkerncmss/m/sl/10 f[]\OT1/cmss/m/n/10 (\OML/cmm/m/it/10 ![]\OT1/c
+mss/m/n/10 ; [])\OT1/mathkerncmss/m/sl/10 d\OML/cmm/m/it/10 ![][] \OT1/cmss/m/n
+/10 = 0
+ []
+
+[27
+
+]
+Overfull \hbox (6.11598pt too wide) in paragraph at lines 619--619
+[]  
+ []
+
+[28
+
+]
+Overfull \vbox (7.15303pt too high) detected at line 639
+ []
+
+[29
+
+] [30
+
+] [31
+
+] [32
+
+]
+\tf@nav=\write8
+\openout8 = `Nonlinear_Quantile_Production_Prez.nav'.
+
+\tf@toc=\write9
+\openout9 = `Nonlinear_Quantile_Production_Prez.toc'.
+
+\tf@snm=\write10
+\openout10 = `Nonlinear_Quantile_Production_Prez.snm'.
+
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 718.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 718.
 
 (/Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Functio
-n_QR/Code/Text/Presentation.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 112.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 112.
-Package rerunfilecheck Info: File `Presentation.out' has not changed.
+n_QR/Code/Text/Nonlinear_Quantile_Production_Prez.aux)
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 718.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 718.
+Package rerunfilecheck Info: File `Nonlinear_Quantile_Production_Prez.out' has 
+not changed.
 (rerunfilecheck)             Checksum: 3C5FD6708A4C706BEEF71C47501622BB;115.
 
 LaTeX Font Warning: Size substitutions with differences
 (Font)              up to 1.0pt have occurred.
 
+
+LaTeX Warning: There were multiply-defined labels.
+
+Package logreq Info: Writing requests to 'Nonlinear_Quantile_Production_Prez.ru
+n.xml'.
+\openout1 = `Nonlinear_Quantile_Production_Prez.run.xml'.
+
  ) 
 Here is how much of TeX's memory you used:
- 18218 strings out of 492995
- 350503 string characters out of 6132704
- 419448 words of memory out of 5000000
- 21339 multiletter control sequences out of 15000+600000
- 10884 words of font info for 41 fonts, out of 8000000 for 9000
+ 24681 strings out of 492995
+ 470934 string characters out of 6132704
+ 917817 words of memory out of 5000000
+ 27627 multiletter control sequences out of 15000+600000
+ 21189 words of font info for 77 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 56i,16n,57p,871b,557s stack positions out of 5000i,500n,10000p,200000b,80000s
-</usr/local/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb
-></usr/local/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmss10.pfb>
-</usr/local/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmss12.pfb><
-/usr/local/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmss8.pfb></u
-sr/local/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmssi10.pfb></u
-sr/local/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmssi8.pfb>
+ 56i,22n,57p,893b,1288s stack positions out of 5000i,500n,10000p,200000b,80000s
+pdfTeX warning (dest): name{cite.0@Wei2009} has been referenced but does not 
+exist, replaced by a fixed one
+
+pdfTeX warning (dest): name{cite.0@Arellano2017} has been referenced but does n
+ot exist, replaced by a fixed one
+
+pdfTeX warning (dest): name{cite.0@Pakesa} has been referenced but does not exi
+st, replaced by a fixed one
+
+pdfTeX warning (dest): name{cite.0@Ericson1995} has been referenced but does no
+t exist, replaced by a fixed one
+
+pdfTeX warning (dest): name{cite.0@Doraszelski2013} has been referenced but doe
+s not exist, replaced by a fixed one
+
+pdfTeX warning (dest): name{cite.0@Hu2012} has been referenced but does not exi
+st, replaced by a fixed one
+
+pdfTeX warning (dest): name{cite.0@Hu2008} has been referenced but does not exi
+st, replaced by a fixed one
+
+pdfTeX warning (dest): name{cite.0@Arellano2016} has been referenced but does n
+ot exist, replaced by a fixed one
+
+pdfTeX warning (dest): name{cite.0@qgmm} has been referenced but does not exist
+, replaced by a fixed one
+
+pdfTeX warning (dest): name{cite.0@Kaplan2016} has been referenced but does not
+ exist, replaced by a fixed one
+
+pdfTeX warning (dest): name{cite.0@He1997} has been referenced but does not exi
+st, replaced by a fixed one
+
+pdfTeX warning (dest): name{cite.0@Ackerberg2015} has been referenced but does 
+not exist, replaced by a fixed one
+
+pdfTeX warning (dest): name{cite.0@Levinsohn2003} has been referenced but does 
+not exist, replaced by a fixed one
+
+ </Users/justindoty/Library/texlive/2017/texmf-var/fonts/pk/ljfour/public/bbm/b
+bm10.600pk> </Users/justindoty/Library/texlive/2017/texmf-var/fonts/pk/ljfour/p
+ublic/bbm/bbm8.600pk> </Users/justindoty/Library/texlive/2017/texmf-var/fonts/p
+k/ljfour/public/bbm/bbm10.657pk></usr/local/texlive/2017/texmf-dist/fonts/type1
+/public/amsfonts/cm/cmex10.pfb></usr/local/texlive/2017/texmf-dist/fonts/type1/
+public/amsfonts/cmextra/cmex8.pfb></usr/local/texlive/2017/texmf-dist/fonts/typ
+e1/public/amsfonts/cm/cmmi10.pfb></usr/local/texlive/2017/texmf-dist/fonts/type
+1/public/amsfonts/cm/cmmi6.pfb></usr/local/texlive/2017/texmf-dist/fonts/type1/
+public/amsfonts/cm/cmmi7.pfb></usr/local/texlive/2017/texmf-dist/fonts/type1/pu
+blic/amsfonts/cm/cmmi8.pfb></usr/local/texlive/2017/texmf-dist/fonts/type1/publ
+ic/amsfonts/cm/cmmib10.pfb></usr/local/texlive/2017/texmf-dist/fonts/type1/publ
+ic/amsfonts/cmextra/cmmib7.pfb></usr/local/texlive/2017/texmf-dist/fonts/type1/
+public/amsfonts/cm/cmss10.pfb></usr/local/texlive/2017/texmf-dist/fonts/type1/p
+ublic/amsfonts/cm/cmss12.pfb></usr/local/texlive/2017/texmf-dist/fonts/type1/pu
+blic/amsfonts/cm/cmss8.pfb></usr/local/texlive/2017/texmf-dist/fonts/type1/publ
+ic/amsfonts/cm/cmssbx10.pfb></usr/local/texlive/2017/texmf-dist/fonts/type1/pub
+lic/amsfonts/cm/cmssi10.pfb></usr/local/texlive/2017/texmf-dist/fonts/type1/pub
+lic/amsfonts/cm/cmssi8.pfb></usr/local/texlive/2017/texmf-dist/fonts/type1/publ
+ic/amsfonts/cm/cmsy10.pfb></usr/local/texlive/2017/texmf-dist/fonts/type1/publi
+c/amsfonts/cm/cmsy6.pfb></usr/local/texlive/2017/texmf-dist/fonts/type1/public/
+amsfonts/cm/cmsy7.pfb></usr/local/texlive/2017/texmf-dist/fonts/type1/public/am
+sfonts/cm/cmsy8.pfb></usr/local/texlive/2017/texmf-dist/fonts/type1/public/amsf
+onts/symbols/msbm10.pfb>
 Output written on /Users/justindoty/Documents/Research/Dissertation/Nonlinear_P
-roduction_Function_QR/Code/Text/Presentation.pdf (2 pages, 63644 bytes).
+roduction_Function_QR/Code/Text/Nonlinear_Quantile_Production_Prez.pdf (32 page
+s, 270197 bytes).
 PDF statistics:
- 115 PDF objects out of 1000 (max. 8388607)
- 93 compressed objects within 1 object stream
- 8 named destinations out of 1000 (max. 500000)
+ 1072 PDF objects out of 1200 (max. 8388607)
+ 994 compressed objects within 10 object streams
+ 106 named destinations out of 1000 (max. 500000)
  83 words of extra memory for PDF output out of 10000 (max. 10000000)
 

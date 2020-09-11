@@ -23,7 +23,7 @@
 \newtheorem{lemma}{Lemma}[section]
 \newtheorem{theorem}{Theorem}[section]
 \usepackage[toc,page]{appendix}
-\pagenumbering{gobble}
+\pagestyle{plain}
 \topmargin 0.0cm
 \oddsidemargin 0.2cm
 \textwidth 16cm
@@ -335,7 +335,7 @@ age_{it}
 where $\bar{\theta}$ denotes the true values of $\theta$. The posterior distribution is specified as (age omitted for ease of notation):
 \begin{equation}\label{posterior}
 \begin{split}
-f_{i}(\omega_{it};\bar{\theta})&=f(\omega_{it}|y_{it}, k_{it}, l_{it}, m_{it}; \bar{\theta}) \propto\\
+f_{i}(\omega_{it};\bar{\theta})&=f(\omega_{it}|y_{it}, k_{it}, l_{it}, m_{it}, i_{it}; \bar{\theta}) \propto\\
 &\prod_{t=1}^{T}f(y_{it}|k_{it}, l_{it}, m_{it}, \omega_{it};\bar{\theta})f(l_{it}|k_{it}, \omega_{it};\bar{\theta})f(m_{it}|k_{it}, \omega_{it};\bar{\theta}) \\
 &\times f(i_{it}|k_{it}, \omega_{it};\bar{\theta})f(\omega_{i1};\bar{\theta})\prod_{t=2}^{T}f(\omega_{it}|\omega_{it-1};\bar{\theta})
 \end{split}
@@ -347,7 +347,7 @@ The posterior density in equation \eqref{posterior} is a closed-form expression 
     \item \textit{Stochastic E-Step}: Draw $M$ values $\omega_{i}^{(m)}=(\omega_{i1}^{(m)}, \omega_{i2}^{(m)},\dots, \omega_{iT}^{(m)})$ from
         \begin{equation*}
         \begin{split}
-            f_{i}(\omega_{it};\hat{\theta}^{(s)})&=f(\omega_{it}|y_{it}, k_{it}, l_{it}, m_{it}; \hat{\theta}^{(s)}) \propto\\
+            f_{i}(\omega_{it};\hat{\theta}^{(s)})&=f(\omega_{it}|y_{it}, k_{it}, l_{it}, m_{it}, i_{t},; \hat{\theta}^{(s)}) \propto\\
             &\prod_{t=1}^{T}f(y_{it}|k_{it}, l_{it}, m_{it}, \omega_{it};\hat{\theta}^{(s)})f(l_{it}|k_{it}, \omega_{it};\hat{\theta}^{(s)})f(m_{it}|k_{it}, \omega_{it};\hat{\theta}^{(s)}) \\
             &\times f(i_{it}|k_{it}, \omega_{it};\hat{\theta}^{(s)})f(\omega_{i1};\hat{\theta}^{(s)})\prod_{t=2}^{T}f(\omega_{it}|\omega_{it-1};\hat{\theta}^{(s)})
             \end{split}
@@ -499,7 +499,10 @@ Then provided $L_{I_{t}, K_{t}|X_{t-1}, X_{t-2}}$ is injective according to Assu
 L_{X_{t}|X_{t-1}, X_{t-2}}L^{-1}_{I_{t}, K_{t}|X_{t-1}, X_{t-2}}=L_{I_{t}|K_{t}, \omega_{t}}\Delta_{Z_{t}|K_{t}, \omega_{t}}L^{-1}_{I_{t}|K_{t}, \omega_{t}}
 \end{equation*}
 Which is the decomposition in \eqref{decomp}. Then using the results of \cite{Hu2008} combined with assumptions \eqref{bounded}, \eqref{unique}, and \eqref{normalize} the densities $f_{I_{t}|K_{t}, \omega_{t}}$, $f_{Y_{t}|K_{t}, L_{t}, M_{t}, \omega_{t}}$, $f_{L_{t}|K_{t}, \omega_{t}}$, $f_{M_{t}|K_{t}, \omega_{t}}$, $f_{K_{t}|K_{t-1}, I_{t-1}}$ and $f_{\omega_{t}|\omega_{t-1}}$ are identified.
-
+%---------------------------------------------------------------------------------------------------------
+\pagebreak
+\newpage
+%------------------------------------------------------------------------------------------------------------
 \section*{Appendix B}
 \subsection*{Injectivity of $L_{\omega_{t-1}, X_{t-1}, X_{t-2}}$}
 First we write the corresponding density as:
@@ -537,7 +540,13 @@ So we may express in operator notation the joint density of $f_{\omega_{t-1}, X_
 \begin{equation*}
 L_{\omega_{t-1}, X_{t-1}, X_{t-2}}=L_{I_{t-1}|K_{t-1}, \omega_{t-1}}\Delta_{Z_{t-1}|K_{t-1}, \omega_{t-1}}\Delta_{K_{t-1}|K_{t-2}, I_{t-2}}\Delta_{X_{t-2}}\Delta_{\omega_{t-1}}
 \end{equation*}
-We have already assumed the invertibility of $L_{I_{t-1}|K_{t-1}, \omega_{t-1}}$, $\Delta_{Z_{t-1}|K_{t-1}, \omega_{t-1}}$ and $\Delta_{K_{t-1}|K_{t-2}, I_{t-2}}$. Both $\Delta_{X_{t-2}}$ and $\Delta_{\omega_{t-1}}$ are invertible if their corresponding densities are nonzero and bounded as required by Assumption \eqref{bounded}.                                               
+We have already assumed the invertibility of $L_{I_{t-1}|K_{t-1}, \omega_{t-1}}$, $\Delta_{Z_{t-1}|K_{t-1}, \omega_{t-1}}$ and $\Delta_{K_{t-1}|K_{t-2}, I_{t-2}}$. Both $\Delta_{X_{t-2}}$ and $\Delta_{\omega_{t-1}}$ are invertible if their corresponding densities are nonzero and bounded as required by Assumption \eqref{bounded}.
+
+%---------------------------------------------------------------------------------------------------------
+\pagebreak
+\newpage
+%------------------------------------------------------------------------------------------------------------ 
+\section*{Appendix C}                                              
 
 
 

@@ -290,4 +290,43 @@
   publisher = {The Econometric Society},
 }
 
+@Article{Olley1996,
+  author    = {G. Steven Olley and Ariel Pakes},
+  title     = {The Dynamics of Productivity in the Telecommunications Equipment Industry},
+  journal   = {Econometrica},
+  year      = {1996},
+  volume    = {64},
+  number    = {6},
+  pages     = {1263},
+  month     = {nov},
+  doi       = {10.2307/2171831},
+  publisher = {{JSTOR}},
+}
+
+@Article{Levinsohn2003,
+  author    = {James Levinsohn and Amil Petrin},
+  title     = {Estimating Production Functions Using Inputs to Control for Unobservables},
+  journal   = {Review of Economic Studies},
+  year      = {2003},
+  volume    = {70},
+  number    = {2},
+  pages     = {317--341},
+  month     = {apr},
+  doi       = {10.1111/1467-937x.00246},
+  publisher = {Oxford University Press ({OUP})},
+}
+
+@Article{He1997,
+  author    = {Xuming He},
+  title     = {Quantile Curves without Crossing},
+  journal   = {The American Statistician},
+  year      = {1997},
+  volume    = {51},
+  number    = {2},
+  pages     = {186},
+  month     = {may},
+  doi       = {10.2307/2685417},
+  publisher = {{JSTOR}},
+}
+
 @Comment{jabref-meta: databaseType:bibtex;}

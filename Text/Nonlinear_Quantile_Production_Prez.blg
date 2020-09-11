@@ -1,0 +1,27 @@
+[0] Config.pm:354> INFO - This is Biber 2.7
+[0] Config.pm:357> INFO - Logfile is 'Nonlinear_Quantile_Production_Prez.blg'
+[41] biber-darwin:303> INFO - === Thu Sep  3, 2020, 12:03:50
+[62] Biber.pm:359> INFO - Reading 'Nonlinear_Quantile_Production_Prez.bcf'
+[161] Biber.pm:835> INFO - Found 13 citekeys in bib section 0
+[176] Biber.pm:3670> INFO - Processing section 0
+[193] Biber.pm:3840> INFO - Looking for bibtex format file 'NL_PF_QR.bib' for section 0
+[196] bibtex.pm:1435> INFO - Decoding LaTeX character macros into UTF-8
+[204] bibtex.pm:1292> INFO - Found BibTeX data source 'NL_PF_QR.bib'
+[209] Utils.pm:164> WARN - month field 'apr' in entry 'Levinsohn2003' is not an integer - this will probably not sort properly.
+[213] Utils.pm:164> WARN - month field 'may' in entry 'He1997' is not an integer - this will probably not sort properly.
+[214] Utils.pm:164> WARN - month field 'jan' in entry 'Kaplan2016' is not an integer - this will probably not sort properly.
+[219] Utils.pm:164> WARN - month field 'jun' in entry 'Arellano2016' is not an integer - this will probably not sort properly.
+[221] Utils.pm:164> WARN - month field 'jan' in entry 'Hu2008' is not an integer - this will probably not sort properly.
+[222] Utils.pm:164> WARN - month field 'nov' in entry 'Hu2012' is not an integer - this will probably not sort properly.
+[224] Utils.pm:164> WARN - month field 'feb' in entry 'Doraszelski2013' is not an integer - this will probably not sort properly.
+[225] Utils.pm:164> WARN - month field 'jan' in entry 'Ericson1995' is not an integer - this will probably not sort properly.
+[229] Utils.pm:164> WARN - month field 'sep' in entry 'Wei2009' is not an integer - this will probably not sort properly.
+[251] UCollate.pm:68> INFO - Overriding locale 'en-US' defaults 'variable = shifted' with 'variable = non-ignorable'
+[251] UCollate.pm:68> INFO - Overriding locale 'en-US' defaults 'normalization = NFD' with 'normalization = prenormalized'
+[251] Biber.pm:3499> INFO - Sorting list 'nyt/global/' of type 'entry' with scheme 'nyt' and locale 'en-US'
+[251] Biber.pm:3505> INFO - No sort tailoring available for locale 'en-US'
+[265] bbl.pm:608> INFO - Writing 'Nonlinear_Quantile_Production_Prez.bbl' with encoding 'ascii'
+[268] Utils.pm:164> WARN - The entry 'Arellano2017' has characters which cannot be encoded in 'ascii'. Recoding problematic characters into macros.
+[269] Utils.pm:164> WARN - The entry 'Arellano2016' has characters which cannot be encoded in 'ascii'. Recoding problematic characters into macros.
+[271] bbl.pm:712> INFO - Output to Nonlinear_Quantile_Production_Prez.bbl
+[271] Biber.pm:109> INFO - WARNINGS: 11
