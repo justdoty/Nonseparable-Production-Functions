@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.18 (TeX Live 2017) (preloaded format=pdflatex 2017.5.23)  17 AUG 2020 12:42
+This is pdfTeX, Version 3.14159265-2.6-1.40.18 (TeX Live 2017) (preloaded format=pdflatex 2017.5.23)  21 SEP 2020 18:36
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -631,33 +631,33 @@ LaTeX Font Info:    Font shape `OMS/cmr/m/n' in size <8> not available
 LaTeX Font Info:    Font shape `OMS/cmr/m/n' in size <6> not available
 (Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 37.
 
-Underfull \hbox (badness 10000) in paragraph at lines 46--48
+Underfull \hbox (badness 10000) in paragraph at lines 45--47
 
  []
 
 [1
 
 {/usr/local/texlive/2017/texmf-var/fonts/map/pdftex/updmap/pdftex.map}]
-LaTeX Font Info:    Try loading font information for U+bbm on input line 85.
+LaTeX Font Info:    Try loading font information for U+bbm on input line 84.
 (/usr/local/texlive/2017/texmf-dist/tex/latex/bbm-macros/ubbm.fd
 File: ubbm.fd 1999/03/15 V 1.2 Font definition for bbm font - TH
 ) [2]
-Underfull \hbox (badness 10000) in paragraph at lines 108--109
+Underfull \hbox (badness 10000) in paragraph at lines 107--108
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 121--122
+Underfull \hbox (badness 10000) in paragraph at lines 120--121
 
  []
 
 [3]
-Underfull \hbox (badness 10000) in paragraph at lines 126--128
+Underfull \hbox (badness 10000) in paragraph at lines 125--127
 
  []
 
 
-Overfull \hbox (35.28242pt too wide) detected at line 132
+Overfull \hbox (35.28242pt too wide) detected at line 131
 \OT1/cmr/m/n/10 [\OML/cmm/m/it/10 L[] \OMS/cmsy/m/n/10 ^^N \OML/cmm/m/it/10 g\O
 T1/cmr/m/n/10 ](\OML/cmm/m/it/10 I[]\OT1/cmr/m/n/10 ) \OMS/cmsy/m/n/10 ^^Q [] \
 OML/cmm/m/it/10 f[]\OT1/cmr/m/n/10 (\OML/cmm/m/it/10 Z[]; I[]\OMS/cmsy/m/n/10 j
@@ -666,49 +666,49 @@ m/n/10 (\OML/cmm/m/it/10 I[]\OT1/cmr/m/n/10 )\OML/cmm/m/it/10 dI[]
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 155--157
+Underfull \hbox (badness 10000) in paragraph at lines 154--156
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 158--159
+Underfull \hbox (badness 10000) in paragraph at lines 157--158
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 162--163
+Underfull \hbox (badness 10000) in paragraph at lines 161--162
 
  []
 
 [4]
-Underfull \hbox (badness 10000) in paragraph at lines 165--169
+Underfull \hbox (badness 10000) in paragraph at lines 164--168
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 183--184
+Underfull \hbox (badness 10000) in paragraph at lines 182--183
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 192--194
+Underfull \hbox (badness 10000) in paragraph at lines 191--193
 
  []
 
 [5]
-Underfull \hbox (badness 10000) in paragraph at lines 243--245
+Underfull \hbox (badness 10000) in paragraph at lines 242--244
 
  []
 
 [6] [7]
-Underfull \hbox (badness 10000) in paragraph at lines 291--292
+Underfull \hbox (badness 10000) in paragraph at lines 290--291
 
  []
 
 [8] [9]
 (/Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Functio
 n_QR/Code/Text/Nonlinear_Quantile_Production.bbl) [10]
-Underfull \hbox (badness 10000) in paragraph at lines 388--390
+Underfull \hbox (badness 10000) in paragraph at lines 387--389
 
  []
 
@@ -756,7 +756,7 @@ ve/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy6.pfb></usr/local/texlive
 /texmf-dist/fonts/type1/public/amsfonts/cm/cmtt8.pfb>
 Output written on /Users/justindoty/Documents/Research/Dissertation/Nonlinear_P
 roduction_Function_QR/Code/Text/Nonlinear_Quantile_Production.pdf (15 pages, 32
-7779 bytes).
+7760 bytes).
 PDF statistics:
  164 PDF objects out of 1000 (max. 8388607)
  117 compressed objects within 2 object streams

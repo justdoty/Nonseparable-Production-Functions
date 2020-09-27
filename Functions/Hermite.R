@@ -48,14 +48,14 @@ hermite <- function(n, x){
 }
 tensor.prod <- function(M, vars){
 	if (length(M)==1){
-		stop("The number of hermite polynomials must be greater than one")
+		prodlist <- sapply(0:M, function(z) hermite(z, as.matrix(vars)))
+		return(prodlist)
 	} else {
-		polymat <- lapply(1:length(M), function(x) sapply(0:M[x], function(z) hermite(z, (as.matrix(vars[,x])-mean(vars[,x]))/sd(vars[,x]))))
+		polymat <- lapply(1:length(M), function(x) sapply(0:M[x], function(z) hermite(z, as.matrix(vars[,x]))))
 		prodlist <- list()
 		prodlist[[1]] <- polymat[[1]]
 		for (i in 2:(length(M))){
 			prodlist[[i]] <- t(sapply(1:nrow(vars), function(j) tcrossprod(prodlist[[i-1]][j,], polymat[[i]][j,])))
-			# prodlist[[i]] <- (prodlist[[i-1]]%x%polymat[[i]])[!!diag(nrow(vars)),]
 		}
 		return(prodlist[[length(M)]])
 	}
