@@ -31,45 +31,56 @@ hermite <- function(n, x){
 	#Compute the Hermite polynomials
 	x <- x/sqrt(2)
 	#Check n
-	if (n<0){
+	if (any(n<0)){
 		stop("The order of Hermite polynomial must be greater than or equal to 0.")
 	}
 
-	if (n-floor(n)!=0){
+	if (any(n-floor(n)!=0)){
 		stop("The order of Hermite polynomial must be an integer")
 	}
 	#Call the hermite recursive function
-	h <- hermite_rec(n)
+	herm <- lapply(1:length(n), function(i) hermite_rec(n[i]))
+	hmat <- matrix(0, nrow=nrow(x), ncol=length(n))
 	#Evaluate the hermite polynomial function, given x
-	if (length(h)==1){
-		h <- rep(h, nrow(x))
-	} else {
-		y <- h[length(h)]*matrix(1, nrow=nrow(x), ncol=1)
-		p <- 1
-		for (i in (length(h)-1):1){
-			y <- y+h[i]*x^p
-			p <- p+1
+	for (i in 1:length(n)){
+		if (length(herm[[i]])==1){
+			h <- rep(herm[[i]], nrow(x))
+		} else {
+			h <- herm[[i]]
+			y <- h[length(h)]*matrix(1, nrow=nrow(x), ncol=1)
+			p <- 1
+			for (j in (length(h)-1):1){
+				y <- array(y, length(x[,i]))
+				y <- y+h[j]*x[,i]^p
+				p <- p+1
+			}
+			h <- as.matrix(y, nrow=nrow(x), ncol=1)
 		}
-		h <- as.matrix(y, nrow=nrow(x), ncol=1)
+		hmat[,i] <- 2^(-n[i]/2)*h
 	}
-	h <- 2^(-n/2)*h
-	return(h)
+	return(hmat)
 }
 #####################################################################################################
 #Function that creates a tensor product from the hermite polynomials
 #####################################################################################################
-tensor.prod <- function(M, vars){
+tensor.prod <- function(M, vars, norm){
+	if (norm==TRUE){
+		vars <- (as.matrix(vars)-colMeans(vars))/apply(vars, 2, sd)
+	} else {
+		vars <- as.matrix(vars)
+	}
 	if (length(M)==1){
-		prodlist <- sapply(0:M, function(z) hermite(z, as.matrix((vars-mean(vars))/sd(vars))))
+		prodlist <- sapply(0:M, function(z) hermite(z, vars))
+		return(prodlist)
+	} else if (all(M==1)){
+		#Just a linear model: TO DO: allow all 1's to use a firt-order interaction model
+		prodlist <- cbind(1, vars)
 		return(prodlist)
 	} else {
-		polymat <- lapply(1:length(M), function(x) sapply(0:M[x], function(z) hermite(z, as.matrix((vars[,x]-mean(vars[,x]))/sd(vars[,x])))))
-		prodlist <- list()
-		prodlist[[1]] <- polymat[[1]]
-		for (p in 2:(length(M))){
-			prodlist[[p]] <- t(sapply(1:nrow(vars), function(j) tcrossprod(prodlist[[p-1]][j,], polymat[[p]][j,])))
-		}
-		return(prodlist[[length(M)]])
+		vecs <- mapply(seq, 0, M)
+		tmp <- as.matrix(do.call(expand.grid, vecs))
+		prodlist <- apply(tmp, 1, function(z) apply(hermite(z, x=vars), 1, prod))
+		return(prodlist)
 	}
 }
 ####################################################################################################

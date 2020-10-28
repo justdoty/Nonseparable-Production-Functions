@@ -66,29 +66,19 @@ sgradfune <- function(idvar, X, U, MH, init, tol, stepsize, nsteps, nbatch, seed
 #Functions to estimate the exponential tail parameters on (0, \tau_{1}) and (\tau_{L}, 1)
 #####################################################################################################
 expb <- function(idvar, X, U, MH, par1, parL, WT){
-	if (WT==2){
-		b1 <- -mean(apply(U, 2, function(u) mean(X[,1]<=tensor.prod(MH, cbind(X[,-1], u))%*%par1)/mean((X[,1]-tensor.prod(MH, cbind(X[,-1], u))%*%par1)*(X[,1]<=tensor.prod(MH, cbind(X[,-1], u))%*%par1))))
-		bL <- mean(apply(U, 2, function(u) mean(X[,1]>tensor.prod(MH, cbind(X[,-1], u))%*%parL)/mean((X[,1]-tensor.prod(MH, cbind(X[,-1], u))%*%parL)*(X[,1]>tensor.prod(MH, cbind(X[,-1], u))%*%parL))))
-	} else if (WT==1){
-		data <- lagdata(idvar=idvar, X=cbind(X, U))
-		names(data) <- c("idvar", paste("X", 1:ncol(X), sep=""), paste("Y", 1:ncol(U), sep=""), paste("Xlag", 1:ncol(X), sep=""), paste("U", 1:ncol(U), sep="")) 
-		data <- data %>% select(-starts_with("Xlag"))
-		#Dropped Xlag since it is not used in estimation
-	    Xpar1 <- apply(as.matrix(data[, grepl("U", names(data))]), 2, function(u) tensor.prod(MH, cbind(data[, grepl("X", names(data))], u))%*%par1)
-		XparL <- apply(as.matrix(data[, grepl("U", names(data))]), 2, function(u) tensor.prod(MH, cbind(data[, grepl("X", names(data))], u))%*%parL)
-		b1 <- -mean(as.matrix(data[,grepl("Y", colnames(data))]<=Xpar1))/mean(as.matrix((data[,grepl("Y", colnames(data))]-Xpar1)*(data[,grepl("Y", colnames(data))]<=Xpar1)))
-		bL <- mean(as.matrix(data[,grepl("Y", colnames(data))]>XparL))/mean(as.matrix((data[,grepl("Y", colnames(data))]-XparL)*(data[,grepl("Y", colnames(data))]>XparL)))
-	} else if (WT==0){
-		data <- t0data(idvar=idvar, X=cbind(X, U))
-		names(data) <- c("idvar", paste("X", 1:ncol(X), sep=""), paste("Y", 1:ncol(U), sep=""))
-		Xpar1 <- tensor.prod(MH, data[,grepl("X", colnames(data))])%*%par1
-		XparL <- tensor.prod(MH, data[,grepl("X", colnames(data))])%*%parL
-		b1 <- -mean(as.matrix(data[,grepl("Y", colnames(data))]<=Xpar1))/mean(as.matrix((data[,grepl("Y", colnames(data))]-Xpar1)*(data[,grepl("Y", colnames(data))]<=Xpar1)))
-		bL <- mean(as.matrix(data[,grepl("Y", colnames(data))]>XparL))/mean(as.matrix((data[,grepl("Y", colnames(data))]-XparL)*(data[,grepl("Y", colnames(data))]>XparL)))
-	}
+	if (!missing(X)){
+		b1 <- -mean(apply(U, 2, function(u) mean(X[,1]<=tensor.prod(MH, cbind(X[,-1], u), norm=0)%*%par1)/mean((X[,1]-tensor.prod(MH, cbind(X[,-1], u), norm=0)%*%par1)*(X[,1]<=tensor.prod(MH, cbind(X[,-1], u), norm=0)%*%par1))))
+		bL <- mean(apply(U, 2, function(u) mean(X[,1]>tensor.prod(MH, cbind(X[,-1], u), norm=0)%*%parL)/mean((X[,1]-tensor.prod(MH, cbind(X[,-1], u), norm=0)%*%parL)*(X[,1]>tensor.prod(MH, cbind(X[,-1], u), norm=0)%*%parL))))
+	} else {
+		data <- lagdata(idvar, U)
+		names(data) <- c("idvar", paste("Ucon", 1:ncol(U), sep=""), paste("Ulag", 1:ncol(U), sep="")) 
+	    Xpar1 <- apply(as.matrix(data[, grepl("Ulag", names(data))]), 2, function(u) tensor.prod(MH, u, norm=0)%*%par1)
+		XparL <- apply(as.matrix(data[, grepl("Ulag", names(data))]), 2, function(u) tensor.prod(MH, u, norm=0)%*%parL)
+		b1 <- -mean(as.matrix(data[,grepl("Ucon", colnames(data))]<=Xpar1))/mean(as.matrix((data[,grepl("Ucon", colnames(data))]-Xpar1)*(data[,grepl("Ucon", colnames(data))]<=Xpar1)))
+		bL <- mean(as.matrix(data[,grepl("Ucon", colnames(data))]>XparL))/mean(as.matrix((data[,grepl("Ucon", colnames(data))]-XparL)*(data[,grepl("Ucon", colnames(data))]>XparL)))
+		}
 	return(list(b1=b1, bL=bL))
 }
-
 #####################################################################################################
 #####################################################################################################
 #####################################################################################################
