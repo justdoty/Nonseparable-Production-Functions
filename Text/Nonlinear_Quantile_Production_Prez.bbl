@@ -138,6 +138,42 @@
       \verb 10.1111/ectj.12062
       \endverb
     \endentry
+    \entry{Arellano2017a}{article}{}
+      \name{author}{2}{}{%
+        {{hash=6b9818f5875c27a0cfbcbcd637e4eed9}{%
+           family={Arellano},
+           familyi={A\bibinitperiod},
+           given={Manuel},
+           giveni={M\bibinitperiod}}}%
+        {{hash=f57d812ec704bd5938dc9de6155268d2}{%
+           family={Bonhomme},
+           familyi={B\bibinitperiod},
+           given={St\'{e}phane},
+           giveni={S\bibinitperiod}}}%
+      }
+      \list{publisher}{1}{%
+        {The Econometric Society}%
+      }
+      \strng{namehash}{774d34363d161aee15c080bd79abfde8}
+      \strng{fullhash}{774d34363d161aee15c080bd79abfde8}
+      \strng{authornamehash}{774d34363d161aee15c080bd79abfde8}
+      \strng{authorfullhash}{774d34363d161aee15c080bd79abfde8}
+      \field{sortinit}{A}
+      \field{sortinithash}{3248043b5fe8d0a34dab5ab6b8d4309b}
+      \field{labeldatesource}{year}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Econometrica}
+      \field{number}{1}
+      \field{title}{Quantile Selection Models With an Application to Understanding Changes in Wage Inequality}
+      \field{volume}{85}
+      \field{year}{2017}
+      \field{pages}{1\bibrangedash 28}
+      \range{pages}{28}
+      \verb{doi}
+      \verb 10.3982/ecta14030
+      \endverb
+    \endentry
     \entry{qgmm}{article}{}
       \name{author}{4}{}{%
         {{hash=ffab074e62080d25eab07f8ccddcf982}{%
@@ -429,6 +465,75 @@
       \range{pages}{25}
       \verb{doi}
       \verb 10.1111/1467-937x.00246
+      \endverb
+    \endentry
+    \entry{Nielsen2000}{article}{}
+      \name{author}{1}{}{%
+        {{hash=450be5a4a387dc9a931b7a7c143bf2bc}{%
+           family={Nielsen},
+           familyi={N\bibinitperiod},
+           given={S{\o{}}ren\bibnamedelima Feodor},
+           giveni={S\bibinitperiod\bibinitdelim F\bibinitperiod}}}%
+      }
+      \list{publisher}{1}{%
+        {JSTOR}%
+      }
+      \strng{namehash}{450be5a4a387dc9a931b7a7c143bf2bc}
+      \strng{fullhash}{450be5a4a387dc9a931b7a7c143bf2bc}
+      \strng{authornamehash}{450be5a4a387dc9a931b7a7c143bf2bc}
+      \strng{authorfullhash}{450be5a4a387dc9a931b7a7c143bf2bc}
+      \field{sortinit}{N}
+      \field{sortinithash}{1163c28585427c673ad5a010cbf82f52}
+      \field{labeldatesource}{year}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Bernoulli}
+      \field{month}{6}
+      \field{number}{3}
+      \field{title}{The Stochastic {EM} Algorithm: Estimation and Asymptotic Results}
+      \field{volume}{6}
+      \field{year}{2000}
+      \field{pages}{457}
+      \range{pages}{1}
+      \verb{doi}
+      \verb 10.2307/3318671
+      \endverb
+    \endentry
+    \entry{Olley1996}{article}{}
+      \name{author}{2}{}{%
+        {{hash=1d69d2d5f8915bf1d5b1be75f76e47ea}{%
+           family={Olley},
+           familyi={O\bibinitperiod},
+           given={G.\bibnamedelimi Steven},
+           giveni={G\bibinitperiod\bibinitdelim S\bibinitperiod}}}%
+        {{hash=e5ca2972929372ecfef828a3c1eba9d7}{%
+           family={Pakes},
+           familyi={P\bibinitperiod},
+           given={Ariel},
+           giveni={A\bibinitperiod}}}%
+      }
+      \list{publisher}{1}{%
+        {JSTOR}%
+      }
+      \strng{namehash}{6e1d8ab6fc162890832ce8923a17e6be}
+      \strng{fullhash}{6e1d8ab6fc162890832ce8923a17e6be}
+      \strng{authornamehash}{6e1d8ab6fc162890832ce8923a17e6be}
+      \strng{authorfullhash}{6e1d8ab6fc162890832ce8923a17e6be}
+      \field{sortinit}{O}
+      \field{sortinithash}{f5d80ef71b5b58852663ecfd775b175a}
+      \field{labeldatesource}{year}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Econometrica}
+      \field{month}{11}
+      \field{number}{6}
+      \field{title}{The Dynamics of Productivity in the Telecommunications Equipment Industry}
+      \field{volume}{64}
+      \field{year}{1996}
+      \field{pages}{1263}
+      \range{pages}{1}
+      \verb{doi}
+      \verb 10.2307/2171831
       \endverb
     \endentry
     \entry{Pakesa}{incollection}{}

@@ -329,4 +329,38 @@
   publisher = {{JSTOR}},
 }
 
+@Article{Kaplan2016,
+  author    = {David M. Kaplan and Yixiao Sun},
+  title     = {Smoothed Estimating Equations for Instrumental Variables Quantile Regression},
+  journal   = {Econometric Theory},
+  year      = {2016},
+  volume    = {33},
+  number    = {1},
+  pages     = {105--157},
+  month     = {jan},
+  doi       = {10.1017/s0266466615000407},
+  publisher = {Cambridge University Press ({CUP})},
+}
+
+@Article{qgmm,
+  author  = {Luciano de Castro and Antonio F. Galvao and David M. Kaplan and Xin Liu},
+  title   = {Smoothed {GMM} for Quantile Models},
+  journal = {Journal of Econometrics},
+  year    = {2018},
+  note    = {forthcoming},
+}
+
+@Article{Nielsen2000,
+  author    = {S{\o}ren Feodor Nielsen},
+  title     = {The Stochastic {EM} Algorithm: Estimation and Asymptotic Results},
+  journal   = {Bernoulli},
+  year      = {2000},
+  volume    = {6},
+  number    = {3},
+  pages     = {457},
+  month     = {jun},
+  doi       = {10.2307/3318671},
+  publisher = {{JSTOR}},
+}
+
 @Comment{jabref-meta: databaseType:bibtex;}

@@ -51,30 +51,20 @@ gradbatch <- function(idvar, X, U, nbatch, seed, WT){
 }
 ###############################################################################################
 #This function computes the piece-wise linear spline with the laplace specification
-#in the tail intervals for the vector of coefficients
+#in the tail intervals in the intercept for the vector of coefficients
 ###############################################################################################
 lspline <- function(vectau, bvec, b1, bL, u){
 	#Laplace Tail Parameters
-	qb1 <- 1/b1*(log(u/vectau[1]))*(0<u)*(u<vectau[1])
-	qbL <- 1/bL*(log((1-u)/(1-vectau[length(vectau)])))*(vectau[length(vectau)]<=u)*(u<1)
+	qb1 <- (matrix(rep(bvec[,1], each=length(u)), nrow=length(u))+1/b1*(log(u/vectau[1]))*cbind(1, array(0, c(length(u), (nrow(bvec)-1)))))*(0<u)*(u<vectau[1])
+	qbL <- (matrix(rep(bvec[,length(vectau)], each=length(u)), nrow=length(u))-1/bL*(log((1-u)/(1-vectau[length(vectau)])))*cbind(1, array(0, c(length(u), (nrow(bvec)-1)))))*(vectau[length(vectau)]<u)*(u<1)
 	#Initialization
-	qpar <- (as.matrix((u-vectau[1]))%*%t(((bvec[,2]-bvec[,1])/(vectau[2]-vectau[1]))))*(vectau[1]<=u)*(u<vectau[2])
+	qpar <- (matrix(rep(bvec[,1], each=length(u)), nrow=length(u))+as.matrix((u-vectau[1])/(vectau[2]-vectau[1]))%*%t((bvec[,2]-bvec[,1])))*(vectau[1]<=u)*(u<vectau[2])
 	for (q in 2:(length(vectau)-1)){
-		qpar <- qpar+(as.matrix((u-vectau[q]))%*%t(((bvec[,q+1]-bvec[,q])/(vectau[q+1]-vectau[q]))))*(vectau[q]<=u)*(u<vectau[q+1])
-	}
-	lspline <- qb1+qpar-qbL
-	return(lspline)
-}
-###############################################################################################
-#This function recursively updates productivity given last period's productivity and other
-#control variables (e.g. age) for a random innovation shock
-###############################################################################################
-wtsim <- function(wtlag, X, xi, dimM, vectau, bvec, b1, bL){
-	wxtlag <- tensor.prod(dimM, cbind(X, wtlag), norm=0)
-	wxtpar <- lspline(vectau=vectau, bvec=bvec, b1=b1, bL=bL, u=xi)
-	wt <- rowSums(wxtlag*wxtpar)
-	return(wt)
+		qpar <- qpar+(matrix(rep(bvec[,q], each=length(u)), nrow=length(u))++as.matrix((u-vectau[q])/(vectau[q+1]-vectau[q]))%*%t((bvec[,q+1]-bvec[,q])))*(vectau[q]<=u)*(u<vectau[q+1])
 
+	}
+	lspline <- qb1+qpar+qbL
+	return(lspline)
 }
 ###############################################################################################
 ###############################################################################################

@@ -1,7 +1,6 @@
 setwd('/Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Function_QR/Code/Functions')
 #This function is used to do a basic LP estimation of TFP to use as initial model estimates
 #and initial draw for productivity in the stEM algorithm
-source('Tensors.R')
 source('Auxfuns.R')
 #LP GMM Criterion Function
 #x denotes the exogeneous and endogeneous regressors

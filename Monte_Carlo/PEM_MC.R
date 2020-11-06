@@ -1,4 +1,4 @@
-setwd('/Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Function_QR/Code/Functions')
+setwd('/Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Function_QR/Code/Monte_Carlo')
 require(quantreg)
 require(dplyr)
 source('Tensors.R')
@@ -13,7 +13,7 @@ source('LP_init.R')
 # source('NLPFQR/FUN/Mstep.R')
 # source('NLPFQR/FUN/Auxfuns.R')
 # source('NLPFQR/FUN/LP_init.R')
-Production_EM <- function(ntau, idvar, timevar, Y, K, L, M, I, MY, ML, MM, MI, MW, maxiter, draws, Mdraws, seed){
+PEM_MC <- function(ntau, idvar, timevar, Y, K, L, M, I, maxiter, draws, Mdraws, seed){
 	set.seed(seed)
 	#We are assuming the researcher has access to a balanced panel. We can extend the case to unbalanced panel
 	#By including possibly conditioning the productivity process on survival probability following OP (1994)
@@ -31,13 +31,6 @@ Production_EM <- function(ntau, idvar, timevar, Y, K, L, M, I, MY, ML, MM, MI, M
 	I <- as.matrix(I)
 	#Number of Firms
 	N <- length(unique(idvar))
-	#Dimension of hermite polynomials/linear models
-	MH <- list(MY=MY, ML=ML, MM=MM, MI=MI, MW=MW)
-	#If linear models are specified, these are the number of parameters of each model
-	#Subject to change if variables are added or removed
-	MLdim <- c(MY=5, ML=3, MM=3, MI=3, MW=2)
-	#Comine the dimensions of both linear (if specified) and hermite polynomials
-	MHdim <- c(MLdim[names(MH[MH=="linear"])], lapply(MH[names(MH[MH!='linear'])], function(x) prod(x+1)))
 	#Grid of Taus
 	vectau <- seq(1/(ntau+1), ntau/(ntau+1), by=1/(ntau+1))
 	TFP <- as.matrix(LP_est(idvar=idvar, timevar=timevar, Y=Y, K=K, L=L, M=M))
@@ -50,27 +43,26 @@ Production_EM <- function(ntau, idvar, timevar, Y, K, L, M, I, MY, ML, MM, MI, M
 	############ Initialization for EM Algorithm ###############################
 	############################################################################
 	#Initialize Paramater Values for Output
-	resYinit <- matrix(rq(Y~tensor.prod(M=MH$MY, vars=cbind(K, L, M, TFP), norm=0)-1, tau=vectau)$coef, nrow=MHdim$MY, ncol=ntau)
-	#Initialize Paramater Values for Labor
-	resLinit <- matrix(rq(L~tensor.prod(M=MH$ML, vars=cbind(K, TFP), norm=0)-1, tau=vectau)$coef, nrow=MHdim$ML, ncol=ntau)
-	#Initialize Parameter Values for Labor
-	resMinit <- matrix(rq(M~tensor.prod(M=MH$MM, vars=cbind(K, TFP), norm=0)-1, tau=vectau)$coef, nrow=MHdim$MM, ncol=ntau)
+	resYinit <- matrix(rq(Y~cbind(K, L, M, TFP), tau=vectau)$coef, nrow=5, ncol=ntau)
 	#Initialize Parameter Values for Omega_{t}
-	resWTinit <- matrix(rq(WTdata$Ucon~tensor.prod(M=MH$MW, vars=WTdata$Ulag, norm=0)-1, tau=vectau)$coef, nrow=MHdim$MW, ncol=ntau)
+	resWTinit <- matrix(rq(WTdata$Ucon~WTdata$Ulag, tau=vectau)$coef, nrow=2, ncol=ntau)
 	#Initialize Parameter Values for Omega_{0}
 	#There is an issue with selecting these initial parameters as the initial guess of unobservables is far off
 	#Therefore i use the parameters of the proposal distribution as initial parameters
 	w1mu <- mean(W1data$U1)
 	w1var <- var(W1data$U1)
 	resW1init <- c(0, .05)
-	#Initialize Paramater Values for Investment (Nonlinear Regression Model)
-	resIcoef <- lm(I~tensor.prod(M=MH$MI, vars=cbind(K, TFP), norm=0)-1)
-	#Vector of Investment coefficients and estimate of  variance
+	#Initialize Paramater Values for Labor
+	resLcoef <- lm(L~cbind(K, TFP))
+	resLinit <- c(as.numeric(coef(resLcoef)), mean(resid(resLcoef)^2))
+	#Initialize Parameter Values for Materials
+	resMcoef <- lm(M~cbind(K, TFP))
+	resMinit <- c(as.numeric(coef(resMcoef)), mean(resid(resMcoef)^2))
+	#Initialize Paramater Values for Investment 
+	resIcoef <- lm(I~cbind(K, TFP))
 	resIinit <- c(as.numeric(coef(resIcoef)), mean(resid(resIcoef)^2))
 	#Initial Parameter Values for Laplace Parameters
 	yb1init <- ybLinit <- 1
-	lb1init <- lbLinit <- 1
-	mb1init <- mbLinit <- 1
 	wtb1init <- wtbLinit <- 1
 	############################################################################
 	############################################################################
@@ -80,15 +72,13 @@ Production_EM <- function(ntau, idvar, timevar, Y, K, L, M, I, MY, ML, MM, MI, M
 	#Variance Random Walk proposal
 	varRW <- .05
 	#Matrices for Storing Results
-	resY <- array(0, c(maxiter, MHdim$MY, ntau))
-	resL <- array(0, c(maxiter, MHdim$ML, ntau))
-	resM <- array(0, c(maxiter, MHdim$MM, ntau))
-	resWT <- array(0, c(maxiter, MHdim$MW, ntau))
+	resY <- array(0, c(maxiter, 5, ntau))
+	resWT <- array(0, c(maxiter, 2, ntau))
+	resL <- array(0, c(maxiter, 4))
+	resM <- array(0, c(maxiter, 4))
+	resI <- array(0, c(maxiter, 4))
 	resW1 <- array(0, c(maxiter, 2))
-	resI <- array(0, c(maxiter, (MHdim$MI+1)))
 	yb1 <- array(0, c(maxiter, 1)); ybL <- array(0, c(maxiter, 1))
-	lb1 <- array(0, c(maxiter, 1)); lbL <- array(0, c(maxiter, 1))
-	mb1 <- array(0, c(maxiter, 1)); mbL <- array(0, c(maxiter, 1))
 	wtb1 <- array(0, c(maxiter, 1)); wtbL <- array(0, c(maxiter, 1))
 	#Begin EM Algorithm
 	for (iter in 1:maxiter){
@@ -98,13 +88,12 @@ Production_EM <- function(ntau, idvar, timevar, Y, K, L, M, I, MY, ML, MM, MI, M
 		#Initialize Matrix for Averaging over Accepted Draws
 		mat <- matrix(0, length(Y), Mdraws)
 		#Initial Parameter Values 
-		resinit <- list(resYinit=resYinit, yb1init=yb1init, ybLinit=ybLinit, resLinit=resLinit, lb1init=lb1init, 
-			lbLinit=lbLinit, resMinit=resMinit, mb1init=mb1init, mbLinit=mbLinit, 
+		resinit <- list(resYinit=resYinit, yb1init=yb1init, ybLinit=ybLinit, resLinit=resLinit, resMinit=resMinit, 
 			resWTinit=resWTinit, wtb1init=wtb1init, wtbLinit=wtbLinit, resW1init=resW1init, resIinit=resIinit)
 		#Initial Guess for Unobservables
 		un <- as.matrix(rnorm(length(Y), 0, sqrt(varRW)))
 		#Calculate posterior density at this guess
-		un_dens <- posterior(data=cbind(idvar, Y, K, L, M, I, un), MH=MH, vectau=vectau, par=resinit)
+		un_dens <- posterior(data=cbind(idvar, Y, K, L, M, I, un), vectau=vectau, par=resinit)
 		for (j in r:Mdraws){
 			Mseed <- seed+j
 			set.seed(Mseed)
@@ -112,7 +101,7 @@ Production_EM <- function(ntau, idvar, timevar, Y, K, L, M, I, MY, ML, MM, MI, M
 			try_un <- as.matrix(rnorm(length(Y), 0, sqrt(varRW)))
 			#Random Walk update
 			y <- un+try_un
-			loglik <- posterior(data=cbind(idvar, Y, K, L, M, I, y), MH=MH, vectau=vectau, par=resinit)
+			loglik <- posterior(data=cbind(idvar, Y, K, L, M, I, y), vectau=vectau, par=resinit)
 			#Log acceptance probability
 			loga <- loglik-un_dens
 			#Create a set of N indices for acceptance rule
@@ -138,47 +127,33 @@ Production_EM <- function(ntau, idvar, timevar, Y, K, L, M, I, MY, ML, MM, MI, M
 		for (q in 1:ntau){
 			print(sprintf("Quantile Mstep %i", q))
 			if (Mdraws==1){
-				resY[,,q][iter,] <- rq(Y~tensor.prod(M=MH$MY, vars=cbind(K, L, M, mat), norm=0)-1, tau=vectau[q])$coef
-				resL[,,q][iter,] <- rq(L~tensor.prod(M=MH$ML, vars=cbind(K, mat), norm=0)-1, tau=vectau[q])$coef
-				resM[,,q][iter,] <- rq(M~tensor.prod(M=MH$MM, vars=cbind(K, mat), norm=0)-1, tau=vectau[q])$coef
-				resWT[,,q][iter,] <- rq(WTdata$Ucon~tensor.prod(M=MH$MW, vars=WTdata$Ulag, norm=0)-1, tau=vectau[q])$coef
+				resY[,,q][iter,] <- rq(Y~cbind(K, L, M, mat), tau=vectau[q])$coef
+				resWT[,,q][iter,] <- rq(WTdata$Ucon~WTdata$Ulag, tau=vectau[q])$coef
 			} else {
-				print('Error: Still working on this part :)')
-				#TO DO: ALLOW FOR DIFFERENT M SIZE TO USE AS DIFFERENT INITIAL VALUES 
-				#FOR THE EM ALGORITHM CHOOSING THE VALUES THAT CORRESPOND TO THE HIGHEST
-				#LIKELIHOOD VALUE
-				#Initialize Gradient Descent Algorithms
-			    #Tolerance for gradient (close to zero)
-			 #    tol <- 1e-2
-			 #    #Stepsize for gradient
-			 #    stepsize <- 100
-			 #    #Number of gradient descent iterations
-			 #    nsteps <- 800
-			 #    nbatch <- 1
-				# resY[,,q][iter,] <- sgradfunq(idvar=idvar, X=cbind(Y, K, L, M, A), U=mat, MH=MH$MY, 
-				# 	init=resYinit[,q], tau=vectau[q], tol=tol, stepsize=stepsize, nsteps=nsteps, nbatch=nbatch, seed=seed, WT=2)$coef
-				# resL[,,q][iter,] <- sgradfunq(idvar=idvar, X=cbind(L, K, A), U=mat, MH=MH$ML, 
-				# 	init=resLinit[,q], tau=vectau[q], tol=tol, stepsize=stepsize, nsteps=nsteps, nbatch=nbatch, seed=seed, WT=2)$coef
-				# resM[,,q][iter,] <- sgradfunq(idvar=idvar, X=cbind(M, K, A), U=mat, MH=MH$MM, 
-				# 	init=resMinit[,q], tau=vectau[q], tol=tol, stepsize=stepsize, nsteps=nsteps, nbatch=nbatch, seed=seed, WT=2)$coef
-				# resWT[,,q][iter,] <- sgradfunq(idvar=idvar, X=A, U=mat, MH=MH$MW, init=resWTinit[,q], tau=vectau[q], 
-				# 	tol=tol, stepsize=stepsize, nsteps=nsteps, nbatch=nbatch, seed=seed, WT=1)$coef
+				print('Error: Still working on this part')
 			}
 		}
 		##########################################################################################
 		#Investment Estimation
 		if (Mdraws==1){
-			resILM <- lm(I~tensor.prod(M=MI, vars=cbind(K, mat), norm=0)-1)
+			#Labor
+			resLLM <- lm(L~cbind(K, mat))
+			resLcoef <- as.numeric(coef(resLLM))
+			resLvar <- mean(resid(resLLM)^2)
+			#Materials
+			resMLM <- lm(M~cbind(K, mat))
+			resMcoef <- as.numeric(coef(resMLM))
+			resMvar <- mean(resid(resMLM)^2)
+			#Investment
+			resILM <- lm(I~cbind(K, mat))
 			resIcoef <- as.numeric(coef(resILM))
 			resIvar <- mean(resid(resILM)^2)
 			
 		} else {
 			print('Error: Still working on this part :)')
-			# resIcoef <- sgradfune(idvar=idvar, X=cbind(I, K, A), U=mat, MH=MI, 
-			# 		init=resIinit[-length(resIinit)], tol=tol, stepsize=stepsize, nsteps=nsteps, nbatch=1, seed=seed)$coef
-			# #Estimate of Variance
-			# resIvar <- mean((apply(mat, 2, function(u) sum(I-tensor.prod(MI, cbind(K, A, u))%*%resIcoef)))^2)
 			}
+		resL[iter,] <- c(resLcoef, resLvar)
+		resM[iter,] <- c(resMcoef, resMvar)
 		resI[iter,] <- c(resIcoef, resIvar)
 		#########################################################################################
 		#Initial Productivity
@@ -186,19 +161,11 @@ Production_EM <- function(ntau, idvar, timevar, Y, K, L, M, I, MY, ML, MM, MI, M
 		###########################################################################################
 		#Tail Parameters
 		#Output
-		yb <- expb(X=cbind(Y, K, L, M), U=mat, MH=MH$MY, par1=resY[,,1][iter,], parL=resY[,,ntau][iter,], WT=2)
+		yb <- expb(X=cbind(Y, K, L, M), U=mat, par1=resY[,,1][iter,], parL=resY[,,ntau][iter,], WT=2)
 		yb1[iter,] <- yb$b1
 		ybL[iter,] <- yb$bL
-		#Labor
-		lb <- expb(X=cbind(L, K), U=mat, MH=MH$ML, par1=resL[,,1][iter,], parL=resL[,,ntau][iter,], WT=2)
-		lb1[iter,] <- lb$b1
-		lbL[iter,] <- lb$bL
-		#Materials
-		mb <- expb(X=cbind(M, K), U=mat, MH=MH$MM, par1=resM[,,1][iter,], parL=resM[,,ntau][iter,], WT=2)
-		mb1[iter,] <- mb$b1
-		mbL[iter,] <- mb$bL
 		#Productivity
-		wtb <- expb(idvar=idvar, U=mat, MH=MH$MW, par1=resWT[,,1][iter,], parL=resWT[,,ntau][iter,], WT=1)
+		wtb <- expb(idvar=idvar, U=mat, par1=resWT[,,1][iter,], parL=resWT[,,ntau][iter,], WT=1)
 		wtb1[iter,] <- wtb$b1
 		wtbL[iter,] <- wtb$bL
 		#############################################################################################
@@ -210,23 +177,18 @@ Production_EM <- function(ntau, idvar, timevar, Y, K, L, M, I, MY, ML, MM, MI, M
 		resW1init <- as.matrix(resW1[iter,])
 		resIinit <- as.matrix(resI[iter,])
 		yb1init <- yb1[iter,]; ybLinit <- ybL[iter,]
-		lb1init <- lb1[iter,]; lbLinit <- lbL[iter,]
-		mb1init <- mb1[iter,]; mbLinit <- mbL[iter,]
 		wtb1init <- wtb1[iter,]; wtbLinit <- wtbL[iter,]
 		################################################################################################
 		}
 	resYmat <- sapply(1:ntau, function(x) colMeans(resY[,,x][(maxiter/2):maxiter,]))
 	resyb1bLmat <- c(mean(yb1[(maxiter/2):maxiter]), mean(ybL[(maxiter/2):maxiter]))
-	resLmat <- sapply(1:ntau, function(x) colMeans(resL[,,x][(maxiter/2):maxiter,]))
-	reslb1bLmat <- c(mean(lb1[(maxiter/2):maxiter]), mean(lbL[(maxiter/2):maxiter]))
-	resMmat <- sapply(1:ntau, function(x) colMeans(resM[,,x][(maxiter/2):maxiter,]))
-	resmb1bLmat <- c(mean(mb1[(maxiter/2):maxiter]), mean(mbL[(maxiter/2):maxiter]))
+	resLmat <- colMeans(resL[(maxiter/2):maxiter,])
+	resMmat <- colMeans(resM[(maxiter/2):maxiter,])
 	resWTmat <- sapply(1:ntau, function(x) colMeans(resWT[,,x][(maxiter/2):maxiter,]))
 	reswtb1bLmat <- c(mean(wtb1[(maxiter/2):maxiter]), mean(wtbL[(maxiter/2):maxiter]))
 	resImat <- colMeans(resI[(maxiter/2):maxiter,])
 	resW1mat <- colMeans(resW1[(maxiter/2):maxiter,])
-	return(list(MH=MH, vectau=vectau, resYmat=resYmat, resLmat=resLmat, resMmat=resMmat, resWTmat=resWTmat, resW1mat=resW1mat, resImat=resImat, resyb1bLmat=resyb1bLmat, reslb1bLmat=reslb1bLmat, 
-		resmb1bLmat=resmb1bLmat, reswtb1bLmat=reswtb1bLmat))
+	return(list(vectau=vectau, resYmat=resYmat, resLmat=resLmat, resMmat=resMmat, resWTmat=resWTmat, resW1mat=resW1mat, resImat=resImat, resyb1bLmat=resyb1bLmat, reswtb1bLmat=reswtb1bLmat))
 }
 
 

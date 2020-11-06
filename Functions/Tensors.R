@@ -64,19 +64,38 @@ hermite <- function(n, x){
 #Function that creates a tensor product from the hermite polynomials
 #####################################################################################################
 tensor.prod <- function(M, vars, norm){
+	#Option to normalize data (useful for gradient descent)
 	if (norm==TRUE){
 		vars <- (as.matrix(vars)-colMeans(vars))/apply(vars, 2, sd)
 	} else {
 		vars <- as.matrix(vars)
 	}
+	#If we just want a univariate hermite polynomial
 	if (length(M)==1){
+		if (length(M)<ncol(vars)){
+			print("Error: Number of vars should be equal to one")
+		}
 		prodlist <- sapply(0:M, function(z) hermite(z, vars))
 		return(prodlist)
-	} else if (all(M==1)){
-		#Just a linear model: TO DO: allow all 1's to use a firt-order interaction model
-		prodlist <- cbind(1, vars)
+	#This covers the case when mapply cant return a list when all M is the same
+	} else if (length(unique(M))==1){
+		if (length(M)!=ncol(vars)){
+			print('Error: M needs to equal to the number of vars')
+		}
+		vecs <- mapply(seq, 0, M)
+		tmp <- split(vecs, rep(1:ncol(vecs), each=nrow(vecs)))
+		tmp <- as.matrix(do.call(expand.grid, vecs))
+		prodlist <- apply(tmp, 1, function(z) apply(hermite(z, x=vars), 1, prod))
 		return(prodlist)
+	#The case where we want a linear regression/random coefficient model
+	} else if (M=='linear') {
+		prodlist <- cbind(1, vecs)
+		return(prodlist)	
+	#For the multivariate hermite polynomial
 	} else {
+		if (length(M)!=ncol(vars)){
+			print('Error: M needs to equal to the number of vars')
+		}
 		vecs <- mapply(seq, 0, M)
 		tmp <- as.matrix(do.call(expand.grid, vecs))
 		prodlist <- apply(tmp, 1, function(z) apply(hermite(z, x=vars), 1, prod))

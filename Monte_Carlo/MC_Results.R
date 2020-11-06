@@ -48,3 +48,6 @@ MCdata <- MCdata %>% group_by(time) %>% mutate(omega=wt1, xi=runif(length(id))) 
 	mutate(omega=c(omega[1], sapply(2:length(time), function(t) wtsim(wtlag=omega[t-1], X=A[t], xi=xi[t], dimM=MW,
 			vectau=vectau, bvec=matrix(MCres$resWTsim, prod(MW+1), ntau), b1=MCres$reswtbsim[1], bL=MCres$reswtbsim[2]))))
 test <- data.frame(MCdata %>% select(c(id, time, Y, omega, xi)))
+
+
+

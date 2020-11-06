@@ -67,9 +67,9 @@
 %	TITLE PAGE
 %----------------------------------------------------------------------------------------
 
-\title[Nonlinear Production Functions]{A Dynamic Panel Data Framework for Identification and Estimation of Nonlinear Production Functions}
+\title[Quantile Production Functions]{Proxy Variable and Dynamic Nonlinear Estimation of Production Function Updates}
 
-\author{Justin Doty and Suyong Song} % 
+\author{Justin Doty} % 
 \institute[] % Your institution as it will appear on the bottom of every slide, may be shorthand to save space
 {
 \\  
@@ -165,7 +165,7 @@ where $\mathcal{I}_{it}$ is the firm's information set at time $t$ which is inde
 	\item We use a linear approximation $\Phi(k_{it}, m_{it}, \eta_{it})=\beta_{k}(\eta_{it})k_{it}+\beta_{m}(\eta_{it})m_{it}$ so we can estimate $\beta_{l}(\tau)$ and $\Phi(k_{it}, m_{it}, \tau)$ using linear quantile regression.
 	\item We write a second stage identification condition in only the $\xi_{it}$ component, similar to \cite{Ackerberg2015} by concentrating out the constant $\beta_{0}(\tau)$ and $\rho$. For a hypothetical guess of $\beta_{k}(\tau)$ we can write
 	\begin{equation}
-		\beta_{0}(\tau)+\omega_{it}=y_{it}-\hat{\beta}_{l}(\tau)l_{it}-\beta_{k}(\tau)k_{it}=\hat{\Phi}(k_{it}, m_{it}; \tau)-\beta_{k}(\tau)k_{it}
+		\tilde{\omega}_{it}=\beta_{0}(\tau)+\omega_{it}=y_{it}-\hat{\beta}_{l}(\tau)l_{it}-\beta_{k}(\tau)k_{it}=\hat{\Phi}(k_{it}, m_{it}; \tau)-\beta_{k}(\tau)k_{it}
 \end{equation}
 \end{itemize}
 \end{frame}
@@ -175,23 +175,44 @@ where $\mathcal{I}_{it}$ is the firm's information set at time $t$ which is inde
 \begin{frame}
 \frametitle{Random Coefficient Model}
 \begin{itemize}
-	\item We can rewrite the AR(1) productivity process as
-		\begin{equation}
-		\hat{\Phi}(k_{it}, m_{it}; \tau)-\beta_{k}(\tau)k_{it}=\beta_{0}(\tau)+\rho(\hat{\Phi}(k_{it-1}, m_{it-1}; \tau)-\beta_{k}(\tau)k_{it-1})+\xi_{it}
-		\end{equation}
-		and note that 
-		\begin{equation}
-		Q_{\tau}(\omega_{it}|\mathcal{I}_{it-1})=\beta_{0}(\tau)+\rho(\hat{\Phi}(k_{it-1}, m_{it-1}; \tau)-\beta_{k}(\tau)k_{it-1})+F_{\xi}^{-1}(\tau)
-		\end{equation}
-	\item We estimate $(\beta_{0}(\tau)+F_{\xi}^{-1}(\tau), \rho)$ using the procedure of \cite{He1997}
+	\item We estimate the AR(1) model with a constant so that
+	\begin{equation}
+	Q_{\tau}(\tilde{\omega}_{it}|\mathcal{I}_{it-1})=\alpha+\rho(\hat{\Phi}(k_{it-1}, m_{it-1}; \tau)-\beta_{k}(\tau)k_{it-1})+F_{\xi}^{-1}(\tau)
+	\end{equation}
+	\item We estimate $(\alpha+F_{\xi}^{-1}(\tau), \rho)$ using the procedure of \cite{He1997} called Restricted Regression Quantiles (RQQ)
 		\begin{enumerate}
-			\item First, a median regression of $\hat{\Phi}(k_{it}, m_{it}; \tau)-\beta_{k}(\tau)k_{it}$ on $\hat{\Phi}(k_{it-1}, m_{it-1}; \tau)-\beta_{k}(\tau)k_{it-1}$ to obtain estimates of $(\beta_{0}(\tau), \rho)$
-			\item Second, let $\hat{\xi}_{it}=\hat{\Phi}(k_{it}, m_{it}; \tau)-\beta_{k}(\tau)k_{it}-\hat{\beta}_{0}(\tau)-\hat{\rho}(\hat{\Phi}(k_{it-1}, m_{it-1}; \tau)-\beta_{k}(\tau)k_{it-1})$. Then take the $\tau$th quantile of $\hat{\xi}_{it}$ as an estimate for $\hat{F}_{\xi}^{-1}(\tau)$
+			\item First, a median regression of $\hat{\Phi}(k_{it}, m_{it}; \tau)-\beta_{k}(\tau)k_{it}$ on $\hat{\Phi}(k_{it-1}, m_{it-1}; \tau)-\beta_{k}(\tau)k_{it-1}$ to obtain estimates of $\rho$ so that it does not vary over $\tau$
+			\item Second, let $\hat{\xi}_{it}=\hat{\Phi}(k_{it}, m_{it}; \tau)-\beta_{k}(\tau)k_{it}-\hat{\rho}(\hat{\Phi}(k_{it-1}, m_{it-1}; \tau)-\beta_{k}(\tau)k_{it-1})$. Then take the $\tau$th quantile of $\hat{\xi}_{it}$ as an estimate for $\hat{\alpha}+\hat{F}_{\xi}^{-1}(\tau)$
 		\end{enumerate}
+		\item The idea is to eliminate the Quantile Crossing problem by estimating $\rho$ separately 
+		\item Since they do not vary over $\tau$, slope estimates are often poor if using quantile regression, especially at the tails
 \end{itemize}
 \end{frame}
 
 %------------------------------------------------------------------------------------
+
+\begin{frame}
+\frametitle{Quantile Crossing Solution}
+\begin{itemize}
+	\item Other than to avoid the problem of the writing a moment condition that corresponds to the joint distribution of $\eta_{it}$ and $\xi_{it}$ I have no theoretical justification for using the RQQ for concentrating out moment conditions in $\xi_{it}$
+	\item Generally, quantile crossing is a finite sample problem that goes away in the limit.
+	\item Typically this problem makes charts hard to interpret as crossing can occur in certain areas of the sample space
+	\item For example a predicted 95th percentile of the response could be smaller than the 90th percentile which is impossible
+	\item The RQQ method enforces monotonicity, but is also inefficient compared to estimating quantiles simultaneously
+	\item This method also looked good for Monte Carlo simulations (next slide) in this paper. However, applying this methodology to the data has been a pain
+\end{itemize}
+\end{frame}
+
+%------------------------------------------------------------------------------------
+\begin{frame}
+\frametitle{Proxy Variable Monte Carlo Results}
+\begin{figure}[ht]
+\centering
+\includegraphics[width=7cm, height=7cm]{/Users/justindoty/Documents/Research/Dissertation/Production_QR_Proxy/Code/Monte_Carlo/LP_Coefficient_Plot.png}
+\end{figure}
+\end{frame}
+
+%----------------------------------------------------------------------------
 
 \begin{frame}
 \frametitle{Random Coefficient Model}
@@ -200,6 +221,7 @@ where $\mathcal{I}_{it}$ is the firm's information set at time $t$ which is inde
 		\begin{equation}
 		P[\hat{\xi}_{it}(\beta_{k}(\tau))\leq \hat{F}_{\xi}^{-1}(\tau)|\mathcal{I}_{it-1}]=P[\hat{\xi}_{it}(\beta_{k}(\tau))\leq \hat{F}_{\xi}^{-1}(\tau)]=\tau
 		\end{equation}
+		where $\mathcal{I}_{t-1}$ should include a constant and other instruments such as inputs determined in the prior period
 	\item This can be represented by conditional moment restrictions
 		\begin{equation} \label{conditional}
 			\mathbb{E}[\mathbbm{1}\{\hat{\xi}_{it}(\beta_{k}(\tau))- \hat{F}_{\xi}^{-1}(\tau)\leq 0\}-\tau|\mathcal{I}_{it-1}]=0
@@ -303,146 +325,146 @@ where $\mathcal{I}_{it}$ is the firm's information set at time $t$ which is inde
 	\end{itemize}
 \end{frame}
 
-%------------------------------------------------------------------------------------
+% %------------------------------------------------------------------------------------
 
-\begin{frame}
-\frametitle{Dynamic Panel Data Framework: Identification}
-\begin{itemize}
-	\item Our goal is identification of the Markov law of motion $f_{Y_{t}, L_{t}, M_{t}, K_{t}, I_{t} \omega_{t}|Y_{t-1}, L_{t-1}, M_{t-1}, K_{t-1}, I_{t-1} \omega_{t-1}}$ which we assume to be stationary.
-	\item We assume the researcher observes a panel dataset consisting of i.i.d observations of firm output and input choices with the number of time periods $T\geq 3$ for a large number of firms.
-	\item We formalize the independence conditions stated in the earlier section as well as conditional independence assumptions for identification.
-	\item For ease of notation we drop the $i$ subscript and let $X_{t}=(Y_{t}, K_{t}, L_{t}, M_{t}, I_{t})$
-	denote all the observable data and $V_{t}=(Y_{t}. L_{t}, M_{t}, I_{t})$ denote the variables that depend only on the current state variables $(K_{t}, \omega_{t})$
-	\end{itemize}
-\end{frame}
+% \begin{frame}
+% \frametitle{Dynamic Panel Data Framework: Identification}
+% \begin{itemize}
+% 	\item Our goal is identification of the Markov law of motion $f_{Y_{t}, L_{t}, M_{t}, K_{t}, I_{t} \omega_{t}|Y_{t-1}, L_{t-1}, M_{t-1}, K_{t-1}, I_{t-1} \omega_{t-1}}$ which we assume to be stationary.
+% 	\item We assume the researcher observes a panel dataset consisting of i.i.d observations of firm output and input choices with the number of time periods $T\geq 3$ for a large number of firms.
+% 	\item We formalize the independence conditions stated in the earlier section as well as conditional independence assumptions for identification.
+% 	\item For ease of notation we drop the $i$ subscript and let $X_{t}=(Y_{t}, K_{t}, L_{t}, M_{t}, I_{t})$
+% 	denote all the observable data and $V_{t}=(Y_{t}. L_{t}, M_{t}, I_{t})$ denote the variables that depend only on the current state variables $(K_{t}, \omega_{t})$
+% 	\end{itemize}
+% \end{frame}
 
-%------------------------------------------------------------------------------------
+% %------------------------------------------------------------------------------------
 
-\begin{frame}
-\frametitle{Dynamic Panel Data Framework: Identification}
-\textbf{Assumption: Production Dynamics}
-\begin{enumerate}
-	\item \textit{First-Order Markov} $f_{X_{t}, \omega_{t}|X_{t-1}, \omega_{t-1}, \mathcal{I}_{t<t-1}}=f_{X_{t}, \omega_{t}|X_{t-1}, \omega_{t-1}}$
-	\item \textit{Markov Decision Rules:} $f_{V_{t}|K_{t}, X_{t-1}, \omega_{t}}=f_{V_{t}|K_{t}, \omega_{t}}$
-	\item \textit{Limited Feedback:} $f_{X_{t}|X_{t-1}, \omega_{t}, \omega_{t-1}}=f_{X_{t}|X_{t-1}, \omega_{t}}$
-	\item \textit{Independence}
-		\begin{enumerate}
-		    \item $\eta_{t}, \epsilon_{t}$ and $\varepsilon_{t}$ are mutually independent of $\zeta_{t}$ conditional on $(K_{t}, L_{t}, M_{t}, \omega_{t})$
-		    \item $\eta_{t}$ is mutually independent of $\upsilon_{t-2}, \epsilon_{t-1}, \varepsilon_{t-1}$, and $\zeta_{t-1}$ conditional on $(K_{t}, L_{t}, M_{t}, \omega_{t})$
-		    \item The error terms $(\eta_{t}, \epsilon_{t}, \varepsilon_{t}, \upsilon_{t}, \xi_{t}, \zeta_{t})$ are independent of their respective functional arguments
-		\end{enumerate}
-\end{enumerate}
-We will proceed in steps in factoring the Markov law of motion into the densities we are interested in identifying. Using Assumption \textit{Production Dynamics:}
-\begin{equation} \label{motion}
-    \begin{split}
-        f_{X_{t}, \omega_{t}|X_{t-1}, \omega_{t-1}}&=f_{Y_{t}|K_{t}, L_{t}, M_{t}, \omega_{t}}f_{K_{t}|K_{t-1}, I_{t-1}}f_{I_{t}|K_{t}, \omega_{t}}\\
-        &\times f_{L_{t}|K_{t}, \omega_{t}}f_{M_{t}|K_{t}, \omega_{t}}f_{\omega_{t}|\omega_{t-1}}
-    \end{split}
-\end{equation} 
-\end{frame}
+% \begin{frame}
+% \frametitle{Dynamic Panel Data Framework: Identification}
+% \textbf{Assumption: Production Dynamics}
+% \begin{enumerate}
+% 	\item \textit{First-Order Markov} $f_{X_{t}, \omega_{t}|X_{t-1}, \omega_{t-1}, \mathcal{I}_{t<t-1}}=f_{X_{t}, \omega_{t}|X_{t-1}, \omega_{t-1}}$
+% 	\item \textit{Markov Decision Rules:} $f_{V_{t}|K_{t}, X_{t-1}, \omega_{t}}=f_{V_{t}|K_{t}, \omega_{t}}$
+% 	\item \textit{Limited Feedback:} $f_{X_{t}|X_{t-1}, \omega_{t}, \omega_{t-1}}=f_{X_{t}|X_{t-1}, \omega_{t}}$
+% 	\item \textit{Independence}
+% 		\begin{enumerate}
+% 		    \item $\eta_{t}, \epsilon_{t}$ and $\varepsilon_{t}$ are mutually independent of $\zeta_{t}$ conditional on $(K_{t}, L_{t}, M_{t}, \omega_{t})$
+% 		    \item $\eta_{t}$ is mutually independent of $\upsilon_{t-2}, \epsilon_{t-1}, \varepsilon_{t-1}$, and $\zeta_{t-1}$ conditional on $(K_{t}, L_{t}, M_{t}, \omega_{t})$
+% 		    \item The error terms $(\eta_{t}, \epsilon_{t}, \varepsilon_{t}, \upsilon_{t}, \xi_{t}, \zeta_{t})$ are independent of their respective functional arguments
+% 		\end{enumerate}
+% \end{enumerate}
+% We will proceed in steps in factoring the Markov law of motion into the densities we are interested in identifying. Using Assumption \textit{Production Dynamics:}
+% \begin{equation} \label{motion}
+%     \begin{split}
+%         f_{X_{t}, \omega_{t}|X_{t-1}, \omega_{t-1}}&=f_{Y_{t}|K_{t}, L_{t}, M_{t}, \omega_{t}}f_{K_{t}|K_{t-1}, I_{t-1}}f_{I_{t}|K_{t}, \omega_{t}}\\
+%         &\times f_{L_{t}|K_{t}, \omega_{t}}f_{M_{t}|K_{t}, \omega_{t}}f_{\omega_{t}|\omega_{t-1}}
+%     \end{split}
+% \end{equation} 
+% \end{frame}
 
-%------------------------------------------------------------------------------------
+% %------------------------------------------------------------------------------------
 
-\begin{frame}
-\frametitle{Dynamic Panel Data Framework: Identification}
-\begin{itemize}
-	\item We use the identification results of \cite{Hu2012} to identify the Markov law of motion in equation \eqref{motion} using the fact that investment depends only on current state variables this allows us to use three repeated measures of investment $(I_{t}, I_{t-1}, I_{t-2})$ for identification. 
-	\item We begin by relating a joint density of observables to unobserved densities. Let $Z_{t}=(Y_{t}, L_{t}, M_{t})$ denote the variables that are functions of the current state variables excluding investment.
-		\begin{equation} \label{obs}
-		f_{X_{t}|X_{t-1}, X_{t-2}}=\int f_{I_{t}|K_{t}, \omega_{t}}f_{Z_{t}|K_{t}, \omega_{t}}f_{K_{t}|K_{t-1}, I_{t-1}}f_{\omega_{t}|X_{t-1}, X_{t-2}}d\omega_{t}
-		\end{equation}
-	\item The observed density in \eqref{obs} can be written in operator notation
-		\begin{equation} \label{obsop}
-		L_{X_{t}|X_{t-1}, X_{t-2}}=L_{I_{t}|K_{t}, \omega_{t}}\Delta_{Z_{t}|K_{t}, \omega_{t}}\Delta_{K_{t}|K_{t-1}, I_{t-1}}L_{\omega_{t}|X_{t-1}, X_{t-2}}
-		\end{equation}
-		We will show that under a set of assumptions, the Markov law of motion in \eqref{motion} is identified from a eigenvalue-eigenfunction decomposition of \eqref{obsop} using the arguments of \cite{Hu2008}.
-	\end{itemize}
-\end{frame}
+% \begin{frame}
+% \frametitle{Dynamic Panel Data Framework: Identification}
+% \begin{itemize}
+% 	\item We use the identification results of \cite{Hu2012} to identify the Markov law of motion in equation \eqref{motion} using the fact that investment depends only on current state variables this allows us to use three repeated measures of investment $(I_{t}, I_{t-1}, I_{t-2})$ for identification. 
+% 	\item We begin by relating a joint density of observables to unobserved densities. Let $Z_{t}=(Y_{t}, L_{t}, M_{t})$ denote the variables that are functions of the current state variables excluding investment.
+% 		\begin{equation} \label{obs}
+% 		f_{X_{t}|X_{t-1}, X_{t-2}}=\int f_{I_{t}|K_{t}, \omega_{t}}f_{Z_{t}|K_{t}, \omega_{t}}f_{K_{t}|K_{t-1}, I_{t-1}}f_{\omega_{t}|X_{t-1}, X_{t-2}}d\omega_{t}
+% 		\end{equation}
+% 	\item The observed density in \eqref{obs} can be written in operator notation
+% 		\begin{equation} \label{obsop}
+% 		L_{X_{t}|X_{t-1}, X_{t-2}}=L_{I_{t}|K_{t}, \omega_{t}}\Delta_{Z_{t}|K_{t}, \omega_{t}}\Delta_{K_{t}|K_{t-1}, I_{t-1}}L_{\omega_{t}|X_{t-1}, X_{t-2}}
+% 		\end{equation}
+% 		We will show that under a set of assumptions, the Markov law of motion in \eqref{motion} is identified from a eigenvalue-eigenfunction decomposition of \eqref{obsop} using the arguments of \cite{Hu2008}.
+% 	\end{itemize}
+% \end{frame}
 
-%------------------------------------------------------------------------------------
+% %------------------------------------------------------------------------------------
 
-\begin{frame}
-\frametitle{Dynamic Panel Data Framework: Identification}
-\textbf{Assumption: Boundedness}
-The joint density of $X_{t+1}, X_{t}$ and $X_{t-1}$ is bounded. All conditional and marginal densities are also bounded.\\
-\textbf{Assumption: Injectivity}
-The operators $L_{I_{t}|K_{t}, \omega_{t}}$, $L_{\omega_{t}|X_{t-1}, X_{t-2}}$, $\Delta_{Z_{t}|K_{t}, \omega_{t}}$ and $\Delta_{K_{t}|K_{t-1}, I_{t-1}}$ are injective
-\begin{itemize}
-\item The above assumption allows us to take inverses of the operators. 
-\item Consider the operator $L_{I_{t}|K_{t}, \omega_{t}}$, following \cite{Hu2008}, injectivity of this operator can be interpreted as its corresponding density $f_{I_{t}|K_{t}, \omega_{t}}(I_{t}|K_{t}, \omega_{t})$ having sufficient variation in $\omega_{t}$ given $K_{t}$. 
-\item This assumption is often phrased as completeness condition in the nonparametric IV literature on the density $f_{I_{t}|K_{t}, \omega_{t}}(I_{t}|K_{t}, \omega_{t})$.
-\item Sufficient conditions for injectivity can be found in the convolution literature. 
-\item In our econometric model discussed in the next section, we consider specifications that necessary for injectivity without placing extensive restrictions on the economic primitives governing the investment process and productivity evolution.
-\end{itemize}
-\end{frame}
+% \begin{frame}
+% \frametitle{Dynamic Panel Data Framework: Identification}
+% \textbf{Assumption: Boundedness}
+% The joint density of $X_{t+1}, X_{t}$ and $X_{t-1}$ is bounded. All conditional and marginal densities are also bounded.\\
+% \textbf{Assumption: Injectivity}
+% The operators $L_{I_{t}|K_{t}, \omega_{t}}$, $L_{\omega_{t}|X_{t-1}, X_{t-2}}$, $\Delta_{Z_{t}|K_{t}, \omega_{t}}$ and $\Delta_{K_{t}|K_{t-1}, I_{t-1}}$ are injective
+% \begin{itemize}
+% \item The above assumption allows us to take inverses of the operators. 
+% \item Consider the operator $L_{I_{t}|K_{t}, \omega_{t}}$, following \cite{Hu2008}, injectivity of this operator can be interpreted as its corresponding density $f_{I_{t}|K_{t}, \omega_{t}}(I_{t}|K_{t}, \omega_{t})$ having sufficient variation in $\omega_{t}$ given $K_{t}$. 
+% \item This assumption is often phrased as completeness condition in the nonparametric IV literature on the density $f_{I_{t}|K_{t}, \omega_{t}}(I_{t}|K_{t}, \omega_{t})$.
+% \item Sufficient conditions for injectivity can be found in the convolution literature. 
+% \item In our econometric model discussed in the next section, we consider specifications that necessary for injectivity without placing extensive restrictions on the economic primitives governing the investment process and productivity evolution.
+% \end{itemize}
+% \end{frame}
 
-%------------------------------------------------------------------------------------
+% %------------------------------------------------------------------------------------
 
-\begin{frame}
-\frametitle{Dynamic Panel Data Framework: Identification}
-\begin{itemize}
-\item Injectivity of the operator $L_{\omega_{t}|X_{t-1}, X_{t-2}}$ is equivalent to showing the injectivity of $L_{\omega_{t}|X_{t-1}, X_{t-2}}=L_{\omega_{t}|, \omega_{t-1}}L_{\omega_{t-1}, X_{t-1}, X_{t-2}}$.
-\item Therefore we require injectivity of both $L_{\omega_{t}|, \omega_{t-1}}$ and $L_{\omega_{t-1}, X_{t-1}, X_{t-2}}$. 
-\item The first operator corresponds to the Markov process for productivity $f_{\omega_{t}|\omega_{t-1}}$. For the second operator, it is injective when productivity evolves exogenously as specified in our model.
-\item Invertibility of the diagonal operators $\Delta_{Z_{t}|K_{t}, \omega_{t}}$ and $\Delta_{K_{t}|K_{t-1}, I_{t-1}}$ requires the kernels of these operators to be nonzero along its support. 
-\item This is satisfied in our model since we assume $Y_{t}, L_{t}, M_{t}, K_{t}$ to be strictly increasing in $\eta_{t}, \epsilon_{t}, \varepsilon_{t}, \upsilon_{t-1}$ respectively. 
-\item It assumed that the densities of these error terms are nonzero so that each density is nonzero and furthermore bounded above.
-\end{itemize}
-\end{frame}
+% \begin{frame}
+% \frametitle{Dynamic Panel Data Framework: Identification}
+% \begin{itemize}
+% \item Injectivity of the operator $L_{\omega_{t}|X_{t-1}, X_{t-2}}$ is equivalent to showing the injectivity of $L_{\omega_{t}|X_{t-1}, X_{t-2}}=L_{\omega_{t}|, \omega_{t-1}}L_{\omega_{t-1}, X_{t-1}, X_{t-2}}$.
+% \item Therefore we require injectivity of both $L_{\omega_{t}|, \omega_{t-1}}$ and $L_{\omega_{t-1}, X_{t-1}, X_{t-2}}$. 
+% \item The first operator corresponds to the Markov process for productivity $f_{\omega_{t}|\omega_{t-1}}$. For the second operator, it is injective when productivity evolves exogenously as specified in our model.
+% \item Invertibility of the diagonal operators $\Delta_{Z_{t}|K_{t}, \omega_{t}}$ and $\Delta_{K_{t}|K_{t-1}, I_{t-1}}$ requires the kernels of these operators to be nonzero along its support. 
+% \item This is satisfied in our model since we assume $Y_{t}, L_{t}, M_{t}, K_{t}$ to be strictly increasing in $\eta_{t}, \epsilon_{t}, \varepsilon_{t}, \upsilon_{t-1}$ respectively. 
+% \item It assumed that the densities of these error terms are nonzero so that each density is nonzero and furthermore bounded above.
+% \end{itemize}
+% \end{frame}
 
-%------------------------------------------------------------------------------------
+% %------------------------------------------------------------------------------------
 
-\begin{frame}
-\frametitle{Dynamic Panel Data Framework: Identification}
-\begin{itemize}
-\item Our next assumption places mild restrictions on the operator $\Delta_{Z_{t}|K_{t}, \omega_{t}}$ so that the eigenvalues of our decomposition argument are unique.\\
-\textbf{Assumption: Uniqueness}\\
-For any $Z_{t}, K_{t}$ and any $\bar{\omega_{t}}\neq \tilde{\omega_{t}}$:
- $k(Z_{t}, K_{t}, \bar{\omega_{t}})\neq k(Z_{t}, K_{t}, \tilde{\omega_{t}})$ where,\\
-    \begin{equation}
-    \begin{split}
-    k(Z_{t}, K_{t}, \omega_{t})&=f_{Z_{t}|K_{t}, \omega_{t}}(Z_{t}|K_{t}, \omega_{t})=f_{Y_{t}|K_{t}, L_{t}, M_{t}, \omega_{t}}(Y_{t}|K_{t}, L_{t}, M_{t}, \omega_{t})\\
-    &\times f_{L_{t}|K_{t}, \omega_{t}}(L_{t}|K_{t}, \omega_{t})f_{M_{t}|K_{t}, \omega_{t}}(M_{t}|K_{t}, \omega_{t})
-    \end{split}
-    \end{equation}
-\item This requires the density $f_{Z_{t}|K_{t}, \omega_{t}}$ be nonidentical and different values of $\omega_{t}$.
-\item This corresponds to the densities $f_{Y_{t}|K_{t}, L_{t}, M_{t}, \omega_{t}}, f_{L_{t}|K_{t}, \omega_{t}}$ and $f_{M_{t}|K_{t}, \omega_{t}}$ being nonidentical and different values of $\omega_{t}$. 
-\item It is satisfied when either $Y_{t}, L_{t}, M_{t}$ are strictly increasing in $\omega_{t}$ or if their respective error terms are conditionally heteroskedastic.
-\end{itemize}
-\end{frame}
+% \begin{frame}
+% \frametitle{Dynamic Panel Data Framework: Identification}
+% \begin{itemize}
+% \item Our next assumption places mild restrictions on the operator $\Delta_{Z_{t}|K_{t}, \omega_{t}}$ so that the eigenvalues of our decomposition argument are unique.\\
+% \textbf{Assumption: Uniqueness}\\
+% For any $Z_{t}, K_{t}$ and any $\bar{\omega_{t}}\neq \tilde{\omega_{t}}$:
+%  $k(Z_{t}, K_{t}, \bar{\omega_{t}})\neq k(Z_{t}, K_{t}, \tilde{\omega_{t}})$ where,\\
+%     \begin{equation}
+%     \begin{split}
+%     k(Z_{t}, K_{t}, \omega_{t})&=f_{Z_{t}|K_{t}, \omega_{t}}(Z_{t}|K_{t}, \omega_{t})=f_{Y_{t}|K_{t}, L_{t}, M_{t}, \omega_{t}}(Y_{t}|K_{t}, L_{t}, M_{t}, \omega_{t})\\
+%     &\times f_{L_{t}|K_{t}, \omega_{t}}(L_{t}|K_{t}, \omega_{t})f_{M_{t}|K_{t}, \omega_{t}}(M_{t}|K_{t}, \omega_{t})
+%     \end{split}
+%     \end{equation}
+% \item This requires the density $f_{Z_{t}|K_{t}, \omega_{t}}$ be nonidentical and different values of $\omega_{t}$.
+% \item This corresponds to the densities $f_{Y_{t}|K_{t}, L_{t}, M_{t}, \omega_{t}}, f_{L_{t}|K_{t}, \omega_{t}}$ and $f_{M_{t}|K_{t}, \omega_{t}}$ being nonidentical and different values of $\omega_{t}$. 
+% \item It is satisfied when either $Y_{t}, L_{t}, M_{t}$ are strictly increasing in $\omega_{t}$ or if their respective error terms are conditionally heteroskedastic.
+% \end{itemize}
+% \end{frame}
 
-%------------------------------------------------------------------------------------
+% %------------------------------------------------------------------------------------
 
-\begin{frame}
-\frametitle{Dynamic Panel Data Framework: Identification}
-\textbf{Assumption: Monotonicity and Normalization}\\
-For any $K_{t}\in Supp(K_{t})$, there exists a known functional $M$ such that $M[f_{I_{t}|K_{t}, \omega_{t}}(I_{t}|K_{t}, \omega_{t})]$ is monotonic in $\omega_{t}$. This functional is normalized such that $M[f_{I_{t}|K_{t}, \omega_{t}}(I_{t}|K_{t}, \omega_{t})]=\omega_{t}$
-\begin{itemize}
-\item The above assumption is used to pin down the eigenfunctions to each unobserved $\omega_{t}$. 
-\item In practice, this functional can be the mean, median, mode, or any quantile of the distribution $f_{I_{t}|K_{t}, \omega_{t}}(I_{t}|K_{t}, \omega_{t})$. 
-\item In either case, this places restrictions on the parameters of the investment process which we discuss in the next later.
-\end{itemize}
-Integrating \eqref{obs} with respect to $(Y_{t}, L_{t}, M_{t})$ gives us in operator notation:
-\begin{equation} \label{plugin}
-L_{I_{t}, K_{t}|X_{t-1}, X_{t-2}}=L_{I_{t}|K_{t}, \omega_{t}}\Delta_{K_{t}|K_{t-1}, I_{t-1}}L_{\omega_{t}|X_{t-1}, X_{t-2}}
-\end{equation}
-\end{frame}
+% \begin{frame}
+% \frametitle{Dynamic Panel Data Framework: Identification}
+% \textbf{Assumption: Monotonicity and Normalization}\\
+% For any $K_{t}\in Supp(K_{t})$, there exists a known functional $M$ such that $M[f_{I_{t}|K_{t}, \omega_{t}}(I_{t}|K_{t}, \omega_{t})]$ is monotonic in $\omega_{t}$. This functional is normalized such that $M[f_{I_{t}|K_{t}, \omega_{t}}(I_{t}|K_{t}, \omega_{t})]=\omega_{t}$
+% \begin{itemize}
+% \item The above assumption is used to pin down the eigenfunctions to each unobserved $\omega_{t}$. 
+% \item In practice, this functional can be the mean, median, mode, or any quantile of the distribution $f_{I_{t}|K_{t}, \omega_{t}}(I_{t}|K_{t}, \omega_{t})$. 
+% \item In either case, this places restrictions on the parameters of the investment process which we discuss in the next later.
+% \end{itemize}
+% Integrating \eqref{obs} with respect to $(Y_{t}, L_{t}, M_{t})$ gives us in operator notation:
+% \begin{equation} \label{plugin}
+% L_{I_{t}, K_{t}|X_{t-1}, X_{t-2}}=L_{I_{t}|K_{t}, \omega_{t}}\Delta_{K_{t}|K_{t-1}, I_{t-1}}L_{\omega_{t}|X_{t-1}, X_{t-2}}
+% \end{equation}
+% \end{frame}
 
-%------------------------------------------------------------------------------------
+% %------------------------------------------------------------------------------------
 
-\begin{frame}
-\frametitle{Dynamic Panel Data Framework: Identification}
-\begin{itemize}
-\item Combining equation \eqref{obsop} and \eqref{plugin} and using injectivity gives
-\begin{equation} \label{decomp}
-L_{I_{t}, K_{t}|X_{t-1}, X_{t-2}}L^{-1}_{X_{t}|X_{t-1}, X_{t-2}}=L_{I_{t}|K_{t}, \omega_{t}}\Delta_{Z_{t}|K_{t}, \omega_{t}}L^{-1}_{I_{t}|K_{t}, \omega_{t}}
-\end{equation}
-\item The left hand side of equation \eqref{decomp} is a function of observable data whereas the right-hand side are the unobservable densities of interest indexed by the unobservable $\omega_{t}$. 
-\item The following theorem of \cite{Hu2008} gives us our main identification result.\\
-\end{itemize}
-\textbf{Theorem: Identification}
-Under assumptions \textit{production dynamics, boundedness, injectivity, uniqueness, monotonicity and normalization}, the density $f_{X_{t}|X_{t-1}, X_{t-2}}$ uniquely determines the Markov law of Motion in equation \eqref{motion}.
-\end{frame}
+% \begin{frame}
+% \frametitle{Dynamic Panel Data Framework: Identification}
+% \begin{itemize}
+% \item Combining equation \eqref{obsop} and \eqref{plugin} and using injectivity gives
+% \begin{equation} \label{decomp}
+% L_{I_{t}, K_{t}|X_{t-1}, X_{t-2}}L^{-1}_{X_{t}|X_{t-1}, X_{t-2}}=L_{I_{t}|K_{t}, \omega_{t}}\Delta_{Z_{t}|K_{t}, \omega_{t}}L^{-1}_{I_{t}|K_{t}, \omega_{t}}
+% \end{equation}
+% \item The left hand side of equation \eqref{decomp} is a function of observable data whereas the right-hand side are the unobservable densities of interest indexed by the unobservable $\omega_{t}$. 
+% \item The following theorem of \cite{Hu2008} gives us our main identification result.\\
+% \end{itemize}
+% \textbf{Theorem: Identification}
+% Under assumptions \textit{production dynamics, boundedness, injectivity, uniqueness, monotonicity and normalization}, the density $f_{X_{t}|X_{t-1}, X_{t-2}}$ uniquely determines the Markov law of Motion in equation \eqref{motion}.
+% \end{frame}
 
 %------------------------------------------------------------------------------------
 
@@ -455,16 +477,16 @@ Under assumptions \textit{production dynamics, boundedness, injectivity, uniquen
 Let $age_{it}$ denote the age of firm $i$ at time $t$. We specify the output equation as follows:
 \begin{equation}\label{ymodel}
 \begin{split}
-Q_{t}(y_{it}|k_{it}, l_{it}, m_{it}, \omega_{it}, \tau)&=Q(y_{it}|k_{it}, l_{it}, m_{it}, \omega_{it}, age_{it}, \tau)\\
-&=\sum_{j=1}^{J}\beta_{j}(\tau)\psi_{j}(k_{it}, l_{it}, m_{it}, \omega_{it}, age_{it})
+Q_{t}(y_{it}|k_{it}, l_{it}, m_{it}, \omega_{it}, \tau)&=Q(y_{it}|k_{it}, l_{it}, m_{it}, \omega_{it}, \tau)\\
+&=\sum_{j=1}^{J}\beta_{j}(\tau)\psi_{j}(k_{it}, l_{it}, m_{it}, \omega_{it})
 \end{split}
 \end{equation}
 \textbf{Labor Input}:
 We specify the labor input demand equation as follows:
 \begin{equation} \label{lmodel}
 \begin{split}
-Q_{t}(l_{it}|k_{it}, \omega_{it}, \tau)&=Q(l_{it}|k_{it}, \omega_{it}, age_{it}, \tau)\\
-&=\sum_{j=1}^{J}\gamma_{j}(\tau)\psi_{j}(k_{it}, \omega_{it}, age_{it})
+Q_{t}(l_{it}|k_{it}, \omega_{it}, \tau)&=Q(l_{it}|k_{it}, \omega_{it}, \tau)\\
+&=\sum_{j=1}^{J}\gamma_{j}(\tau)\psi_{j}(k_{it}, \omega_{it})
 \end{split}
 \end{equation}
 \end{itemize}
@@ -478,16 +500,16 @@ Q_{t}(l_{it}|k_{it}, \omega_{it}, \tau)&=Q(l_{it}|k_{it}, \omega_{it}, age_{it},
 We specify the material input demand equation as follows
 \begin{equation}\label{mmodel}
 \begin{split}
-Q_{t}(m_{it}|k_{it}, \omega_{it}, \tau)&=Q(m_{it}|k_{it}, \omega_{it}, age_{it}, \tau)\\
-&=\sum_{j=1}^{J}\delta_{j}(\tau)\psi_{j}(k_{it}, \omega_{it}, age_{it})
+Q_{t}(m_{it}|k_{it}, \omega_{it}, \tau)&=Q(m_{it}|k_{it}, \omega_{it}, \tau)\\
+&=\sum_{j=1}^{J}\delta_{j}(\tau)\psi_{j}(k_{it}, \omega_{it})
 \end{split}
 \end{equation}
 \textbf{Investment Demand}:
 We specify the investment demand equation as
 \begin{equation}\label{imodel}
 \begin{split}
-i_{t}=\iota_{t}(k_{it}, \omega_{it}, \zeta_{it})&=\iota(k_{it}, \omega_{it}, age_{it}, \zeta_{it})\\
-&=\iota_{0}+\sum_{j=1}^{J}\iota_{j}\psi_{j}(k_{it}, \omega_{it}, age_{it})+\zeta_{it},
+i_{t}=\iota_{t}(k_{it}, \omega_{it}, \zeta_{it})&=\iota(k_{it}, \omega_{it}, \zeta_{it})\\
+&=\iota_{0}+\sum_{j=1}^{J}\iota_{j}\psi_{j}(k_{it}, \omega_{it})+\zeta_{it},
 \end{split}
 \end{equation}
 where $E[\zeta_{it}|k_{it}, \omega_{it}]=0$
@@ -504,16 +526,20 @@ where $E[\zeta_{it}|k_{it}, \omega_{it}]=0$
 \textbf{Persistent Productivity}:
 We specify productivity to transition according to:
 \begin{equation}\label{omegamodel}
-Q_{t}(\omega_{it-1}, \tau)=Q(\omega_{it-1}, age_{it}, \tau)=\sum_{j=1}^{J}\rho_{j}(\tau)\psi_{j}(\omega_{it-1}, age_{it})
-\end{equation}
-The quantile function for $\omega_{i1}$ is specified in a similar way
-\begin{equation}\label{omegamodel}
-Q(\omega_{i1}, age_{i1}, \tau)=\sum_{j=1}^{J}\rho^{1}_{j}(\tau)\psi_{j}(\omega_{i1}, age_{i1})
+Q_{t}(\omega_{it-1}, \tau)=Q(\omega_{it-1}, \tau)=\sum_{j=1}^{J}\rho_{j}(\tau)\psi_{j}(\omega_{it-1})
 \end{equation}
 \begin{itemize}
-	\item A specification for the capital accumulation process may not be needed since it does not depend on $\omega_{it}$
-	\item Given these specifications, we discuss how the model restrictions yield a viable estimation strategy
+	\item I decided to remove age dependence in the above specifications for two reasons
+	\begin{enumerate}
+		\item Most results show age has negligent effects on production such as \cite{Olley1996}
+		\item I cannot find age in the Compustat database. Not sure about using IPO date as initial age because most companies are private before they go public. Other datasets have similar concern. Is date appearing in the panel equal to initial age? Maybe not.
+	\end{enumerate}
 \end{itemize}
+I specify a parametric specification for initial productivity 
+\begin{equation}\label{omegamodel}
+\omega_{i1}\sim N(\mu, \sigma^{2})
+\end{equation}
+These parameters are easy to estimate in the M-step of the algorithm
 \end{frame}
 
 %------------------------------------------------------------------------------------
@@ -538,10 +564,10 @@ Q(\omega_{i1}, age_{i1}, \tau)=\sum_{j=1}^{J}\rho^{1}_{j}(\tau)\psi_{j}(\omega_{
 	\item The following conditional moment restrictions hold as an implication of the conditional independence restrictions. Therefore, we estimate the parameters of interest from the following conditional moment restrictions.
 	\item To fix ideas, we focus on how to estimate the production function and investment equation
 	\begin{equation}\label{ymoment}
-	\mathbbm{E}\Bigg[\Psi_{\tau_{q}}(\eta_{it})\Big|k_{it}, l_{it}, m_{it}, age_{it}\Bigg]=0
+	\mathbbm{E}\Bigg[\Psi_{\tau_{q}}(\eta_{it})\Big|k_{it}, l_{it}, m_{it}\Bigg]=0
 	\end{equation}
 	\begin{equation}\label{iemoment}
-	\mathbbm{E}\Bigg[\zeta_{it}\Big|\omega_{it}, k_{it}, age_{it}\Bigg]=0
+	\mathbbm{E}\Bigg[\zeta_{it}\Big|\omega_{it}, k_{it}\Bigg]=0
 	\end{equation}
 \end{itemize}
 \end{frame}
@@ -553,15 +579,15 @@ Q(\omega_{i1}, age_{i1}, \tau)=\sum_{j=1}^{J}\rho^{1}_{j}(\tau)\psi_{j}(\omega_{
 Rewriting these moment conditions as:
 \begin{equation}\label{ymoment}
 \begin{split}
-\mathbbm{E}\Bigg[&\Psi_{\tau_{q}}(\eta_{it})\Big|k_{it}, l_{it}, m_{it}, \omega_{it}, age_{it}\Bigg]=\\
-&\mathbbm{E}\Bigg[\Psi_{\tau_{q}}(y_{it}-\sum_{j=1}^{J}\bar{\beta}_{j}(\tau_{q})\psi_{j}(k_{it}, l_{it}, m_{it}, \omega_{it}, age_{it}))\Big|k_{it}, l_{it}, m_{it}, \omega_{it}, age_{it}\Bigg]=0
+\mathbbm{E}\Bigg[&\Psi_{\tau_{q}}(\eta_{it})\Big|k_{it}, l_{it}, m_{it}, \omega_{it}\Bigg]=\\
+&\mathbbm{E}\Bigg[\Psi_{\tau_{q}}(y_{it}-\sum_{j=1}^{J}\bar{\beta}_{j}(\tau_{q})\psi_{j}(k_{it}, l_{it}, m_{it}, \omega_{it}))\Big|k_{it}, l_{it}, m_{it}, \omega_{it}\Bigg]=0
 \end{split}
 \end{equation}
 and 
 \begin{equation}\label{imoment}
 \begin{split}
-\mathbbm{E}\Bigg[&\zeta_{it}\Big|k_{it}, \omega_{it}, age_{it}\Bigg]=\\
-&\mathbbm{E}\Bigg[i_{it}-\bar{\iota_{0}}-\sum_{j=1}^{J}\bar{\iota}_{j}\psi_{j}(k_{it}, \omega_{it}, age_{it})\Big|k_{it}, \omega_{it}, age_{it}\Bigg]=0
+\mathbbm{E}\Bigg[&\zeta_{it}\Big|k_{it}, \omega_{it}\Bigg]=\\
+&\mathbbm{E}\Bigg[i_{it}-\bar{\iota_{0}}-\sum_{j=1}^{J}\bar{\iota}_{j}\psi_{j}(k_{it}, \omega_{it})\Big|k_{it}, \omega_{it}\Bigg]=0
 \end{split}
 \end{equation}
 \end{frame}
@@ -578,13 +604,12 @@ and
 \end{itemize}
 \small
 \begin{equation}\label{yimc}
-\mathbbm{E}\Bigg[\int\Bigg(\Psi_{\tau_{q}}(y_{it}-\sum_{j=1}^{J}\bar{\beta}_{j}(\tau_{q})\psi_{j}(k_{it}, l_{it}, m_{it}, \omega_{it}, age_{it}))\otimes
+\mathbbm{E}\Bigg[\int\Bigg(\Psi_{\tau_{q}}(y_{it}-\sum_{j=1}^{J}\bar{\beta}_{j}(\tau_{q})\psi_{j}(k_{it}, l_{it}, m_{it}, \omega_{it}))\otimes
 \begin{pmatrix}
 k_{it} \\
 l_{it}\\
 m_{it} \\
-\omega_{it} \\
-age_{it}
+\omega_{it} 
 \end{pmatrix}
 \Bigg)f_{i}(\omega_{it};\bar{\theta})d\omega_{it}\Bigg]=0
 \end{equation}
@@ -598,22 +623,21 @@ age_{it}
 and for investment
 \begin{equation}\label{iimc}
 \begin{split}
-\mathbbm{E}\Bigg[\int\Bigg((i_{it}-\bar{\iota_{0}}-\sum_{j=1}^{J}\bar{\iota}_{j}\psi_{j}(k_{it}, \omega_{it}, age_{it}))\otimes
+\mathbbm{E}\Bigg[\int\Bigg((i_{it}-\bar{\iota_{0}}-\sum_{j=1}^{J}\bar{\iota}_{j}\psi_{j}(k_{it}, \omega_{it}))\otimes
 \begin{pmatrix}
 1 \\
 k_{it} \\
-\omega_{it}\\
-age_{it}
+\omega_{it}
 \end{pmatrix}
 \Bigg)f_{i}(\omega_{it};,\bar{\theta})d\omega_{it}\Bigg]=0,
 \end{split}
 \end{equation}
-where $\bar{\theta}$ denotes the true values of $\theta$. The posterior distribution is specified as (age omitted for ease of notation):
+where $\bar{\theta}$ denotes the true values of $\theta$. The posterior distribution is specified as:
 \begin{equation}\label{posterior}
 \begin{split}
 f_{i}(\omega_{it};\bar{\theta})&=f(\omega_{it}|y_{it}, k_{it}, l_{it}, m_{it}, i_{it}; \bar{\theta}) \propto\\
 &\prod_{t=1}^{T}f(y_{it}|k_{it}, l_{it}, m_{it}, \omega_{it};\bar{\theta})f(l_{it}|k_{it}, \omega_{it};\bar{\theta})f(m_{it}|k_{it}, \omega_{it};\bar{\theta}) \\
-&\times f(i_{it}|k_{it}, \omega_{it};\bar{\theta})f(\omega_{i1};\bar{\theta})\prod_{t=2}^{T}f(\omega_{it}|\omega_{it-1};\bar{\theta})
+&\times f(i_{it}|k_{it}, \omega_{it};\bar{\theta})\prod_{t=2}^{T}f(\omega_{it}|\omega_{it-1};\bar{\theta})f(\omega_{i1};\bar{\theta})
 \end{split}
 \end{equation}
 \end{frame}
@@ -633,7 +657,7 @@ f_{i}(\omega_{it};\bar{\theta})&=f(\omega_{it}|y_{it}, k_{it}, l_{it}, m_{it}, i
         \begin{split}
             f_{i}(\omega_{it};\hat{\theta}^{(s)})&=f(\omega_{it}|y_{it}, k_{it}, l_{it}, m_{it}, i_{t},; \hat{\theta}^{(s)}) \propto\\
             &\prod_{t=1}^{T}f(y_{it}|k_{it}, l_{it}, m_{it}, \omega_{it};\hat{\theta}^{(s)})f(l_{it}|k_{it}, \omega_{it};\hat{\theta}^{(s)})f(m_{it}|k_{it}, \omega_{it};\hat{\theta}^{(s)}) \\
-            &\times f(i_{it}|k_{it}, \omega_{it};\hat{\theta}^{(s)})f(\omega_{i1};\hat{\theta}^{(s)})\prod_{t=2}^{T}f(\omega_{it}|\omega_{it-1};\hat{\theta}^{(s)})
+            &\times f(i_{it}|k_{it}, \omega_{it};\hat{\theta}^{(s)})\prod_{t=2}^{T}f(\omega_{it}|\omega_{it-1};\hat{\theta}^{(s)})f(\omega_{i1};\hat{\theta}^{(s)})
             \end{split}
         \end{equation*}
 \end{frame}
@@ -646,19 +670,178 @@ f_{i}(\omega_{it};\bar{\theta})&=f(\omega_{it}|y_{it}, k_{it}, l_{it}, m_{it}, i
 \small
     \begin{equation*}
     \begin{split}
-    \hat{\boldsymbol\beta}(\tau_{q})^{(s+1)}&=\underset{\boldsymbol\beta(\tau_{q})}{\operatorname{argmin}}\,\sum_{i=1}^{N}\sum_{t=1}^{T}\sum_{m=1}^{M}\Psi_{\tau_{q}}\bigg(y_{it}-\sum_{j=1}^{J}\beta_{j}(\tau_{q})\psi_{j}(k_{it}, l_{it}, m_{it}, \omega_{it}^{(m)}, age_{it})\bigg)\\
-    \hat{\boldsymbol\iota}^{(s+1)}&=\underset{\boldsymbol\iota}{\operatorname{argmin}}\,\sum_{i=1}^{N}\sum_{t=1}^{T}\sum_{m=1}^{M}\bigg(i_{it}-\iota_{0}-\sum_{j=1}^{J}\iota_{j}\psi_{j}(k_{it}, \omega_{it}^{(m)}, age_{it})\bigg)^{2}\\
+    \hat{\boldsymbol\beta}(\tau_{q})^{(s+1)}&=\underset{\boldsymbol\beta(\tau_{q})}{\operatorname{argmin}}\,\sum_{i=1}^{N}\sum_{t=1}^{T}\sum_{m=1}^{M}\Psi_{\tau_{q}}\bigg(y_{it}-\sum_{j=1}^{J}\beta_{j}(\tau_{q})\psi_{j}(k_{it}, l_{it}, m_{it}, \omega_{it}^{(m)})\bigg)\\
+    \hat{\boldsymbol\iota}^{(s+1)}&=\underset{\boldsymbol\iota}{\operatorname{argmin}}\,\sum_{i=1}^{N}\sum_{t=1}^{T}\sum_{m=1}^{M}\bigg(i_{it}-\iota_{0}-\sum_{j=1}^{J}\iota_{j}\psi_{j}(k_{it}, \omega_{it}^{(m)})\bigg)^{2}\\
     \end{split}
     \end{equation*}
 \begin{itemize}
 	\item The parameters of the production function equation in \eqref{iimc} can be estimated using a nonlinear regression for a given draw of $\omega_{it}^{(m)}$. 
 	\item Then, the variance of the shock $\zeta_{it}$ can be estimated using
 	\begin{equation}\label{staticivar}
-     \hat{\sigma_{\zeta}}^{2}=\frac{1}{NTM}\sum_{i=1}^{N}\sum_{t=1}^{T}\sum_{m=1}^{M}\Bigg[\Bigg(i_{it}-\hat{\iota_{0}}-\sum_{j=1}^{J}\hat{\iota}_{j}\psi_{j}(k_{it}, \omega_{it}^{(m)}, age_{it})\Bigg)^{2}\Bigg]
+     \hat{\sigma_{\zeta}}^{2}=\frac{1}{NTM}\sum_{i=1}^{N}\sum_{t=1}^{T}\sum_{m=1}^{M}\Bigg[\Bigg(i_{it}-\hat{\iota_{0}}-\sum_{j=1}^{J}\hat{\iota}_{j}\psi_{j}(k_{it}, \omega_{it}^{(m)})\Bigg)^{2}\Bigg]
      \end{equation}
      so that $\hat{\iota_{0}}(\tau_{q})=\hat{\iota_{0}}+\hat{\sigma_{\zeta}}\Phi^{-1}(\tau_{q})$
 \end{itemize}
+\end{frame}
+%------------------------------------------------------------------------------------
+\begin{frame}
+\frametitle{Empirical Implementation}
+\begin{itemize}
+	\item I used a tensor product of Hermite polynomials for $\psi_{j}$
+	\item For example in the output equation, I specify $(1,2,1,2)$ for capital, labor, materials, and productivity respectively (36 parameters in total)
+	\item In their paper, \cite{Arellano2016} and \cite{Arellano2017} take $M=1$ which is makes this estimation algorithm a Stochastic EM Algorithm (stEM) as opposed to a Monte Carlo EM Algorithm (MCEM)
+	\item A stEM algorithm means that with $M=1$ a single draw of the unobservables is used to estimate the model which can be done using basic quantile regression
+	\item A large $M$ is computationally costly. Even though a large $M$ could be used to ``smooth'' the moment conditions
+	\item I tried variations of stochastic gradient descent algorithms that although had decent convergence results, were too costly to use in practice.
+\end{itemize}
+\end{frame}
 
+%------------------------------------------------------------------------------------
+\begin{frame}
+\frametitle{The Stochastic EM Algorithm}
+\begin{itemize}
+	\item The sequence of maximizers $\hat{\theta}^{(s)}$ is a time-homogeneous Markov chain
+	\item \cite{Nielsen2000} shows that under certain conditions (e.g aperiodic and irreducible) than this Markov chain is ergodic and will converge to the stationary distribution of the Markov chain
+	\item They further show that this distribution is asymptotically normal with a variance term that decreases in $M$.
+	\item The asymptotic distribution is much harder to characterize in this quantile based approach although \cite{Arellano2016} make some effort
+	\item The paper by \cite{Nielsen2000} provides many possible improvements of the stochastic EM algorithm such as multiple starting points or multiple maximizations 
+	\item In the next few slides ill present a few preliminary results from a linear random coefficient model for US NAICS 33
+\end{itemize}
+\end{frame}
+
+%------------------------------------------------------------------------------------
+\begin{frame}
+\frametitle{Preliminary Results: Capital Elasticity}
+\begin{figure}[ht]
+\centering
+\includegraphics[width=7cm, height=7cm]{/Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Function_QR/Code/Empirical/US/capital.png}
+\end{figure}
+\end{frame}
+
+%------------------------------------------------------------------------------------
+\begin{frame}
+\frametitle{Preliminary Results: Labor Elasticity}
+\begin{figure}[ht]
+\centering
+\includegraphics[width=7cm, height=7cm]{/Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Function_QR/Code/Empirical/US/labor.png}
+\end{figure}
+\end{frame}
+
+%------------------------------------------------------------------------------------
+\begin{frame}
+\frametitle{Preliminary Results: Materials Elasticity}
+\begin{figure}[ht]
+\centering
+\includegraphics[width=7cm, height=7cm]{/Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Function_QR/Code/Empirical/US/materials.png}
+\end{figure}
+\end{frame}
+
+%------------------------------------------------------------------------------------
+\begin{frame}
+\frametitle{Preliminary Results: Productivity}
+\begin{figure}[ht]
+\centering
+\includegraphics[width=7cm, height=7cm]{/Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Function_QR/Code/Empirical/US/productivity.png}
+\end{figure}
+\end{frame}
+
+%------------------------------------------------------------------------------------
+\begin{frame}
+\frametitle{Preliminary Results: Average Persistence}
+\begin{figure}[ht]
+\centering
+\includegraphics[width=7cm, height=7cm]{/Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Function_QR/Code/Empirical/US/pers.png}
+\end{figure}
+\end{frame}
+
+%------------------------------------------------------------------------------------
+\begin{frame}
+\frametitle{Preliminary Results: Productivity Distribution}
+\begin{figure}[ht]
+\centering
+\includegraphics[width=7cm, height=7cm]{/Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Function_QR/Code/Empirical/US/dens.png}
+\end{figure}
+\end{frame}
+
+%------------------------------------------------------------------------------------
+\begin{frame}
+\frametitle{Addressing a Sample Selection Problem}
+\begin{itemize}
+	\item Much of the time consumed writing this algorithm was taking into consideration unbalanced panel data
+	\item Both \cite{Arellano2016} and \cite{Arellano2017} use balanced panel data in their empirical applications
+	\item \cite{Olley1996} address anomalies in production function coefficients estimated from balanced panels. 
+	\item They find that going from the balanced sample to the full sample more than doubles the capital coefficient and decreases the labor coefficient by about 20 percent
+	\item Productivity is a major determinant of whether or not a plant exits the industry
+	\item If firms exit decisions depend on beliefs of future productivity which are partially determined by current productivity then a balanced panel will be selected on the basis of the unobserved productivity realizations
+\end{itemize}
+\end{frame}
+
+
+%------------------------------------------------------------------------------------
+\begin{frame}
+\frametitle{Addressing a Sample Selection Problem}
+\begin{itemize}
+	\item The exit rule decision is given by
+	\begin{equation}
+		\chi_{t}=
+		\begin{cases}
+		1 \quad \text{if}\, \omega_{t}\geq\bar{\omega}_{t}(a_{t}, k_{t})\\
+		0 \quad \text{otherwise}
+		\end{cases}
+	\end{equation}
+	where $a_{t}$ denotes another state variable of the firm (age)
+	\item Then the second stage of OP
+	\begin{equation}
+	\begin{split}
+	\mathbbm{E}&[y_{it}-\hat{\beta}_{l}l_{it}|\chi_{t}=1, \mathcal{I}_{it}]\\
+	&=\beta_{0}+\beta_{k}k_{it}+\beta_{a}a_{it}+\mathbbm{E}[\omega_{it}|\chi_{t}=1, \mathcal{I}_{it}]
+	\end{split}
+	\end{equation}
+	where
+	\begin{equation}
+	\begin{split}
+	\mathbbm{E}[\omega_{it}|\chi_{t}=1, \mathcal{I}_{it}]&=\mathbbm{E}[\omega_{it}|\omega_{t}\geq\bar{\omega}_{t}(a_{t}, k_{t}), \mathcal{I}_{it}]\\
+	&\int_{\bar{\omega}_{t}(a_{t}, k_{t})}^{\infty}\omega_{it}\frac{p(\omega_{it}|\omega_{it-1})}{\int_{\bar{\omega}_{t}(a_{t}, k_{t})}^{\infty}p(\omega_{it}|\omega_{it-1})d\omega_{it}}d\omega_{it}\\
+	&=g(\omega_{it-1}, \bar{\omega}_{t}(a_{it}, k_{it}))
+	\end{split}
+	\end{equation}
+\end{itemize}
+\end{frame}
+
+%------------------------------------------------------------------------------------
+\begin{frame}
+\frametitle{Addressing a Sample Selection Problem}
+\begin{itemize}
+	\item In OP, the first stage results conditional on parameters can be used as a proxy for $\omega_{it-1}$
+	\item $\bar{\omega}_{t}(a_{it}, k_{it})$ can be controlled using observed data on entry and exit
+	\begin{equation}
+	\begin{split}
+	P(\chi_{t}=1|\mathcal{I}_{it-1})&=P(\omega_{it}\geq\bar{\omega}_{t}(a_{it}, k_{it})|\mathcal{I}_{it-1})\\
+	&=\varphi(\omega_{it-1}, \bar{\omega}_{t}(a_{it}, k_{it}))\\
+	&=\varphi(\omega_{it-1}, a_{it}, k_{it})\\
+	&=\varphi(i_{it-1}, k_{it-1}, a_{it-1})=P_{t}
+	\end{split}
+	\end{equation}
+	which can be nonparametrically estimated using probit with a flexible polynomial of $(i_{it-1}, k_{it-1}, a_{it-1})$ or by using kernel methods
+	\item Lastly, we can invert the last line of the above equation to express $\bar{\omega}_{t}(a_{it}, k_{it})$ as a function of $\omega_{it-1}$ and $P_{t}$ so that
+	\begin{equation}
+	g(\omega_{it-1}, \bar{\omega}_{t}(a_{it}, k_{it}))=\tilde{g}(\omega_{it-1}, P_{t})
+	\end{equation}
+\end{itemize}
+\end{frame}
+
+%------------------------------------------------------------------------------------
+\begin{frame}
+\frametitle{Addressing a Sample Selection Problem}
+\begin{itemize}
+	\item Can we apply a similar correction using \cite{Arellano2017a} for quantile models?
+	\begin{equation}
+	P(\omega_{it}\leq g(\omega_{it-1}, \xi_{it})|\chi_{t}=1, \mathcal{I}_{it-1})=P(\xi_{it}\leq \tau|\bar{\omega}_{t}(a_{it}, k_{it})\leq \omega_{it}, \mathcal{I}_{it-1})
+	\end{equation}
+	\item They use a copula based method to estimate the dependence between the error in the selection equation and the error in the output equation
+	\item Not sure if that method can be applied here or if I should try to see if the OP selection correction can be applied here
+	\item This is something to consider in the far future
+\end{itemize}
 \end{frame}
 
 %------------------------------------------------------------------------------------
