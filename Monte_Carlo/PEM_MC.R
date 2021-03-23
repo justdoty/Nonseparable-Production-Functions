@@ -1,18 +1,13 @@
-setwd('/Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Function_QR/Code/Monte_Carlo')
 require(quantreg)
 require(dplyr)
-source('Tensors.R')
-source('Posterior.R')
-source('Moments.R')
-source('Mstep.R')
-source('Auxfuns.R')
-source('LP_init.R')
-# source('NLPFQR/FUN/Tensors.R')
-# source('NLPFQR/FUN/Posterior.R')
-# source('NLPFQR/FUN/Moments.R')
-# source('NLPFQR/FUN/Mstep.R')
-# source('NLPFQR/FUN/Auxfuns.R')
-# source('NLPFQR/FUN/LP_init.R')
+# source('/Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Function_QR/Code/Monte_Carlo/Posterior_MC.R')
+# source('/Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Function_QR/Code/Monte_Carlo/Mstep_MC.R')
+# source('/Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Function_QR/Code/Monte_Carlo/Auxfuns_MC.R')
+# source('/Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Function_QR/Code/Monte_Carlo/LP_init_MC.R')
+source('NLPFQR/SIM/Posterior_MC.R')
+source('NLPFQR/SIM/Mstep_MC.R')
+source('NLPFQR/SIM/Auxfuns_MC.R')
+source('NLPFQR/SIM/LP_init_MC.R')
 PEM_MC <- function(ntau, idvar, timevar, Y, K, L, M, I, maxiter, draws, Mdraws, seed){
 	set.seed(seed)
 	#We are assuming the researcher has access to a balanced panel. We can extend the case to unbalanced panel
@@ -125,7 +120,6 @@ PEM_MC <- function(ntau, idvar, timevar, Y, K, L, M, I, maxiter, draws, Mdraws, 
 		W1data <- t0data(idvar=idvar, X=mat)
 		names(W1data) <- c("idvar", "U1")
 		for (q in 1:ntau){
-			print(sprintf("Quantile Mstep %i", q))
 			if (Mdraws==1){
 				resY[,,q][iter,] <- rq(Y~cbind(K, L, M, mat), tau=vectau[q])$coef
 				resWT[,,q][iter,] <- rq(WTdata$Ucon~WTdata$Ulag, tau=vectau[q])$coef
@@ -171,8 +165,8 @@ PEM_MC <- function(ntau, idvar, timevar, Y, K, L, M, I, maxiter, draws, Mdraws, 
 		#############################################################################################
 		# Use Estimates as parameters in the MH Algorithm
 		resYinit <- as.matrix(resY[iter,,])
-		resLinit <- as.matrix(resL[iter,,])
-		resMinit <- as.matrix(resM[iter,,])
+		resLinit <- as.matrix(resL[iter,])
+		resMinit <- as.matrix(resM[iter,])
 		resWTinit <- as.matrix(resWT[iter,,])
 		resW1init <- as.matrix(resW1[iter,])
 		resIinit <- as.matrix(resI[iter,])

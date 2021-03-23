@@ -65,10 +65,9 @@ hermite <- function(n, x){
 #####################################################################################################
 tensor.prod <- function(M, vars, norm){
 	#Option to normalize data (useful for gradient descent)
+	vars <- as.matrix(vars)
 	if (norm==TRUE){
-		vars <- (as.matrix(vars)-colMeans(vars))/apply(vars, 2, sd)
-	} else {
-		vars <- as.matrix(vars)
+		vars <- (vars-colMeans(vars))/apply(vars, 2, sd)
 	}
 	#If we just want a univariate hermite polynomial
 	if (length(M)==1){
@@ -84,7 +83,7 @@ tensor.prod <- function(M, vars, norm){
 		}
 		vecs <- mapply(seq, 0, M)
 		tmp <- split(vecs, rep(1:ncol(vecs), each=nrow(vecs)))
-		tmp <- as.matrix(do.call(expand.grid, vecs))
+		tmp <- as.matrix(do.call(expand.grid, tmp))
 		prodlist <- apply(tmp, 1, function(z) apply(hermite(z, x=vars), 1, prod))
 		return(prodlist)
 	#The case where we want a linear regression/random coefficient model
@@ -105,7 +104,17 @@ tensor.prod <- function(M, vars, norm){
 ####################################################################################################
 ####################################################################################################
 ####################################################################################################
-
+translog <- function(K, L, M, omega){
+	omega <- as.matrix(omega)
+	#translog productivity component
+	prodf <- cbind(1, K, L, M, K*L, L*M, K*M, K^2, L^2, M^2)
+	#translog productivity component (first-order for now)
+	prodw <- omega
+	#Combine translog production polynomial with productivity component
+	#Includes the constant but not the neutral productivity component which needs to be subtracted off the dependent variable
+	tprod <- cbind(prodf, sweep(prodf[,-1], 1, prodw, `*`))
+	return(tprod)
+}
 
 
 

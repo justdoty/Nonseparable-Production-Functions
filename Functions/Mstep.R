@@ -1,7 +1,7 @@
 setwd('/Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Function_QR/Code/Functions')
 require(dplyr)
-source('Moments.R')
-source('Auxfuns.R')
+# source('NLPFQR/FUN/Moments.R')
+# source('NLPFQR/FUN/Auxfuns.R')
 #####################################################################################################
 #This file contains the functions which perform all M-step computations
 #Requires Moment.R to evaluate objective function and jacobian calculations
@@ -65,27 +65,27 @@ sgradfune <- function(idvar, X, U, MH, init, tol, stepsize, nsteps, nbatch, seed
 #####################################################################################################
 #Functions to estimate the exponential tail parameters on (0, \tau_{1}) and (\tau_{L}, 1)
 #####################################################################################################
-expb <- function(idvar, X, U, MH, par1, parL, WT){
-	if (!missing(X)){
-		b1 <- -mean(apply(U, 2, function(u) mean(X[,1]<=tensor.prod(MH, cbind(X[,-1], u), norm=0)%*%par1)/mean((X[,1]-tensor.prod(MH, cbind(X[,-1], u), norm=0)%*%par1)*(X[,1]<=tensor.prod(MH, cbind(X[,-1], u), norm=0)%*%par1))))
-		bL <- mean(apply(U, 2, function(u) mean(X[,1]>tensor.prod(MH, cbind(X[,-1], u), norm=0)%*%parL)/mean((X[,1]-tensor.prod(MH, cbind(X[,-1], u), norm=0)%*%parL)*(X[,1]>tensor.prod(MH, cbind(X[,-1], u), norm=0)%*%parL))))
-	} else {
-		data <- lagdata(idvar, U)
-		names(data) <- c("idvar", paste("Ucon", 1:ncol(U), sep=""), paste("Ulag", 1:ncol(U), sep="")) 
-	    Xpar1 <- apply(as.matrix(data[, grepl("Ulag", names(data))]), 2, function(u) tensor.prod(MH, u, norm=0)%*%par1)
-		XparL <- apply(as.matrix(data[, grepl("Ulag", names(data))]), 2, function(u) tensor.prod(MH, u, norm=0)%*%parL)
-		b1 <- -mean(as.matrix(data[,grepl("Ucon", colnames(data))]<=Xpar1))/mean(as.matrix((data[,grepl("Ucon", colnames(data))]-Xpar1)*(data[,grepl("Ucon", colnames(data))]<=Xpar1)))
-		bL <- mean(as.matrix(data[,grepl("Ucon", colnames(data))]>XparL))/mean(as.matrix((data[,grepl("Ucon", colnames(data))]-XparL)*(data[,grepl("Ucon", colnames(data))]>XparL)))
-		}
+#For the translog production function
+expby <- function(Y, K, L, M, omega, par1, parL){
+	YX <- translog(K=K, L=L, M=M, omega=omega)
+	b1 <- -mean((Y-omega)<=YX%*%par1)/mean(((Y-omega)-YX%*%par1)*((Y-omega)<=YX%*%par1))
+	bL <- mean((Y-omega)>YX%*%parL)/mean(((Y-omega)-YX%*%parL)*((Y-omega)>YX%*%parL))
 	return(list(b1=b1, bL=bL))
 }
-#####################################################################################################
-#####################################################################################################
-#####################################################################################################
-
-
-
-
+#For the input functions
+expbx <- function(X, K, omega, par1, parL){
+	XX <- cbind(1, K, omega, K*omega, K^2, omega^2)
+	b1 <- -mean(X<=XX%*%par1)/mean((X-XX%*%par1)*(X<=XX%*%par1))
+	bL <- mean(X>XX%*%parL)/mean((X-XX%*%parL)*(X>XX%*%parL))
+	return(list(b1=b1, bL=bL))
+}
+#For productivity t>1
+expbwt <- function(omega, omegalag, par1, parL){
+	WX <- cbind(1, omegalag, omegalag^2, omegalag^3)
+	b1 <- -mean(omega<=WX%*%par1)/mean((omega-WX%*%par1)*(omega<=WX%*%par1))
+	bL <- mean(omega>WX%*%parL)/mean((omega-WX%*%parL)*(omega>WX%*%parL))
+	return(list(b1=b1, bL=bL))
+}
 
 
 

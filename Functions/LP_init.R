@@ -1,42 +1,59 @@
 setwd('/Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Function_QR/Code/Functions')
-#This function is used to do a basic LP estimation of TFP to use as initial model estimates
+#This function is used to do a basic ACF estimation of productivity to use as initial model estimates
 #and initial draw for productivity in the stEM algorithm
 source('Auxfuns.R')
-#LP GMM Criterion Function
-#x denotes the exogeneous and endogeneous regressors
-#z denotes the instrumets
-LP_GMM <- function(x, z, b){
-  Omega1 <- x[,1]-b[1]*x[,2]-b[2]*x[,3]
-  Omega2 <- x[,4]-b[1]*x[,5]-b[2]*x[,6]
-  conc <- fitted(lm(Omega1~Omega2))
-  resid <- x[,1]-b[1]*x[,2]-b[2]*x[,3]-conc
-  Obj <- sum((z*array(data=resid, dim=dim(z)))^2)
-  return(Obj)
-}
-LP_est <- function(idvar, timevar, Y, K, L, M){
-	#First Stage of LP 
-	#Obtain consistent estimates of labor and age
-	L1st <- lm(L~K+M)
-	Y1st <- lm(Y~K+M)
-	Lfit <- L-fitted(L1st)
-	Yfit <- Y-fitted(Y1st)
-	stage1 <- as.numeric(coef(lm(Yfit~Lfit-1)))
+#Function that estimates productivity (omega)
+omega_est <- function(idvar, timevar, Y, K, L, M){
+	regvars <- data.frame(reg1=K, reg2=L, reg3=M, reg4=K*L, reg5=K*M, 
+    reg6=L*M, reg7=K^2, reg8=L^2, reg9=M^2)
+	#First Stage 
+	ACFfirststage <- lm(data$Y~as.matrix(regvars[, grepl('reg', colnames(regvars))]))
+	#Initial Values for search
+	ACF_LM <- lm(Y~K+L+M)
+	ACFinit <- as.numeric(coef(ACF_LM)[-1])
 	#2nd stage of LP
 	#obtain consistent estimates of materials and capital
-	phi <- Y-stage1[1]*L
-	lagdata <- lagdata(idvar, cbind(Y, K, L, M, phi))
-	names(lagdata) <- c("idvar", "Ycon", "Kcon", "Lcon", "Mcon", "phicon",
-		"Ylag", "Klag", "Llag", "Mlag", "philag")
-	X <- as.matrix(cbind(lagdata$phicon, lagdata$Kcon, lagdata$Mcon, lagdata$philag, lagdata$Klag, 
-		lagdata$Mlag))
-	Z <- as.matrix(cbind(lagdata$Kcon, lagdata$Mlag))
-	obj.fn_LP <- function(b){
-      momi <- LP_GMM(x=X, z=Z, b)
-      return(momi)
-    }
-    LP1 <- stage1[1]
-    LP2 <- optim(par=c(0.5, 0.5), obj.fn_LP)$par
-    TFP <- Y-cbind(L, K, M)%*%c(LP1, LP2)
-    return(TFP)
-
+	phihat <- fitted(ACFfirststage)
+    ACFphi <- phihat
+	lagdata <- lagdata(idvar, cbind(Y, K, L, M, ACFphi))
+	names(lagdata) <- c("idvar", "Ycon", "Kcon", "Lcon", "Mcon", "ACFphicon",
+		"Ylag", "Klag", "Llag", "Mlag", "ACFphilag")
+	#ACF Output
+	ACFmY <-  as.matrix(lagdata$Ycon)
+	#ACF Contemporary State Variables
+    ACFmX <- cbind(lagdata$Kcon, lagdata$Lcon)
+    #ACF Lagged State Variables
+    ACFmlX <- cbind(lagdata$Klag, lagdata$Llag)
+    #ACF Contemporary phi estimates
+    ACFfitphi <- as.matrix(lagdata$ACFphicon)
+    #ACF Lagged phi estimates
+    ACFfitlagphi <- as.matrix(lagdata$ACFphilag)
+    #ACF Instruments 
+    ACFmZ <- cbind(1, lagdata1$Kcon, lagdata1$Llag)
+    #ACF estimates for Capital and Labor
+    ACFhat <- optim(par=ACFinit, fn=function(b) ACFobj(b, mY=ACFmY, mX=ACFmX, mlX=ACFmlX, 
+    	mZ=ACFmZ, fitphi=ACFfitphi, fitlagphi=ACFfitlagphi), gr=NULL, method="L-BFGS-B", 
+    lower=c(0,0,0), upper=c(1,1,1))$par
+    omega <- phihat-cbind(K, L, M)%*%as.matrix(as.numeric(ACFhat))
+    return(omega)
+}
+############################################################################################
+#Functions for Estimating ACF Coefficients
+###########################################################################################
+#Function that defines the residuals
+ACF_Lambda <- function(b, mY, mX, mlX, fitphi, fitlagphi){
+  b <- as.matrix(as.numeric(b))
+  A <- fitphi-mX%*%b[1:ncol(mX)]
+  B <- fitlagphi-mlX%*%b[1:ncol(mX)]
+  step1 <- lm(A~B-1)
+  step1param <- as.numeric(coef(step1))
+  xifit <- A-B*step1param
+  return(xifit)
+} 
+#ACF GMM objective function
+ACFobj <- function(b, mY, mX, mlX, mZ, fitphi, fitlagphi){
+  xifit <- ACF_Lambda(b=b, mY=mY, mX=mX, mlX=mlX, fitphi=fitphi, fitlagphi=fitlagphi)
+  mW <- solve(crossprod(mZ))/nrow(mZ)
+  go <- t(crossprod(mZ, xifit))%*%mW%*%(crossprod(mZ, xifit))
+  return(go)
 }

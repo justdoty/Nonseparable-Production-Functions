@@ -1,42 +1,48 @@
-source('/Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Function_QR/Code/Functions/Production_EM.R')
+# source('/Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Function_QR/Code/Monte_Carlo/PEM_MC.R')
 #For HPC 
-# source('Production_EM.R')
+source('NLPFQR/SIM/PEM_MC.R')
 #EM Algorithm Parameters
 #Length of tau sequence (evenly divided)
 ntau <- 11
 vectau <- seq(1/(ntau+1), ntau/(ntau+1), by=1/(ntau+1))
 #Total number of EM steps
-maxiter <- 2
+maxiter <- 100
 #Number of Metropolis-Hastings steps (burn-in)
-draws <- 50
+draws <- 100
 #Number of draws of Metropolis Hastings kept for computation (Mdraws=1 for stEM for now)
 Mdraws <- 1
 #Degrees of the Univariate Hermite Polynomials
 #Output
 MY <- "linear"
 #Labor
-ML <- as.numeric(c(MLK=2, MLW=2))
+ML <- "linear"
 #Materials
-MM <- as.numeric(c(MMK=2, MMW=2))
+MM <- "linear"
 #Productivity t>1
 MW <- "linear"
 #Investment
-MI <- as.numeric(c(MIK=2, MIW=2))
+MI <- "linear"
 MH <- list(MY=MY, ML=ML, MM=MM, MW=MW, MI=MI)
 #Monte Carlo Simulation Parameters
-nreps <- 2
+nreps <- 500
+#Bath Size for HPC
+nbatch <- 10
+#Number of iteratios for each HPC batch
+breps <- nreps/nbatch
+bmat <- cbind(seq(1, (nreps-breps+1), by=breps), seq(breps, nreps, by=breps))
+id <- as.numeric(commandArgs(TRUE)[1])
+bmat <- bmat[id,]
 seed <- 123456
 #Monte Carlo Parameters
 #Storage Matrices for Results
-resYsim <- array(0, c(5, ntau, nreps))
-resybsim <- array(0, c(2, nreps))
-resLsim <- array(0, c(prod(ML+1), ntau, nreps))
-reslbsim <- array(0, c(2, nreps))
-resMsim <- array(0, c(prod(MM+1), ntau, nreps))
-resmbsim <- array(0, c(2, nreps))
-resWTsim <- array(0, c(2, ntau, nreps))
-reswtbsim <- array(0, c(2, nreps))
-resIsim <- array(0, c((prod(MI+1)+1), nreps))
+resYsim <- array(0, c(5, ntau, breps))
+resybsim <- array(0, c(2, breps))
+resLsim <- array(0, c(4, breps))
+resMsim <- array(0, c(4, breps))
+resWTsim <- array(0, c(2, ntau, breps))
+reswtbsim <- array(0, c(2, breps))
+resIsim <- array(0, c(4, breps))
+resW1sim <- array(0, c(2, breps))
 #Parameters for data evolution
 ##########################################
 #Production:
@@ -100,7 +106,7 @@ investmat <- matrix(0, n, overallt) #Investment
 lnldata <- matrix(0, n, overallt) #ln(labor)
 lnmdata <- matrix(0, n, overallt) #ln(intermediate input)
 ############################################################
-for (niter in 1:nreps){
+for (niter in bmat[1]:bmat[2]){
   print(sprintf("MC Iteration %i", niter))
   seed <- seed+niter
   set.seed(seed)
@@ -115,6 +121,8 @@ for (niter in 1:nreps){
   epsdata <- matrix(rnorm(n*overallt, 0, sigoptm), nrow=n, ncol=overallt)
   #Specification for Investment Input Shock Distribution
   iotadata <- matrix(rnorm(n*overallt, 0, sigopti), nrow=n, ncol=overallt)
+  #Specification for Capital Shock Distribution
+  upsdata <- matrix(rlnorm(n*overallt, 0, sigoptk), nrow=n, ncol=overallt)
   #Specification for labor cost (not serially correlated)
   pl <- 0.3
   #Specification for materials cost (not serially correlated)
@@ -133,20 +141,15 @@ for (niter in 1:nreps){
   #########################################
   #Intital ln(capital) level (close to 0)
   kdata[,1] <- matrix(1,n,1)
+  investmat[,1] <- iota0+iotak+log(kdata[,1])+omgdata[,1]+iotadata[,1]
   #Depreciation rate of capital
   delta <- 0.2
-  ########################################
-
   ######################################################################
   #Compute Optimal Investment and Capital stock for all firms over time
-  for (i in 1:n){
-      for (s in 1:overallt){
-        investmat[i,s] <- iota0+iotak*log(kdata[i,s])+omgdata[i,s]+iotadata[i,s]
-        if (s >= 2){
-          kdata[i,s] <- (1-delta)*kdata[i,s-1]+exp(investmat[i,s-1])+rlnorm(1, meanlog=0, sdlog=sigoptk)
-        }
-      }
-    }
+  for (s in 2:overallt){
+    kdata[,s] <- (1-delta)*kdata[,s-1]+exp(investmat[,s-1])+upsdata[,s-1]
+    investmat[,s] <- iota0+iotak*log(kdata[,s])+omgdata[,s]+iotadata[,s]
+  }
   lnkdata <- log(kdata)
   ############################################################################
 
@@ -173,8 +176,7 @@ for (niter in 1:nreps){
   ##############################################################
   #Output
   ###############################################################
-  lnydata <- rowSums(betaspl*cbind(1, c(t(lnkdata)), c(t(lnldata)), c(t(lnmdata))))
-
+  lnydata <- rowSums(betaspl*cbind(1, c(t(lnkdata)), c(t(lnldata)), c(t(lnmdata))))+c(t(omgdata))
   #Stack data across firms 
   Output <- matrix(lnydata, nrow=n, ncol=overallt, byrow=TRUE)
   Capital <- matrix(lnkdata, nrow=n, ncol=overallt, byrow=TRUE)
@@ -192,28 +194,27 @@ for (niter in 1:nreps){
   #Create ID and Time variables
   idvar <- rep(1:n, each=(overallt-starttime+1))
   timevar <- rep(1:(overallt-starttime+1), n)
-  if (niter==nreps){
-    MCdata <- data.frame(id=idvar, time=timevar, Y=Output_Con, K=Capital_Con, L=Labor_Con, M=Materials_Con, I=Investment_Con)
-  }
   #Start Timer
   overall.start.time <- Sys.time()
   #Results
-  # results <- Production_EM(ntau=ntau, idvar=idvar, timevar=timevar, Y=Output_Con, K=Capital_Con, L=Labor_Con, M=Materials_Con, I=Investment_Con, maxiter=maxiter, draws=draws, Mdraws=Mdraws, seed=seed, MH)
-  # resYsim[,,niter] <- results$resYmat; resybsim[,niter] <- results$resyb1bLmat
-  # resLsim[,,niter], <- results$resLmat; reslbsim[,niter] <- results$reslb1bLmat
-  # resMsim[,,niter] <- results$resMmat; resmbsim[,niter] <- results$resmb1bLmat
-  # resWTsim[,,niter] <- results$resWTmat; reswtbsim[,niter] <- results$reswtb1bLmat
-  # resW1sim[,,niter] <- results$resW1mat; resIsim[,niter] <- results$resImat
+  results <- PEM_MC(ntau=ntau, idvar=idvar, timevar=timevar, Y=Output_Con, K=Capital_Con, L=Labor_Con, M=Materials_Con, I=Investment_Con, maxiter=maxiter, draws=draws, Mdraws=Mdraws, seed=seed)
+  resYsim[,,niter] <- results$resYmat; resybsim[,niter] <- results$resyb1bLmat
+  resLsim[,niter] <- results$resLmat; resMsim[,niter] <- results$resMmat; 
+  resWTsim[,,niter] <- results$resWTmat; reswtbsim[,niter] <- results$reswtb1bLmat
+  resW1sim[,niter] <- results$resW1mat; resIsim[,niter] <- results$resImat
   #Loop time
   print(Sys.time()-overall.start.time)
 }
-# MCres <- list(resYsim=resYsim, resybsim=resybsim, resLsim=resLsim, reslbsim=reslbsim, resMsim=resMsim,
-#   resmbsim=resmbsim, resWTsim=resWTsim, reswtbsim=reswtbsim, resW1sim=resW1sim, resIsim=resIsim)
-#Save Results
-# save(MH, nreps, ntau, MCres, MCdata, file='/Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Function_QR/Code/Monte_Carlo/MCresults.Rdata')
+MCres <- list(resYsim=resYsim, resybsim=resybsim, resLsim=resLsim, resMsim=resMsim, resWTsim=resWTsim, 
+  reswtbsim=reswtbsim, resW1sim=resW1sim, resIsim=resIsim)
 #Total time of MC experiment
 print(Sys.time()-overall.start.time)
+#Save Results
+filename <- paste("NLPFQR/SIM/Output_Files/MCresults_Batch", id, ".Rdata", sep="")
+save(breps, ntau, vectau, beta, betaexp, rho, rhoexp, MCres, file=filename)
 
+#HPC Job Submissions for batches: qsub -t 1:nbatch MC.job
+#Here nbatch=10
 
 
 

@@ -1,6 +1,6 @@
-# setwd('/Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Function_QR/Code/Functions')
-source('NLPFQR/FUN/Tensors.R')
-source('NLPFQR/FUN/Auxfuns.R')
+source('/Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Function_QR/Code/Monte_Carlo/Auxfuns_MC.R')
+#For HPC
+# source('NLPFQR/FUN/Auxfuns.R')
 require(dplyr)
 ############################################################################################################
 #Function that defines the (log) posterior density for which to evaluate the Metropolis Hastings algorithm (target distribution)
@@ -34,11 +34,11 @@ posterior <- function(data, vectau, par){
 	densY <- as.matrix((data.frame(idvar=data$idvar, densY=densY) %>% group_by(idvar) %>% summarise(densN=sum(log(densY)),.groups = 'drop'))$densN)
 	#Likelihood of Labor Data#############################################################################
 	ResLX <- data$L-LX%*%parL[-length(parL)]
-	densL <- 1/sqrt(parL[length(parL)])*dnorm(ResLX/sqrt(parL[length(parL)]))
+	densL <- (1/sqrt(2*pi*parL[length(parL)]))*exp(-.5*(ResLX/sqrt(parL[length(parL)]))^2)
 	densL <- as.matrix((data.frame(idvar=data$idvar, densL=densL) %>% group_by(idvar) %>% summarise(densN=sum(log(densL)),.groups = 'drop'))$densN)
 	#Likelihood of Materials Data########################################################################
 	ResMX <- data$M-MX%*%parM[-length(parM)]
-	densM <- 1/sqrt(parM[length(parM)])*dnorm(ResMX/sqrt(parM[length(parM)]))
+	densM <- (1/sqrt(2*pi*parM[length(parM)]))*exp(-.5*(ResMX/sqrt(parM[length(parM)]))^2)
 	densM <- as.matrix((data.frame(idvar=data$idvar, densM=densM) %>% group_by(idvar) %>% summarise(densN=sum(log(densM)),.groups = 'drop'))$densN)
 	#Prior Omega_{t} Data############################################################################
 	densWT <- as.matrix(rowSums(sapply(1:(length(vectau)-1), function(q) ((vectau[q+1]-vectau[q])/(WXT%*%(parWT[,q+1]-parWT[,q])))*
@@ -46,11 +46,11 @@ posterior <- function(data, vectau, par){
 					(1-vectau[length(vectau)])*wtbL*exp(-wtbL*(WTdata$Ucon-WXT%*%parWT[,length(vectau)]))*(WTdata$Ucon>WXT%*%parWT[,length(vectau)])
 	densWT <- as.matrix((data.frame(idvar=WTdata$idvar, densWT=densWT) %>% group_by(idvar) %>% summarise(densN=sum(log(densWT)),.groups = 'drop'))$densN)
     #Prior Omega_{0} Data (Normal)############################################################################
-	densW1 <- as.matrix(dnorm(W1data$U1, mean=parW1[1], sd=sqrt(parW1[2])))
+    densW1 <- (1/sqrt(2*pi*parW1[2]))*exp(-.5*((W1data$U1-parW1[1])/sqrt(parW1[2]))^2)
 	densW1 <- log(densW1)
 	#Likelihood of Investment Data (Log-Normal)#########################################################
 	ResIX <- data$I-IX%*%parI[-length(parI)]
-	densI <- 1/sqrt(parI[length(parI)])*dnorm(ResIX/sqrt(parI[length(parI)]))
+	densI <- (1/sqrt(2*pi*parI[length(parI)]))*exp(-.5*(ResIX/sqrt(parI[length(parI)]))^2)
 	densI <- as.matrix((data.frame(idvar=data$idvar, densI=densI) %>% group_by(idvar) %>% summarise(densN=sum(log(densI)),.groups = 'drop'))$densN)
 	#Final posterior density########################################################################
 	finaldens <- densY+densL+densM+densWT+densW1+densI
