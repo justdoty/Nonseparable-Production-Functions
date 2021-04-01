@@ -53,7 +53,7 @@ compstat <- read.csv('/Users/justindoty/Documents/Research/Dissertation/Producti
 	# mutate(realcap=ifelse(year==first(year), ppent/iprice, 0)) %>% 
 	# mutate(realcap=ifelse(year==first(year), first(realcap), lag(dep)*lag(realcap)+lag(capx/iprice))) %>% ungroup() %>%
 	#Unit changes and deflate: Sales (by industry-level price index), Capital (by investment price index), Investment (by investment price index), Materials (by price-index)
-	transmute(id=gvkey, year=year, Y=(sale/yprice)*1e6, K=ppegt*1e6/iprice, L=employ*1e3, M=(cogs*1e6+xsga*1e6-dp*1e6-employ*lprice*1e3)/yprice, I=capx*1e6/iprice, dep=dep, naics3=naics) %>% group_by(id) %>%
+	transmute(id=gvkey, year=year, Y=(sale/yprice)*1e6, K=ppent*1e6/iprice, L=employ*1e3, M=(cogs*1e6+xsga*1e6-dp*1e6-employ*lprice*1e3)/yprice, I=capx*1e6/iprice, dep=dep, naics3=naics) %>% group_by(id) %>%
 	#Year-to-year changes for output and inputs, firms with extreme changes are dropped (optional)
 	# mutate(Yratio=ifelse(year==first(year), 0, abs((Y-lag(Y))/lag(Y))), Kratio=ifelse(year==first(year), 0, abs((K-lag(Y))/lag(K))), Lratio=ifelse(year==first(year), 0, abs((L-lag(L))/lag(L))), Mratio=ifelse(year==first(year), 0, abs((M-lag(M))/lag(M))), Iratio=ifelse(year==first(year), 0, abs((I-lag(I))/lag(I)))) %>%
 	#Year-to-year changes for total input/output ratio, firms with values extremely different from one are dropped (optional)

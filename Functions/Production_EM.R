@@ -1,19 +1,20 @@
-setwd('/Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Function_QR/Code/Functions')
+# setwd('/Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Function_QR/Code/Functions')
 require(quantreg)
+# library("dplyr", lib.loc='R/x86_64-pc-linux-gnu-library/3.5/')
 require(dplyr)
 require(pracma)
-source('Tensors.R')
-source('Posterior.R')
-source('Moments.R')
-source('Mstep.R')
-source('Auxfuns.R')
-source('omega.R')
-# source('NLPFQR/FUN/Tensors.R')
-# source('NLPFQR/FUN/Posterior.R')
-# source('NLPFQR/FUN/Moments.R')
-# source('NLPFQR/FUN/Mstep.R')
-# source('NLPFQR/FUN/Auxfuns.R')
-# source('NLPFQR/FUN/omega.R')
+# source('Tensors.R')
+# source('Posterior.R')
+# source('Moments.R')
+# source('Mstep.R')
+# source('Auxfuns.R')
+# source('omega.R')
+source('NLPFQR/FUN/Tensors.R')
+source('NLPFQR/FUN/Posterior.R')
+source('NLPFQR/FUN/Moments.R')
+source('NLPFQR/FUN/Mstep.R')
+source('NLPFQR/FUN/Auxfuns.R')
+source('NLPFQR/FUN/omega.R')
 Production_EM <- function(ntau, idvar, timevar, Y, K, L, M, I, maxiter, draws){
 	seed <- 123456
 	set.seed(seed)
@@ -33,9 +34,8 @@ Production_EM <- function(ntau, idvar, timevar, Y, K, L, M, I, maxiter, draws){
 	T <- unique(timevar)
 	#Grid of Taus
 	vectau <- seq(1/(ntau+1), ntau/(ntau+1), by=1/(ntau+1))
-	#Initial estimate of productivity from ACF
-	omega <- as.matrix(omega_est(idvar=idvar, timevar=timevar, Y=Y, K=K, L=L, M=M))
-	print(summary(omega))
+	#Initial estimate of productivity from ACF plus random noise
+	omega <- as.matrix(omega_est(idvar=idvar, timevar=timevar, Y=Y, K=K, L=L, M=M))+rnorm(length(idvar), mean=0, sd=0.25)
 	#Reformatting data for initial optimization
 	WTdata <- lagdata(idvar=idvar, X=omega)
 	names(WTdata) <- c("idvar", "Wcon", "Wlag")
@@ -98,26 +98,25 @@ Production_EM <- function(ntau, idvar, timevar, Y, K, L, M, I, maxiter, draws){
 		resinit <- list(resYinit=resYinit, yb1init=yb1init, ybLinit=ybLinit, resLinit=resLinit, lb1init=lb1init, 
 			lbLinit=lbLinit, resMinit=resMinit, mb1init=mb1init, mbLinit=mbLinit, 
 			resWTinit=resWTinit, wtb1init=wtb1init, wtbLinit=wtbLinit, resW1init=resW1init, resIinit=resIinit)
-		#Initial Guess for Unobservables
-		chain <- omega
-		oldpost <- posterior(idvar=idvar, Y=Y, K=K, L=L, M=M, I=I, omega=chain, vectau=vectau, par=resinit)
+		#Initial Guess for Posterior density using initial unobservables
+		oldpost <- posterior(idvar=idvar, Y=Y, K=K, L=L, M=M, I=I, omega=omega, vectau=vectau, par=resinit)
 		for (j in 1:(draws+1)){
-			Mseed <- seed+j
-			#RW Update
-			newchain <- chain+runif(length(chain), -0.5, 0.5)
-			newpost <- posterior(idvar=idvar, Y=Y, K=K, L=L, M=M, I=I, omega=newchain, vectau=vectau, par=resinit)
+			set.seed(seed+j)
+			newomega <- omega+rnorm(length(idvar), 0, sqrt(varRW))
+			#Calculate Posterior for Proposed Chain
+			newpost <- posterior(idvar=idvar, Y=Y, K=K, L=L, M=M, I=I, omega=newomega, vectau=vectau, par=resinit)
 			#Log acceptance probability
 			loga <- min(newpost-oldpost, 0)
 			#Create a set of N indices for acceptance rule
-			Nindex <- as.logical(log(runif(N))<loga)
+			Nindex <- log(runif(N))<loga
 			#Create sequence of vectors for accepting each time period of each accepted firm draw
 			NTindex <- rep(Nindex, as.data.frame(table(idvar))$Freq)
 			#Update unobservables that satisfy acceptance rule according to the RW process
-			chain[NTindex] <- newchain[NTindex]
+			omega[NTindex] <- newomega[NTindex]
 			oldpost[Nindex] <- newpost[Nindex]
 		}
 		#This is the draws+1 draw of the unobservable in the stEM algorithm
-		mat <- chain
+		mat <- omega
 		#Note that the traditional EM algorithm requires multiple of these draws so that
 		#Mat would be a matrix with the number of columns equal to the number of accepted draws
 		#We do not implement this version here because it is computationally costly

@@ -1,4 +1,4 @@
-setwd('/Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Function_QR/Code/Functions')
+# setwd('/Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Function_QR/Code/Functions')
 ##########################################################################################################
 #This file creates the tensor product of the user choice of basis polynomials, Hermite polynomials
 #are used here, working on implementing other specifications such as different basis functions, splines, wavelets, etc

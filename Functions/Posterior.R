@@ -1,9 +1,9 @@
-setwd('/Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Function_QR/Code/Functions')
-source('Tensors.R')
-source('Auxfuns.R')
-# source('NLPFQR/FUN/Tensors.R')
-# source('NLPFQR/FUN/Auxfuns.R')
-require(dplyr)
+# setwd('/Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Function_QR/Code/Functions')
+# source('Tensors.R')
+# source('Auxfuns.R')
+source('NLPFQR/FUN/Tensors.R')
+source('NLPFQR/FUN/Auxfuns.R')
+# require(dplyr)
 ############################################################################################################
 #Function that defines the (log) posterior density for which to evaluate the Metropolis Hastings algorithm (target distribution)
 #Requires the file Tensors.R to evaluate the tensor products

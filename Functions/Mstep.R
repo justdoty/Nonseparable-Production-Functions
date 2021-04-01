@@ -1,7 +1,7 @@
-setwd('/Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Function_QR/Code/Functions')
-require(dplyr)
-# source('NLPFQR/FUN/Moments.R')
-# source('NLPFQR/FUN/Auxfuns.R')
+# setwd('/Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Function_QR/Code/Functions')
+# require(dplyr)
+source('NLPFQR/FUN/Moments.R')
+source('NLPFQR/FUN/Auxfuns.R')
 #####################################################################################################
 #This file contains the functions which perform all M-step computations
 #Requires Moment.R to evaluate objective function and jacobian calculations

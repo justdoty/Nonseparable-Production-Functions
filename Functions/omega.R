@@ -1,8 +1,8 @@
-setwd('/Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Function_QR/Code/Functions')
+# setwd('/Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Function_QR/Code/Functions')
 #This function is used to do a basic LP estimation of productivity to use as initial model estimates
 #and initial draw for productivity in the stEM algorithm
-source('Auxfuns.R')
-# source('NLPFQR/FUN/Auxfuns.R')
+# source('Auxfuns.R')
+source('NLPFQR/FUN/Auxfuns.R')
 #Function that estimates productivity (omega)
 omega_est <- function(idvar, timevar, Y, K, L, M){
 	regvars <- data.frame(reg1=K, reg2=L, reg3=M, reg4=M*K, reg5=K^2, reg6=M^2, reg7=M*(K^2), reg8=(M^2)*K, reg9=K^3, reg10=M^3)

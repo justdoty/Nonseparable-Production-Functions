@@ -1,5 +1,5 @@
-setwd('/Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Function_QR/Code/Functions')
-source('Tensors.R')
+# setwd('/Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Function_QR/Code/Functions')
+source('NLPFQR/FUN/Tensors.R')
 #####################################################################################################
 #This file contains the functions that are used to evaluate the gradient descent algorithms
 #Requires the file 'Tensors.R' to evaluate the tensor products
