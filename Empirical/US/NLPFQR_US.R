@@ -9,7 +9,7 @@ ntau <- 11
 #Total number of EM steps
 maxiter <- 500
 #Number of Metropolis-Hastings steps (burn-in)
-draws <- 200
+draws <- 300
 #Load US dataset
 # US_panel <- read.csv('/Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Function_QR/Data/USdata.csv')
 US_panel <- read.csv('NLPFQR/DATA/US/USdata.csv')
@@ -23,8 +23,8 @@ id <- as.numeric(commandArgs(TRUE)[1])
 industries <- industries[id]
 
 #fFor testing purposes
-# maxiter <- 5
-# draws <- 2
+# maxiter <- 15
+# draws <- 500
 # industries <- c("31")
 
 

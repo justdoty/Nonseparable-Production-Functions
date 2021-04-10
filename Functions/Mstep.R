@@ -73,15 +73,21 @@ expby <- function(Y, K, L, M, omega, par1, parL){
 	return(list(b1=b1, bL=bL))
 }
 #For the input functions
-expbx <- function(X, K, omega, par1, parL){
-	XX <- cbind(1, K, omega, K*omega, K^2, omega^2)
+expblx <- function(X, K, omega, par1, parL){
+	XX <- LX(K=K, omega=omega)
+	b1 <- -mean(X<=XX%*%par1)/mean((X-XX%*%par1)*(X<=XX%*%par1))
+	bL <- mean(X>XX%*%parL)/mean((X-XX%*%parL)*(X>XX%*%parL))
+	return(list(b1=b1, bL=bL))
+}
+expbmx <- function(X, K, omega, par1, parL){
+	XX <- MX(K=K, omega=omega)
 	b1 <- -mean(X<=XX%*%par1)/mean((X-XX%*%par1)*(X<=XX%*%par1))
 	bL <- mean(X>XX%*%parL)/mean((X-XX%*%parL)*(X>XX%*%parL))
 	return(list(b1=b1, bL=bL))
 }
 #For productivity t>1
 expbwt <- function(omega, omegalag, par1, parL){
-	WX <- cbind(1, omegalag, omegalag^2, omegalag^3)
+	WX <- WX(omega=omegalag)
 	b1 <- -mean(omega<=WX%*%par1)/mean((omega-WX%*%par1)*(omega<=WX%*%par1))
 	bL <- mean(omega>WX%*%parL)/mean((omega-WX%*%parL)*(omega>WX%*%parL))
 	return(list(b1=b1, bL=bL))

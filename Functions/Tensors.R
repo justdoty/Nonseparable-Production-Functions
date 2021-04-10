@@ -116,10 +116,21 @@ translog <- function(K, L, M, omega){
 	return(tprod)
 }
 
+LX <- function(K, omega){
+	return(cbind(1, K, omega, K*omega, K^2, omega^2))
+}
 
+MX <- function(K, omega){
+	return(cbind(1, K, omega, K*omega, K^2, omega^2))
+}
 
+WX <- function(omega){
+	return(cbind(1, omega, omega^2, omega^3))
+}
 
-
+IX <- function(K, omega){
+	return(cbind(1, K, omega, K*omega, K^2, omega^2))
+}
 
 
 
