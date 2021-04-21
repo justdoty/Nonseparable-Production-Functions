@@ -89,7 +89,7 @@ for (i in 2:length(NAICS)){
 	KS1 <- results$omegaKS[,,1]
 	KS2 <- results$omegaKS[,,2]
 	for (k in 1:500){
-		KStest[k,i-1] <- ks.test(KS1[,k], KS2[,k])$p.value
+		KStest[k,i-1] <- suppressWarnings(ks.test(KS1[,k], KS2[,k]))$p.value
 	}
 	write.csv(KStest, "/Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Function_QR/Code/Empirical/US/Results/Plots/Diagnostics/KStest.csv")
 	# ##############################################################################

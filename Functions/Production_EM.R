@@ -1,19 +1,19 @@
-# setwd('/Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Function_QR/Code/Functions')
+setwd('/Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Function_QR/Code/Functions')
 require(quantreg)
 require(dplyr)
 require(pracma)
-# source('Tensors.R')
-# source('Posterior.R')
-# source('Moments.R')
-# source('Mstep.R')
-# source('Auxfuns.R')
-# source('omega.R')
-source('NLPFQR/FUN/Tensors.R')
-source('NLPFQR/FUN/Posterior.R')
-source('NLPFQR/FUN/Moments.R')
-source('NLPFQR/FUN/Mstep.R')
-source('NLPFQR/FUN/Auxfuns.R')
-source('NLPFQR/FUN/omega.R')
+source('Tensors.R')
+source('Posterior.R')
+source('Moments.R')
+source('Mstep.R')
+source('Auxfuns.R')
+source('omega.R')
+# source('NLPFQR/FUN/Tensors.R')
+# source('NLPFQR/FUN/Posterior.R')
+# source('NLPFQR/FUN/Moments.R')
+# source('NLPFQR/FUN/Mstep.R')
+# source('NLPFQR/FUN/Auxfuns.R')
+# source('NLPFQR/FUN/omega.R')
 Production_EM <- function(ntau, idvar, timevar, Y, K, L, M, I, maxiter, draws){
 	seed <- 123456
 	set.seed(seed)
@@ -70,10 +70,10 @@ Production_EM <- function(ntau, idvar, timevar, Y, K, L, M, I, maxiter, draws){
 	#Vector of Investment coefficients and estimate of  variance
 	resIinit <- c(as.numeric(coef(resIcoef)), mean(resid(resIcoef)^2))
 	#Initial Parameter Values for Laplace Parameters
-	yb1init <- ybLinit <- 1
-	lb1init <- lbLinit <- 1
-	mb1init <- mbLinit <- 1
-	wtb1init <- wtbLinit <- 1
+	yb1init <- 20; ybLinit <- 10;
+	lb1init <- 3; lbLinit <- 4;
+	mb1init <- mbLinit <- 2
+	wtb1init <- wtbLinit <- 5
 	############################################################################
 	#E-Step
 	############################################################################
@@ -108,13 +108,30 @@ Production_EM <- function(ntau, idvar, timevar, Y, K, L, M, I, maxiter, draws){
 			resWTinit=resWTinit, wtb1init=wtb1init, wtbLinit=wtbLinit, resW1init=resW1init, resIinit=resIinit)
 		#Initial Guess for Posterior density using initial unobservables
 		omega <- omegainit
-		oldpost <- posterior(idvar=idvar, Y=Y, K=K, L=L, M=M, I=I, omega=omega, vectau=vectau, par=resinit)
+		#Cubic Polynomial Interpolation Functions for given guess of parameters
+		#Output
+		ppy <- lapply(1:nrow(resYinit), function(p) cspline(x=vectau, y=resYinit[p,], endp2nd=TRUE, d.ord=0))
+		ppyd <- lapply(1:nrow(resYinit), function(p) cspline(x=vectau, y=resYinit[p,], endp2nd=TRUE, d.ord=1))
+		#Labor
+		ppl <- lapply(1:nrow(resLinit), function(p) cspline(x=vectau, y=resLinit[p,], endp2nd=TRUE, d.ord=0))
+		ppld <- lapply(1:nrow(resLinit), function(p) cspline(x=vectau, y=resLinit[p,], endp2nd=TRUE, d.ord=1))
+		#Materials
+		ppm <- lapply(1:nrow(resMinit), function(p) cspline(x=vectau, y=resMinit[p,], endp2nd=TRUE, d.ord=0))
+		ppmd <- lapply(1:nrow(resMinit), function(p) cspline(x=vectau, y=resMinit[p,], endp2nd=TRUE, d.ord=1))
+		#Productivity
+		ppw <- lapply(1:nrow(resWTinit), function(p) cspline(x=vectau, y=resWTinit[p,], endp2nd=TRUE, d.ord=0))
+		ppwd <- lapply(1:nrow(resWTinit), function(p) cspline(x=vectau, y=resWTinit[p,], endp2nd=TRUE, d.ord=1))
+		#Combine into list
+		pp <- list(y=ppy, l=ppl, m=ppm, w=ppw)
+		ppd <- list(y=ppyd, l=ppld, m=ppmd, w=ppwd)
+		#Posterior density
+		oldpost <- posterior(idvar=idvar, Y=Y, K=K, L=L, M=M, I=I, omega=omega, vectau=vectau, par=resinit, pp=pp, ppd=ppd)
 		for (j in 1:draws){
 			dseed <- mseed+j
 			set.seed(dseed)
 			newomega <- omega+rnorm(length(idvar), mean=0, sd=sqrt(varRW))
 			#Calculate Posterior for Proposed Chain
-			newpost <- posterior(idvar=idvar, Y=Y, K=K, L=L, M=M, I=I, omega=newomega, vectau=vectau, par=resinit)
+			newpost <- posterior(idvar=idvar, Y=Y, K=K, L=L, M=M, I=I, omega=newomega, vectau=vectau, par=resinit, pp=pp, ppd=ppd)
 			#Log acceptance probability
 			loga <- apply(newpost-oldpost, 1, function(x) min(x, 0))
 			#Create a set of N indices for acceptance rule
@@ -133,7 +150,7 @@ Production_EM <- function(ntau, idvar, timevar, Y, K, L, M, I, maxiter, draws){
 		}
 		accrate <- colMeans(acc)
 		print(sprintf("Acceptance Rate %.3f", accrate[iter]))
-		post[,,iter] <- posterior(idvar=idvar, Y=Y, K=K, L=L, M=M, I=I, omega=omega, vectau=vectau, par=resinit)
+		post[,,iter] <- posterior(idvar=idvar, Y=Y, K=K, L=L, M=M, I=I, omega=omega, vectau=vectau, par=resinit, pp=pp, ppd=ppd)
 		print(sprintf("Average Posterior %.3f", mean(post[,,iter])))
 		#This is the draws+1 draw of the unobservable in the stEM algorithm
 		mat <- omega
