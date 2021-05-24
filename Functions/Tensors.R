@@ -1,4 +1,4 @@
-setwd('/Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Function_QR/Code/Functions')
+# setwd('/Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Function_QR/Code/Functions')
 ##########################################################################################################
 #This file creates the tensor product of the user choice of basis polynomials, Hermite polynomials
 #are used here, working on implementing other specifications such as different basis functions, splines, wavelets, etc
@@ -8,19 +8,22 @@ setwd('/Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Fu
 #H_{1}(x)=2x
 #H_{n+1}(x)=2xH_{n}(x)-2nH[n-1](x)
 #########################################################################################################
-hermite_rec <- function(n){
-	if (n==0){
-		return(1)
-	} else if (n==1) {
-		return(c(2,0))
-	} else {
-		h1 <- array(0, c(1,n+1))
-		h1[1:n] <- 2*hermite_rec(n-1)
-
-		h2 <- array(0, c(1,n+1))
-		h2[3:length(h2)] <- 2*(n-1)*hermite_rec(n-2)
-
+hermite_rec <- function(n, deriv){
+	if (deriv==0){
+		if (n==0){
+			return(1)
+		} else if (n==1) {
+			return(c(2,0))
+		} else {
+			h1 <- array(0, c(1,n+1))
+			h1[1:n] <- 2*hermite_rec(n-1)
+	
+			h2 <- array(0, c(1,n+1))
+			h2[3:length(h2)] <- 2*(n-1)*hermite_rec(n-2)
+	} else if (deriv==1){
+		
 		return(h1-h2)
+	}
 
 	}
 }
@@ -86,10 +89,6 @@ tensor.prod <- function(M, vars, norm){
 		tmp <- as.matrix(do.call(expand.grid, tmp))
 		prodlist <- apply(tmp, 1, function(z) apply(hermite(z, x=vars), 1, prod))
 		return(prodlist)
-	#The case where we want a linear regression/random coefficient model
-	} else if (M=='linear') {
-		prodlist <- cbind(1, vecs)
-		return(prodlist)	
 	#For the multivariate hermite polynomial
 	} else {
 		if (length(M)!=ncol(vars)){
@@ -103,35 +102,92 @@ tensor.prod <- function(M, vars, norm){
 }
 ####################################################################################################
 ####################################################################################################
-####################################################################################################
-translog <- function(K, L, M, omega){
-	omega <- as.matrix(omega)
-	#translog productivity component
-	prodf <- cbind(1, K, L, M, K*L, L*M, K*M, K^2, L^2, M^2)
-	#translog productivity component (first-order for now)
-	prodw <- omega
-	#Combine translog production polynomial with productivity component
-	#Includes the constant but not the neutral productivity component which needs to be subtracted off the dependent variable
-	tprod <- cbind(prodf, sweep(prodf[,-1], 1, prodw, `*`))
-	return(tprod)
+PF <- function(A, K, L, M, omega, method){
+	if (method=="cobbN"){
+		prodf <- cbind(1, A, K, L, M)
+	} else if (method=="transN") {
+		prodf <- cbind(1, A, K, L, M, K*L, L*M, K*M, K^2, L^2, M^2)
+	} else if (method=="cobb"){
+		prod <- cbind(1, A, K, L, M)
+		prodf <- cbind(prod, sweep(prod[,-1], 1, omega, `*`))
+	} else if (method=="trans"){
+		prod <- cbind(1, A, K, L, M, K*L, L*M, K*M, K^2, L^2, M^2)
+		prodf <- cbind(prod, sweep(prod[,-1], 1, omega, `*`))
+	} else if (method=="hermite"){
+		prodf <- cbind(1, (A-mean(A)/sd(A)), tensor.prod(c(2,2,2,2), cbind(K, L, M, omega), norm=TRUE)[,-1])
+	}
+	return(prodf)
+}
+LX <- function(A, K, omega){
+	#Linear Model
+	# return(cbind(1, A, K, omega))
+	#Simple Polynomial
+	# K <- (K-mean(K))/sd(K)
+	# omega <- (omega-mean(omega))/sd(omega)
+	# return(cbind(1, K, omega, K*omega, K^2, omega^2))
+	#Tensor Product Hermite Polynomial (Normalized)
+	LX <- cbind(1, (A-mean(A)/sd(A)), tensor.prod(c(2,2), cbind(K, omega), norm=TRUE)[,-1])
+	return(LX)
 }
 
-LX <- function(K, omega){
-	return(cbind(1, K, omega, K*omega, K^2, omega^2))
+MX <- function(A, K, omega){
+	#Linear Model
+	return(cbind(1, A, K, omega))
+	#Simple Polynomial
+	# K <- (K-mean(K))/sd(K)
+	# omega <- (omega-mean(omega))/sd(omega)
+	# return(cbind(1, K, omega, K*omega, K^2, omega^2))
+	#Tensor Product Hermite Polynomial (Normalized)
+	MX <- cbind(1, (A-mean(A)/sd(A)), tensor.prod(c(2,2), cbind(K, omega), norm=TRUE)[,-1])
+	return(MX)
 }
 
-MX <- function(K, omega){
-	return(cbind(1, K, omega, K*omega, K^2, omega^2))
+WX <- function(A, omega){
+	#For Linear AR(1)
+	# return(cbind(1, A, omega))
+	#For Polynomial AR(1)
+	# return(cbind(1, omega, omega^2, omega^3))
+	#For Tensor Product Hermite Polynomial
+	WX <- cbind(1, (A-mean(A)/sd(A)), tensor.prod(3, as.matrix(omega), norm=TRUE)[,-1])
+	return(WX)
 }
 
-WX <- function(omega){
-	return(cbind(1, omega, omega^2, omega^3))
+# IX <- function(K, omega){
+# 	#Linear Model
+# 	# return(cbind(1, K, omega))
+# 	#Simple Polynomial
+# 	# return(cbind(1, K, omega, K*omega, K^2, omega^2))
+# 	#Tensor Product Hermite Polynomial (Normalized)
+# 	return(tensor.prod(c(2,2), cbind(K, omega), norm=TRUE))
+# }
+KX <- function(A, K, omega){
+	#Linear Model
+	# return(cbind(1, A, K, omega))
+	#Simple Polynomial
+	# K <- (K-mean(K))/sd(K)
+	# omega <- (omega-mean(omega))/sd(omega)
+	# return(cbind(1, K, omega, K*omega, K^2, omega^2))
+	#Tensor Product Hermite Polynomial (Normalized)
+	KX <- cbind(1, (A-mean(A)/sd(A)), tensor.prod(c(2,2), cbind(K, omega), norm=TRUE)[,-1])
+	return(KX)
 }
-
-IX <- function(K, omega){
-	return(cbind(1, K, omega, K*omega, K^2, omega^2))
+W1X <- function(A){
+	#Linear Model
+	return(cbind(1, A))
+	#Simple Polynomial
+	# K <- (K-mean(K))/sd(K)
+	# omega <- (omega-mean(omega))/sd(omega)
+	# return(cbind(1, K, omega, K*omega, K^2, omega^2))
+	#Tensor Product Hermite Polynomial (Normalized)
+	# return(tensor.prod(c(2,2), cbind(K, omega), norm=TRUE))
 }
-
-
-
-
+K1X <- function(A, omega){
+	#Linear Model
+	return(cbind(1, A, omega))
+	#Simple Polynomial
+	# K <- (K-mean(K))/sd(K)
+	# omega <- (omega-mean(omega))/sd(omega)
+	# return(cbind(1, K, omega, K*omega, K^2, omega^2))
+	#Tensor Product Hermite Polynomial (Normalized)
+	# return(tensor.prod(c(2,2), cbind(K, omega), norm=TRUE))
+}

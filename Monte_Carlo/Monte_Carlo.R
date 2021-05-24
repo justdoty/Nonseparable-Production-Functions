@@ -1,28 +1,21 @@
-# source('/Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Function_QR/Code/Monte_Carlo/PEM_MC.R')
-#For HPC 
-source('NLPFQR/SIM/PEM_MC.R')
+require(quantreg)
+source('/Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Function_QR/Code/Functions/Production_EM.R')
+source('/Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Function_QR/Code/Functions/Tensors.R')
+source('/Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Function_QR/Code/Functions/Auxfuns.R')
+source('/Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Function_QR/Code/Functions/omega.R')
+load("/Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Function_QR/Code/Monte_Carlo/siminit.Rdata")
+US_panel <- read.csv('/Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Function_QR/Data/USdata.csv')
+# source('NLPFQR/FUN/Production_EM.R')
+# source('NLPFQR/FUN/Tensors.R')
+# source('NLPFQR/FUN/omega.R')
+# load('NLPFQR/SIM/siminit.Rdata')
+# US_panel <- read.csv('NLPFQR/DATA/US/USdata.csv')
 #EM Algorithm Parameters
 #Length of tau sequence (evenly divided)
-ntau <- 11
-vectau <- seq(1/(ntau+1), ntau/(ntau+1), by=1/(ntau+1))
 #Total number of EM steps
 maxiter <- 100
 #Number of Metropolis-Hastings steps (burn-in)
 draws <- 100
-#Number of draws of Metropolis Hastings kept for computation (Mdraws=1 for stEM for now)
-Mdraws <- 1
-#Degrees of the Univariate Hermite Polynomials
-#Output
-MY <- "linear"
-#Labor
-ML <- "linear"
-#Materials
-MM <- "linear"
-#Productivity t>1
-MW <- "linear"
-#Investment
-MI <- "linear"
-MH <- list(MY=MY, ML=ML, MM=MM, MW=MW, MI=MI)
 #Monte Carlo Simulation Parameters
 nreps <- 500
 #Bath Size for HPC
@@ -33,17 +26,27 @@ bmat <- cbind(seq(1, (nreps-breps+1), by=breps), seq(breps, nreps, by=breps))
 id <- as.numeric(commandArgs(TRUE)[1])
 bmat <- bmat[id,]
 seed <- 123456
-#Monte Carlo Parameters
 #Storage Matrices for Results
-resYsim <- array(0, c(5, ntau, breps))
-resybsim <- array(0, c(2, breps))
-resLsim <- array(0, c(4, breps))
-resMsim <- array(0, c(4, breps))
-resWTsim <- array(0, c(2, ntau, breps))
-reswtbsim <- array(0, c(2, breps))
-resIsim <- array(0, c(4, breps))
-resW1sim <- array(0, c(2, breps))
-#Parameters for data evolution
+#Monte Carlo Parameters
+US <- transmute(US_panel, id=id, year=year, lny=log(Y), lnva=log(VA), lnk=log(K), lnl=log(L), lnm=log(M), lni=log(I))
+vectau <- results$vectau
+ntau <- length(vectau)
+dims <- results$dims
+parYsim <- results$resYmat
+parLTsim<- results$resLmat
+parMsim <- results$resMmat
+parIsim <- results$resImat
+parWTsim <- results$resWTmat
+parW1sim <- results$resW1mat
+parYbsim <- results$resyb1bLmat
+parLbsim <- results$reslb1bLmat
+parMbsim <- results$resmb1bLmat
+parWTbsim <- results$reswtb1bLmat
+#Also Use the DS estimator
+omegaDS <- omega_est(idvar=US$id, timevar=US$year, Y=US$lny, K=US$lnk, L=US$lnl, M=US$lnm)$omega
+lag <- lagdata(idvar=US$id, X=cbind(omegaDS, US$lnk))
+colnames(lag) <- c("idvar", "Wcon", "Kcon", "Wlag", "Klag")
+DSY <- rq((US$lny-omegaDS)~PF(K=US$lnk, L=US$lnl, M=US$lnm, omega=omegaDS)-1, tau=vectau)$coefficients
 ##########################################
 #Production:
 #########################################

@@ -1,137 +1,112 @@
-setwd('/Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Function_QR/Code/Functions')
+# setwd('/Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Function_QR/Code/Functions')
 require(quantreg)
 require(dplyr)
 require(pracma)
-source('Tensors.R')
-source('Posterior.R')
-source('Moments.R')
-source('Mstep.R')
-source('Auxfuns.R')
-source('omega.R')
-# source('NLPFQR/FUN/Tensors.R')
-# source('NLPFQR/FUN/Posterior.R')
-# source('NLPFQR/FUN/Moments.R')
-# source('NLPFQR/FUN/Mstep.R')
-# source('NLPFQR/FUN/Auxfuns.R')
-# source('NLPFQR/FUN/omega.R')
-Production_EM <- function(ntau, idvar, timevar, Y, K, L, M, I, maxiter, draws){
+# source('Tensors.R')
+# source('Posterior.R')
+# source('Mstep.R')
+# source('Auxfuns.R')
+# source('omega.R')
+source('NLPFQR/FUN/Tensors.R')
+source('NLPFQR/FUN/Posterior.R')
+source('NLPFQR/FUN/Mstep.R')
+source('NLPFQR/FUN/Auxfuns.R')
+source('NLPFQR/FUN/omega.R')
+Production_EM <- function(ntau, idvar, timevar, Y, A, K, L, M, I, method="trans", maxiter, draws){
+	if (all(method!=c("cobbN", "transN", "cobb", "trans", "hermite"))){
+		stop("Production Function must be specified as either cobbN (Hicks-Neutral Cobb Douglas),
+			transN (Hicks-Neutral Translog), cobb (NonHicks-Neutral Cobb Douglass), trans (NonHicks-Neutral Translog),
+			or hermite (tensor product hermite polynomial)")
+	}
 	seed <- 123456
 	set.seed(seed)
-	#Logical checks for output, input
-	#Output
-	Y <- as.matrix(Y)
-	#Capital
-	K <- as.matrix(K)
-	#Labor
-	L <- as.matrix(L)
-	#Materials
-	M <- as.matrix(M)
-	#Investment
-	I <- as.matrix(I)
 	#Number of Firms
 	N <- length(unique(idvar))
 	T <- unique(timevar)
 	#Grid of Taus
 	vectau <- seq(1/(ntau+1), ntau/(ntau+1), by=1/(ntau+1))
 	#Initial estimate of productivity from ACF plus random noise
-	omegainit <- as.matrix(omega_est(idvar=idvar, timevar=timevar, Y=Y, K=K, L=L, M=M))+rnorm(length(idvar), mean=0, sd=0.25)
+	# omegainit <- jitter(as.matrix(omega_est(idvar=idvar, timevar=timevar, Y=Y, A=A, K=K, L=L, M=M)$omega), 50)
+	# omegainit <- rnorm(length(idvar), mean=0, sd=sd(omegainit))
+	omegainit <- as.matrix(rnorm(length(idvar)))
 	#Reformatting data for initial optimization
-	WTdata <- lagdata(idvar=idvar, X=omegainit)
-	names(WTdata) <- c("idvar", "Wcon", "Wlag")
-	W1data <- t0data(idvar=idvar, X=omegainit)
-	names(W1data) <- c("idvar", "W1")
-	YX <- translog(K=K, L=L, M=M, omega=omegainit)
-	LX <- LX(K=K, omega=omegainit)
-	MX <- MX(K=K, omega=omegainit)
-	WX <- WX(omega=WTdata$Wlag)
-	IX <- IX(K=K, omega=omegainit)
-	dims <- list(Y=ncol(YX), L=ncol(LX), M=ncol(MX), W=ncol(WX), I=(ncol(IX)+1))
+	lagdata <- lagdata(idvar, cbind(Y, A, K, L, M, I, omegainit))
+	names(lagdata) <- c("idvar", "Ycon", "Acon", "Kcon", "Lcon", "Mcon", "Icon", "Wcon",
+		"Ylag", "Alag", "Klag", "Llag", "Mlag", "Ilag", "Wlag")
+	t1data <- t0data(idvar, cbind(Y, A, K, L, M, I, omegainit))
+	names(t1data) <- c("idvar", "Y1", "A1", "K1", "L1", "M1", "I1", "W1")
 	############################################################################
 	############ Initialization for EM Algorithm ###############################
 	############################################################################
 	#Initialize Paramater Values for Output
-	resYinit <- matrix(rq((Y-omegainit)~YX-1, tau=vectau)$coef, nrow=dims$Y, ncol=ntau)
+	resYinit <- matrix(rq((Y-omegainit)~PF(A=A, K=K, L=L, M=M, omega=omegainit, method=method)-1, tau=vectau)$coef, ncol=ntau)
 	#Initialize Paramater Values for Labor
-	resLinit <- matrix(rq(L~LX-1, tau=vectau)$coef, nrow=dims$L, ncol=ntau)
+	resLinit <- matrix(rq(L~LX(A=A, K=K, omega=omegainit)-1, tau=vectau)$coef, ncol=ntau)
 	#Initialize Parameter Values for Labor
-	resMinit <- matrix(rq(M~MX-1, tau=vectau)$coef, nrow=dims$M, ncol=ntau)
+	resMinit <- matrix(rq(M~MX(A=A, K=K, omega=omegainit)-1, tau=vectau)$coef, ncol=ntau)
 	#Initialize Parameter Values for Omega_{t}
-	resWTinit <- matrix(rq(WTdata$Wcon~WX-1, tau=vectau)$coef, nrow=dims$W, ncol=ntau)
-	#Initialize Parameter Values for Omega_{0}
-	#There is an issue with selecting these initial parameters as the initial guess of unobservables is far off
-	#Therefore i use the parameters of the proposal distribution as initial parameters
-	w1mu <- mean(W1data$W1)
-	w1var <- var(W1data$W1)
-	resW1init <- c(w1mu, w1var)
-	#Initialize Paramater Values for Investment (Nonlinear Regression Model)
-	#This doesnt have to be the case, we can set a monotone (mode) restriction in omega
-	#On the investment equation that sets restrictions on the parameter space
-	resIcoef <- lm(I~IX-1)
-	#Vector of Investment coefficients and estimate of  variance
-	resIinit <- c(as.numeric(coef(resIcoef)), mean(resid(resIcoef)^2))
+	resWTinit <- matrix(rq(lagdata$Wcon~WX(A=lagdata$Acon, omega=lagdata$Wlag)-1, tau=vectau)$coef, ncol=ntau)
+	#Initialize Parameter Values for Capital
+	resKTinit <- matrix(rq(lagdata$Kcon~KX(A=lagdata$Acon, K=lagdata$Klag, omega=lagdata$Wlag)-1, tau=vectau)$coef, ncol=ntau)
+	#Initial Parameter Values for Initial Productivity
+	#I let initial productivity be normally-distributed
+	resW1coef <- lm(rnorm(N)~W1X(A=t1data$A1)-1)
+	resW1init <- c(as.numeric(coef(resW1coef)), mean(resid(resW1coef)^2))
+	#Initial Parameter Values for Initial Capital
+	resK1coef <- lm(t1data$K1~K1X(A=t1data$A1, omega=t1data$W1)-1)
+	resK1init <- c(as.numeric(coef(resK1coef)), mean(resid(resK1coef)^2))
+	#Initial Parameter Values for Laplace Parameters
 	#Initial Parameter Values for Laplace Parameters
 	yb1init <- 20; ybLinit <- 10;
 	lb1init <- 3; lbLinit <- 4;
 	mb1init <- mbLinit <- 2
 	wtb1init <- wtbLinit <- 5
+	ktb1init <- ktbLinit <- 5
 	############################################################################
 	#E-Step
 	############################################################################
 	#Variance Random Walk proposal
 	varRW <- .05
 	#Matrices for Storing Results
+	# dims <- list(Y=nrow(resYinit), L=nrow(resLinit), M=nrow(resMinit), W=nrow(resWTinit), I=length(resIinit))
+	dims <- list(Y=nrow(resYinit), L=nrow(resLinit), M=nrow(resMinit), W=nrow(resWTinit), K=nrow(resKTinit), W1=length(resW1init), K1=length(resK1init))
 	resY <- array(0, c(maxiter, dims$Y, ntau))
 	resL <- array(0, c(maxiter, dims$L, ntau))
 	resM <- array(0, c(maxiter, dims$M, ntau))
 	resWT <- array(0, c(maxiter, dims$W, ntau))
-	resW1 <- array(0, c(maxiter, 2))
-	resI <- array(0, c(maxiter, dims$I))
+	resKT <- array(0, c(maxiter, dims$K, ntau))
+	resW1 <- array(0, c(maxiter, dims$W1))
+	resK1 <- array(0, c(maxiter, dims$K1))
 	yb1 <- array(0, c(maxiter, 1)); ybL <- array(0, c(maxiter, 1))
 	lb1 <- array(0, c(maxiter, 1)); lbL <- array(0, c(maxiter, 1))
 	mb1 <- array(0, c(maxiter, 1)); mbL <- array(0, c(maxiter, 1))
 	wtb1 <- array(0, c(maxiter, 1)); wtbL <- array(0, c(maxiter, 1))
+	ktb1 <- array(0, c(maxiter, 1)); ktbL <- array(0, c(maxiter, 1))
 	#Diagnostic Matrices
 	#Matrix for Average Acceptance Rates
 	acc <- array(0, c(draws, maxiter))
 	#Matrix for posterior distribution
 	post <- array(0, c(N, draws, maxiter))
-	#Matrix to store last and second-to-last draw for productiviity
-	omegaKS <- array(0, c(length(idvar), maxiter, 2))
 	#Begin EM Algorithm
 	for (iter in 1:maxiter){
 		print(sprintf("EM Iteration %i", iter))
 		mseed <- seed+iter
 		set.seed(mseed)
-		#Initial Parameter Values 
 		resinit <- list(resYinit=resYinit, yb1init=yb1init, ybLinit=ybLinit, resLinit=resLinit, lb1init=lb1init, 
 			lbLinit=lbLinit, resMinit=resMinit, mb1init=mb1init, mbLinit=mbLinit, 
-			resWTinit=resWTinit, wtb1init=wtb1init, wtbLinit=wtbLinit, resW1init=resW1init, resIinit=resIinit)
+			resWTinit=resWTinit, wtb1init=wtb1init, wtbLinit=wtbLinit, resW1init=resW1init, resKTinit=resKTinit, ktb1init=ktb1init, ktbLinit=ktbLinit, resK1init=resK1init)
+		print(resinit$resYinit)
+		print(resinit$resWTinit)
 		#Initial Guess for Posterior density using initial unobservables
 		omega <- omegainit
-		#Cubic Polynomial Interpolation Functions for given guess of parameters
-		#Output
-		ppy <- lapply(1:nrow(resYinit), function(p) cspline(x=vectau, y=resYinit[p,], endp2nd=TRUE, d.ord=0))
-		ppyd <- lapply(1:nrow(resYinit), function(p) cspline(x=vectau, y=resYinit[p,], endp2nd=TRUE, d.ord=1))
-		#Labor
-		ppl <- lapply(1:nrow(resLinit), function(p) cspline(x=vectau, y=resLinit[p,], endp2nd=TRUE, d.ord=0))
-		ppld <- lapply(1:nrow(resLinit), function(p) cspline(x=vectau, y=resLinit[p,], endp2nd=TRUE, d.ord=1))
-		#Materials
-		ppm <- lapply(1:nrow(resMinit), function(p) cspline(x=vectau, y=resMinit[p,], endp2nd=TRUE, d.ord=0))
-		ppmd <- lapply(1:nrow(resMinit), function(p) cspline(x=vectau, y=resMinit[p,], endp2nd=TRUE, d.ord=1))
-		#Productivity
-		ppw <- lapply(1:nrow(resWTinit), function(p) cspline(x=vectau, y=resWTinit[p,], endp2nd=TRUE, d.ord=0))
-		ppwd <- lapply(1:nrow(resWTinit), function(p) cspline(x=vectau, y=resWTinit[p,], endp2nd=TRUE, d.ord=1))
-		#Combine into list
-		pp <- list(y=ppy, l=ppl, m=ppm, w=ppw)
-		ppd <- list(y=ppyd, l=ppld, m=ppmd, w=ppwd)
 		#Posterior density
-		oldpost <- posterior(idvar=idvar, Y=Y, K=K, L=L, M=M, I=I, omega=omega, vectau=vectau, par=resinit, pp=pp, ppd=ppd)
+		oldpost <- posterior(data=data.frame(idvar=idvar, Y=Y, A=A, K=K, L=L, M=M, I=I, omega=omega), vectau=vectau, par=resinit, method=method)
 		for (j in 1:draws){
 			dseed <- mseed+j
 			set.seed(dseed)
 			newomega <- omega+rnorm(length(idvar), mean=0, sd=sqrt(varRW))
 			#Calculate Posterior for Proposed Chain
-			newpost <- posterior(idvar=idvar, Y=Y, K=K, L=L, M=M, I=I, omega=newomega, vectau=vectau, par=resinit, pp=pp, ppd=ppd)
+			newpost <- posterior(data=data.frame(idvar=idvar, Y=Y, A=A, K=K, L=L, M=M, I=I, omega=newomega), vectau=vectau, par=resinit, method=method)
 			#Log acceptance probability
 			loga <- apply(newpost-oldpost, 1, function(x) min(x, 0))
 			#Create a set of N indices for acceptance rule
@@ -144,13 +119,10 @@ Production_EM <- function(ntau, idvar, timevar, Y, K, L, M, I, maxiter, draws){
 			#Average Acceptance Rate
 			acc[j,iter] <- mean(Nindex)
 			post[,,iter][,j] <- oldpost
-			if (j>=(draws-1)){
-				omegaKS[,,(j-draws+2)][,iter] <- omega
-			}
 		}
 		accrate <- colMeans(acc)
 		print(sprintf("Acceptance Rate %.3f", accrate[iter]))
-		post[,,iter] <- posterior(idvar=idvar, Y=Y, K=K, L=L, M=M, I=I, omega=omega, vectau=vectau, par=resinit, pp=pp, ppd=ppd)
+		post[,,iter] <- posterior(data=data.frame(idvar=idvar, Y=Y, A=A, K=K, L=L, M=M, I=I, omega=omega), vectau=vectau, par=resinit, method=method)
 		print(sprintf("Average Posterior %.3f", mean(post[,,iter])))
 		#This is the draws+1 draw of the unobservable in the stEM algorithm
 		mat <- omega
@@ -167,60 +139,65 @@ Production_EM <- function(ntau, idvar, timevar, Y, K, L, M, I, maxiter, draws){
 		#Large M is computationally expensive but allows us to use a gradient descent algorithm
 		#########################################################################################
 		#Reformatting data for initial optimization
-		WTdata <- lagdata(idvar=idvar, X=mat)
-		names(WTdata) <- c("idvar", "Wcon", "Wlag")
-		W1data <- t0data(idvar=idvar, X=mat)
-		names(W1data) <- c("idvar", "W1")
-		YX <- translog(K=K, L=L, M=M, omega=mat)
-		LX <- LX(K=K, omega=mat)
-		MX <- MX(K=K, omega=mat)
-		WX <- WX(omega=WTdata$Wlag)
-		IX <- IX(K=K, omega=mat)
+		lagdata <- lagdata(idvar, cbind(Y, A, K, L, M, I, mat))
+		names(lagdata) <- c("idvar", "Ycon", "Acon", "Kcon", "Lcon", "Mcon", "Icon", "Wcon",
+		"Ylag", "Alag", "Klag", "Llag", "Mlag", "Ilag", "Wlag")
+		t1data <- t0data(idvar, cbind(Y, A, K, L, M, I, mat))
+		names(t1data) <- c("idvar", "Y1", "A1", "K1", "L1", "M1", "I1", "W1")
 		for (q in 1:ntau){
-			resY[,,q][iter,] <- rq((Y-mat)~YX-1, tau=vectau[q])$coef
-			resL[,,q][iter,] <- rq(L~LX-1, tau=vectau[q])$coef
-			resM[,,q][iter,] <- rq(M~MX-1, tau=vectau[q])$coef
-			resWT[,,q][iter,] <- rq(WTdata$Wcon~WX-1, tau=vectau[q])$coef
+			resY[,,q][iter,] <- matrix(rq((Y-mat)~PF(A=A, K=K, L=L, M=M, omega=mat, method=method)-1, tau=vectau[q], method="fn")$coef, nrow=dims$Y)
+			resL[,,q][iter,] <- matrix(rq(L~LX(A=A, K=K, omega=mat)-1, tau=vectau[q], method="fn")$coef, nrow=dims$L)
+			resM[,,q][iter,] <- matrix(rq(M~MX(A=A, K=K, omega=mat)-1, tau=vectau[q], method="fn")$coef, nrow=dims$M)
+			resWT[,,q][iter,] <- matrix(rq(lagdata$Wcon~WX(A=lagdata$Acon, omega=lagdata$Wlag)-1, tau=vectau[q], method="fn")$coef, nrow=dims$W)
+			resKT[,,q][iter,] <- matrix(rq(lagdata$Kcon~KX(A=lagdata$Acon, K=lagdata$Klag, omega=lagdata$Wlag)-1, tau=vectau[q], method="fn")$coef, nrow=dims$K)
 		}
 		##########################################################################################
-		#Investment Estimation
-		resILM <- lm(I~IX-1)
-		resIcoef <- as.numeric(coef(resILM))
-		resIvar <- mean(resid(resILM)^2)
-		resI[iter,] <- c(resIcoef, resIvar)
-		#########################################################################################
-		#Initial Productivity
-		resW1[iter,] <- c(mean(W1data$W1), var(W1data$W1))
+		#Initial Productivity Estimation
+		resW1LM <- lm(t1data$W1~W1X(A=t1data$A1)-1)
+		resW1coef <- as.numeric(coef(resW1LM))
+		resW1var <- mean(resid(resW1LM)^2)
+		resW1[iter,] <- c(resW1coef, resW1var)
+		#Initial Capital Estimation
+		resK1LM <- lm(t1data$K1~K1X(A=t1data$A1, omega=t1data$W1)-1)
+		resK1coef <- as.numeric(coef(resK1LM))
+		resK1var <- mean(resid(resK1LM)^2)
+		resK1[iter,] <- c(resK1coef, resK1var)
 		###########################################################################################
 		#Tail Parameters
 		#Output
-		yb <- expby(Y=Y, K=K, L=L, M=M, omega=mat, par1=resY[,,1][iter,], parL=resY[,,ntau][iter,])
+		yb <- expb(YX=(Y-mat), XX=PF(A=A, K=K, L=L, M=M, omega=mat, method=method), par1=resY[,,1][iter,], parL=resY[,,ntau][iter,])
 		yb1[iter,] <- yb$b1
 		ybL[iter,] <- yb$bL
 		#Labor
-		lb <- expblx(X=L, K=K, omega=mat, par1=resL[,,1][iter,], parL=resL[,,ntau][iter,])
+		lb <- expb(YX=L, XX=LX(A=A, K=K, omega=mat), par1=resL[,,1][iter,], parL=resL[,,ntau][iter,])
 		lb1[iter,] <- lb$b1
 		lbL[iter,] <- lb$bL
 		#Materials
-		mb <- expbmx(X=M, K=K, omega=mat, par1=resM[,,1][iter,], parL=resM[,,ntau][iter,])
+		mb <- expb(YX=M, XX=MX(A=A, K=K, omega=mat), par1=resM[,,1][iter,], parL=resM[,,ntau][iter,])
 		mb1[iter,] <- mb$b1
 		mbL[iter,] <- mb$bL
 		#Productivity
-		wtb <- expbwt(omega=WTdata$Wcon, omegalag=WTdata$Wlag, par1=resWT[,,1][iter,], parL=resWT[,,ntau][iter,])
+		wtb <- expb(YX=lagdata$Wcon, XX=WX(A=lagdata$Acon, omega=lagdata$Wlag), par1=resWT[,,1][iter,], parL=resWT[,,ntau][iter,])
 		wtb1[iter,] <- wtb$b1
 		wtbL[iter,] <- wtb$bL
+		#Capital
+		ktb <- expb(YX=lagdata$Kcon, XX=KX(A=lagdata$Acon, K=lagdata$Klag, omega=lagdata$Wlag), par1=resKT[,,1][iter,], parL=resKT[,,ntau][iter,])
+		ktb1[iter,] <- ktb$b1
+		ktbL[iter,] <- ktb$bL
 		#############################################################################################
 		# Use Estimates as parameters in the MH Algorithm
 		resYinit <- as.matrix(resY[iter,,])
 		resLinit <- as.matrix(resL[iter,,])
 		resMinit <- as.matrix(resM[iter,,])
 		resWTinit <- as.matrix(resWT[iter,,])
+		resKTinit <- as.matrix(resKT[iter,,])
 		resW1init <- as.matrix(resW1[iter,])
-		resIinit <- as.matrix(resI[iter,])
+		resK1init <- as.matrix(resK1[iter,])
 		yb1init <- yb1[iter,]; ybLinit <- ybL[iter,]
 		lb1init <- lb1[iter,]; lbLinit <- lbL[iter,]
 		mb1init <- mb1[iter,]; mbLinit <- mbL[iter,]
 		wtb1init <- wtb1[iter,]; wtbLinit <- wtbL[iter,]
+		ktb1init <- ktb1[iter,]; ktbLinit <- ktbL[iter,]
 		################################################################################################
 		}
 	resYmat <- sapply(1:ntau, function(x) colMeans(resY[,,x][(maxiter/2):maxiter,]))
@@ -231,15 +208,16 @@ Production_EM <- function(ntau, idvar, timevar, Y, K, L, M, I, maxiter, draws){
 	resmb1bLmat <- c(mean(mb1[(maxiter/2):maxiter]), mean(mbL[(maxiter/2):maxiter]))
 	resWTmat <- sapply(1:ntau, function(x) colMeans(resWT[,,x][(maxiter/2):maxiter,]))
 	reswtb1bLmat <- c(mean(wtb1[(maxiter/2):maxiter]), mean(wtbL[(maxiter/2):maxiter]))
-	resImat <- colMeans(resI[(maxiter/2):maxiter,])
+	resKTmat <- sapply(1:ntau, function(x) colMeans(resKT[,,x][(maxiter/2):maxiter,]))
+	resktb1bLmat <- c(mean(ktb1[(maxiter/2):maxiter]), mean(ktbL[(maxiter/2):maxiter]))
+	resK1mat <- colMeans(resK1[(maxiter/2):maxiter,])
 	resW1mat <- colMeans(resW1[(maxiter/2):maxiter,])
 	return(list(dims=dims, draws=draws, maxiter=maxiter, vectau=vectau, resYmat=resYmat, 
 		resLmat=resLmat, resMmat=resMmat, resWTmat=resWTmat, resW1mat=resW1mat, 
-		resImat=resImat, resyb1bLmat=resyb1bLmat, reslb1bLmat=reslb1bLmat, 
+		resKTmat=resKTmat, resK1mat=resK1mat, resyb1bLmat=resyb1bLmat, reslb1bLmat=reslb1bLmat, 
 		resmb1bLmat=resmb1bLmat, reswtb1bLmat=reswtb1bLmat, accrate=accrate, 
-		posterior=post, omegaKS=omegaKS, resY=resY))
+		posterior=post, resY=resY, method=method))
 }
-
 
 
 

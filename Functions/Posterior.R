@@ -1,69 +1,63 @@
-setwd('/Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Function_QR/Code/Functions')
-source('Tensors.R')
-source('Auxfuns.R')
-# source('NLPFQR/FUN/Tensors.R')
-# source('NLPFQR/FUN/Auxfuns.R')
+# setwd('/Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Function_QR/Code/Functions')
+# source('Tensors.R')
+# source('Auxfuns.R')
+source('NLPFQR/FUN/Tensors.R')
+source('NLPFQR/FUN/Auxfuns.R')
 # require(dplyr)
 ############################################################################################################
 #Function that defines the (log) posterior density for which to evaluate the Metropolis Hastings algorithm (target distribution)
 #Requires the file Tensors.R to evaluate the tensor products
 #Requires the file Auxfuns.R for overhead computations
 ############################################################################################################
-posterior <- function(idvar, Y, K, L, M, I, omega, vectau, par, pp, ppd){
-	#Load the data, degrees of polynomials, tau vector, guess of the unobservables
-	#and the current guess for unobservables
-	parY <- par$resYinit; yb1 <- par$yb1init; ybL <- par$ybLinit; 
-	parL <- par$resLinit; lb1 <- par$lb1init; lbL <- par$lbLinit;
-	parM <- par$resMinit; mb1 <- par$mb1init; mbL <- par$mbLinit;
-	parWT <- par$resWTinit; wtb1 <- par$wtb1init; wtbL <- par$wtbLinit;
-	parW1 <- par$resW1init; parI <- par$resIinit
-	#Load Cubic Polynomial Functions
-	ppy <- pp$y; ppl <- pp$l; ppm <- pp$m; ppw <- pp$w
-	ppyd <- ppd$y; ppld <- ppd$l; ppmd <- ppd$m; ppwd <- ppd$w
+posterior <- function(data, vectau, par, method){
+	#Density Function for the Conditional Quantiles
+	densq <- function(idvar, vectau, YX, XX, par, parb1, parbL){
+		densq <- ((vectau[2]-vectau[1])/(XX%*%(par[,2]-par[,1])))*(XX%*%par[,1]<YX)*(XX%*%par[,2]>=YX)
+		for (q in 2:(length(vectau)-1)){ 
+			densq <- densq+((vectau[q+1]-vectau[q])/(XX%*%(par[,q+1]-par[,q])))*(XX%*%par[,q]<YX)*(XX%*%par[,q+1]>=YX)
+		}
+		d1 <- array(0, length(idvar))
+		dL <- array(0, length(idvar))
+		d1[(YX<=XX%*%par[,1])] <- vectau[1]*parb1*exp(parb1*((YX-XX%*%par[,1])[(YX<=XX%*%par[,1])]))
+		dL[(YX>XX%*%par[,length(vectau)])] <- (1-vectau[length(vectau)])*parbL*exp(-parbL*((YX-XX%*%par[,length(vectau)])[(YX>XX%*%par[,length(vectau)])]))
+		densq <- as.matrix(d1)+densq+as.matrix(dL)
+		densq <- as.matrix((data.frame(idvar=idvar, densq) %>% group_by(idvar) %>% summarise(densN=sum(log(densq)),.groups = 'drop'))$densN)
+		return(densq)
+	}
 	#Some data preparation for posterior calculations
-	WTdata <- lagdata(idvar=idvar, X=omega)
-	names(WTdata) <- c("idvar", "Wcon", "Wlag")
-	W1data <- t0data(idvar=idvar, X=omega)
-	names(W1data) <- c("idvar", "W1")
-	#Create Hermite Tensor Products
-	YX <- translog(K=K, L=L, M=M, omega=omega)
-	LX <- LX(K=K, omega=omega)
-	MX <- MX(K=K, omega=omega)
-	IX <- IX(K=K, omega=omega)
-	WX <- WX(omega=WTdata$Wlag)
-	Wcon <- as.matrix(WTdata$Wcon)
-	W1 <- as.matrix(W1data$W1)
-	#Likelihood of Output Data#############################################################################
-	densY <- densfun(PY=(Y-omega), PX=YX, vectau=vectau, par=parY, parb=c(yb1, ybL), pp=ppy, ppd=ppyd, steps=50, tol=1e-3)
-	densY <- as.matrix((data.frame(idvar=idvar, densY) %>% group_by(idvar) %>% summarise(densN=sum(log(densY)),.groups = 'drop'))$densN)
-	#Likelihood of Labor Data#############################################################################
-	densL <- densfun(PY=L, PX=LX, vectau=vectau, par=parL, parb=c(lb1, lbL), pp=ppl, ppd=ppld, steps=50, tol=1e-3)
-	densL <- as.matrix((data.frame(idvar=idvar, densL) %>% group_by(idvar) %>% summarise(densN=sum(log(densL)),.groups = 'drop'))$densN)
-	#Likelihood of Output Data#############################################################################
-	densM <- densfun(PY=M, PX=MX, vectau=vectau, par=parM, parb=c(mb1, mbL), pp=ppm, ppd=ppmd, steps=50, tol=1e-3)
-	densM <- as.matrix((data.frame(idvar=idvar, densM) %>% group_by(idvar) %>% summarise(densN=sum(log(densM)),.groups = 'drop'))$densN)
-	#Likelihood of Omega_{t} Data#############################################################################
-	densWT <- densfun(PY=Wcon, PX=WX, vectau=vectau, par=parWT, parb=c(wtb1, wtbL), pp=ppw, ppd=ppwd, steps=50, tol=1e-3)
-	densWT <- as.matrix((data.frame(idvar=WTdata$idvar, densWT) %>% group_by(idvar) %>% summarise(densN=sum(log(densWT)),.groups = 'drop'))$densN)
+	lagdata <- lagdata(data$idvar, cbind(data$Y, data$A, data$K, data$L, data$M, data$I, data$omega))
+	names(lagdata) <- c("idvar", "Ycon", "Acon", "Kcon", "Lcon", "Mcon", "Icon", "Wcon",
+		"Ylag", "Alag", "Klag", "Llag", "Mlag", "Ilag", "Wlag")
+	t1data <- t0data(data$idvar, cbind(data$Y, data$A, data$K, data$L, data$M, data$I, data$omega))
+	names(t1data) <- c("idvar", "Y1", "A1", "K1", "L1", "M1", "I1", "W1")
     #Prior Omega_{0} Data (Normal)############################################################################
-	densW1 <- log((1/sqrt(2*pi*parW1[2]))*exp(-.5*((W1-parW1[1])/sqrt(parW1[2]))^2))
-	#Likelihood of Investment Data (Log-Normal)#########################################################
-	densI <- (1/sqrt(2*pi*parI[length(parI)]))*exp(-.5*(I-IX%*%parI[-length(parI)])^2/parI[length(parI)])
-	densI <- as.matrix((data.frame(idvar=idvar, densI) %>% group_by(idvar) %>% summarise(densN=sum(log(densI)),.groups = 'drop'))$densN)
-	#Final Density
-	finaldens <- densY+densL+densM+densWT+densW1+densI
+	densW1 <- function(W1, W1X, parW1){
+		ResW1X <- (W1-W1X%*%parW1[-length(parW1)])^2/parW1[length(parW1)]
+		densW1 <- (1/sqrt(2*pi*parW1[length(parW1)]))*exp(-.5*ResW1X)
+		densW1 <- log(densW1)
+		return(densW1)
+	}
+	#Prior K_{0} Data (Normal)############################################################################
+	densK1 <- function(K1, K1X, parK1){
+		ResK1X <- (K1-K1X%*%parK1[-length(parK1)])^2/parK1[length(parK1)]
+		densK1 <- (1/sqrt(2*pi*parK1[length(parK1)]))*exp(-.5*ResK1X)
+		densK1 <- log(densK1)
+		return(densK1)
+	}
+	#Final posterior density########################################################################
+	densY <- densq(idvar=data$idvar, vectau=vectau, YX=(data$Y-data$omega), XX=PF(A=data$A, K=data$K, L=data$L, M=data$M, omega=data$omega, method=method), par=par$resYinit, parb1=par$yb1init, parbL=par$ybLinit)
+	densL <- densq(idvar=data$idvar, vectau=vectau, YX=data$L, XX=LX(A=data$A, K=data$K, omega=data$omega), par=par$resLinit, parb1=par$lb1init, parbL=par$lbLinit)
+	densM <- densq(idvar=data$idvar, vectau=vectau, YX=data$M, XX=MX(A=data$A, K=data$K, omega=data$omega), par=par$resMinit, parb1=par$mb1init, parbL=par$mbLinit)
+	densWT <- densq(idvar=lagdata$idvar, vectau=vectau, YX=lagdata$Wcon, XX=WX(A=lagdata$Acon, omega=lagdata$Wlag), par=par$resWTinit, parb1=par$wtb1init, parbL=par$wtbLinit)
+	densKT <- densq(idvar=lagdata$idvar, vectau=vectau, YX=lagdata$Kcon, XX=KX(A=lagdata$Acon, K=lagdata$Klag, omega=lagdata$Wlag), par=par$resKTinit, parb1=par$ktb1init, parbL=par$ktbLinit)
+	densW1 <- densW1(W1=t1data$W1, W1X=W1X(A=t1data$A1), parW1=par$resW1init)
+	densK1 <- densK1(K1=t1data$K1, K1X=K1X(A=t1data$A1, omega=t1data$W1), parK1=par$resK1init)
+	finaldens <- densY+densL+densM+densWT+densKT+densK1+densW1
 	return(finaldens)
 
 }
 ######################################################################################################
 ######################################################################################################
 ######################################################################################################
-
-######################################################################################################
-######################################################################################################
-######################################################################################################
-
-
-
 
 

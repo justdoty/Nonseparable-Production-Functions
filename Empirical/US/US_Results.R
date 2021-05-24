@@ -9,48 +9,39 @@ require(reshape2)
 source('/Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Function_QR/Code/Functions/Auxfuns.R')
 source('/Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Function_QR/Code/Functions/Tensors.R')
 #Load US Dataset
-USdata <- read.csv('/Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Function_QR/Data/USdata.csv') %>% 
-select(id, year, Y, K, L, M, I, dep, naics3) %>% transmute(id=id, year=year, Y=log(Y), K=log(K), L=log(L), M=log(M), 
-	I=log(I), dp=dep, naics3=as.character(naics3), naics2=as.numeric(str_extract(as.character(naics3), "^.{2}"))) %>% 
-	group_by(id) %>% filter(n()>=3) %>% ungroup()
-#Industries for Analysis
-NAICS <- c("31", "32", "33", "All")
+US <- read.csv('/Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Function_QR/Data/USdata.csv') %>% 
+select(id, year, Y, K, L, M, I, dep) %>% transmute(id=id, year=year, Y=log(Y), K=log(K), L=log(L), M=log(M), I=log(I))
 ########################################################################################################
 ##########################################Summary Statistics############################################
 ########################################################################################################
 #Create table for all relevant summary statistics
-sumNAICS <- group_by(USdata, naics2) %>% summarise_at(c("Y", "K", "L", "M", "I"), list(Q1=~quantile(., 0.25), med=median, Q3=~quantile(.,0.75), mean=mean, sd=sd), na.rm=TRUE) 
-sumALL <- cbind("All", summarise_at(USdata, c("Y", "K", "L", "M", "I"), list(Q1=~quantile(., 0.25), med=median, Q3=~quantile(.,0.75), mean=mean, sd=sd), na.rm=TRUE))
-colnames(sumALL)[1] <- "naics2"
-sizeNAICS <- group_by(USdata, naics2) %>% summarise(Firms=length(unique(id)), Total=n())
-sizeALL <- c("All", sum(sizeNAICS$Firms), sum(sizeNAICS$Total))
-size <- rbind(sizeNAICS, sizeALL)
-sumstat <- round(matrix(as.numeric(as.matrix(rbind(sumNAICS, sumALL))[,-1]), nrow=20, ncol=5), 2)
-#Some pretty formatting
-NAICS_labels <- array(NA, 5*length(NAICS)); NAICS_labels[seq(1, 5*length(NAICS), by=5)] <- paste(NAICS, paste("(Total=", size$Total, ")", sep=""))
-NAICS_labels[is.na(NAICS_labels)] <- ""
-summary_table <- cbind(NAICS_labels, rep(c("Output", "Capital", "Labor", "Materials", "Investment"), 4), sumstat)
-colnames(summary_table) <- c("Industry (NAICS code)", " ", "1st Qu.", 'Median', "3rd Qu.", 'Mean', "sd")
+# sumNAICS <- group_by(USdata, naics2) %>% summarise_at(c("Y", "K", "L", "M", "I"), list(Q1=~quantile(., 0.25), med=median, Q3=~quantile(.,0.75), mean=mean, sd=sd), na.rm=TRUE) 
+# sumALL <- cbind("All", summarise_at(USdata, c("Y", "K", "L", "M", "I"), list(Q1=~quantile(., 0.25), med=median, Q3=~quantile(.,0.75), mean=mean, sd=sd), na.rm=TRUE))
+# colnames(sumALL)[1] <- "naics2"
+# sizeNAICS <- group_by(USdata, naics2) %>% summarise(Firms=length(unique(id)), Total=n())
+# sizeALL <- c("All", sum(sizeNAICS$Firms), sum(sizeNAICS$Total))
+# size <- rbind(sizeNAICS, sizeALL)
+# sumstat <- round(matrix(as.numeric(as.matrix(rbind(sumNAICS, sumALL))[,-1]), nrow=20, ncol=5), 2)
+# #Some pretty formatting
+# NAICS_labels <- array(NA, 5*length(NAICS)); NAICS_labels[seq(1, 5*length(NAICS), by=5)] <- paste(NAICS, paste("(Total=", size$Total, ")", sep=""))
+# NAICS_labels[is.na(NAICS_labels)] <- ""
+# summary_table <- cbind(NAICS_labels, rep(c("Output", "Capital", "Labor", "Materials", "Investment"), 4), sumstat)
+# colnames(summary_table) <- c("Industry (NAICS code)", " ", "1st Qu.", 'Median', "3rd Qu.", 'Mean', "sd")
 
-summary_table <- xtable(summary_table, digits=c(2,2,0,4,4,2,2,2), type="latex")
-align(summary_table) <- rep('c', 8)
-addtorow <- list()
-addtorow$pos <- list(-1)
-addtorow$command <- '\\hline\\hline '
-#For copy pasting into latex
-print(summary_table, hline.after=c(0,nrow(summary_table)), add.to.row=addtorow, auto=FALSE, include.rownames=FALSE, sanitize.text.function=function(x) x, table.placement="H")
-#Saves to file
-print(summary_table, hline.after=c(0,nrow(summary_table)), add.to.row=addtorow, auto=FALSE, include.rownames=FALSE, sanitize.text.function=function(x) x, table.placement="H", file="/Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Function_QR/Code/Empirical/US/Results/Tex/US_Summary.tex")
+# summary_table <- xtable(summary_table, digits=c(2,2,0,4,4,2,2,2), type="latex")
+# align(summary_table) <- rep('c', 8)
+# addtorow <- list()
+# addtorow$pos <- list(-1)
+# addtorow$command <- '\\hline\\hline '
+# #For copy pasting into latex
+# print(summary_table, hline.after=c(0,nrow(summary_table)), add.to.row=addtorow, auto=FALSE, include.rownames=FALSE, sanitize.text.function=function(x) x, table.placement="H")
+# #Saves to file
+# print(summary_table, hline.after=c(0,nrow(summary_table)), add.to.row=addtorow, auto=FALSE, include.rownames=FALSE, sanitize.text.function=function(x) x, table.placement="H", file="/Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Function_QR/Code/Empirical/US/Results/Tex/US_Summary.tex")
 ########################################################################################################
 ##########################################Load Results############################################
 ########################################################################################################
-NAICS <- c("31", "32", "33", "^3")
-industries <- c("31", "32", "33", "All")
-for (i in 2:length(NAICS)){
-	set.seed(123456+i)
-	print(i)
-	load(sprintf("/Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Function_QR/Environments/Application/NLPFQR_NAICS_%s.RData", i))
-	US <- filter(USdata, str_detect(naics2, NAICS[i]))
+	set.seed(123456)
+	load("/Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Function_QR/Environments/Application/NLPFQR_US.RData")
 	vectau <- results$vectau
 	ntau <- length(vectau)
 	dims <- results$dims
@@ -73,25 +64,25 @@ for (i in 2:length(NAICS)){
 	K_EM_dat <- melt(results$resY[,2,])
 	K_EM_dat$Var2 <- as.factor(K_EM_dat$Var2)
 	K_EM <- ggplot(K_EM_dat, aes(x=Var1, y=value, group=Var2)) + geom_line(aes(colour=Var2)) + xlab("Iteration") + ylab("Capital") + scale_colour_manual(name="", labels=round(vectau, digits=2), values=EMcolour)
-	save_plot(paste("/Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Function_QR/Code/Empirical/US/Results/Plots/Diagnostics/K_EM_", industries[i], ".png", sep=""), K_EM) 
+	save_plot("/Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Function_QR/Code/Empirical/US/Results/Plots/Diagnostics/K_EM.png", K_EM) 
 	#Labor
 	L_EM_dat <- melt(results$resY[,3,])
 	L_EM_dat$Var2 <- as.factor(L_EM_dat$Var2)
 	L_EM <- ggplot(L_EM_dat, aes(x=Var1, y=value, group=Var2)) + geom_line(aes(colour=Var2)) + xlab("Iteration") + ylab("Labor") + scale_colour_manual(name="", labels=round(vectau, digits=2), values=EMcolour)
-	save_plot(paste("/Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Function_QR/Code/Empirical/US/Results/Plots/Diagnostics/L_EM_", industries[i], ".png", sep=""), L_EM) 
+	save_plot("/Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Function_QR/Code/Empirical/US/Results/Plots/Diagnostics/L_EM.png", L_EM) 
 	#Materials
 	M_EM_dat <- melt(results$resY[,4,])
 	M_EM_dat$Var2 <- as.factor(M_EM_dat$Var2)
 	M_EM <- ggplot(M_EM_dat, aes(x=Var1, y=value, group=Var2)) + geom_line(aes(colour=Var2)) + xlab("Iteration") + ylab("Materials") + scale_colour_manual(name="", labels=round(vectau, digits=2), values=EMcolour)
-	save_plot(paste("/Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Function_QR/Code/Empirical/US/Results/Plots/Diagnostics/M_EM_", industries[i], ".png", sep=""), M_EM) 
+	save_plot("/Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Function_QR/Code/Empirical/US/Results/Plots/Diagnostics/M_EM.png", M_EM) 
 	#KS Tests for Last Two Draws from MH Algorithm
-	KStest <- array(0, c(500, 3))
-	KS1 <- results$omegaKS[,,1]
-	KS2 <- results$omegaKS[,,2]
-	for (k in 1:500){
-		KStest[k,i-1] <- suppressWarnings(ks.test(KS1[,k], KS2[,k]))$p.value
-	}
-	write.csv(KStest, "/Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Function_QR/Code/Empirical/US/Results/Plots/Diagnostics/KStest.csv")
+	# KStest <- array(0, c(500, 3))
+	# KS1 <- results$omegaKS[,,1]
+	# KS2 <- results$omegaKS[,,2]
+	# for (k in 1:500){
+	# 	KStest[k,i-1] <- suppressWarnings(ks.test(KS1[,k], KS2[,k]))$p.value
+	# }
+	# write.csv(KStest, "/Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Function_QR/Code/Empirical/US/Results/Plots/Diagnostics/KStest.csv")
 	# ##############################################################################
 	#Simulate Productivity Given Model Parameters
 	##############################################################################
@@ -123,9 +114,9 @@ for (i in 2:length(NAICS)){
     #Productivity
     omgdata <- matrix(0, N, T)
     #Shocks to Productivity
-    xidata <- matrix(runif(N*T), nrow=N, ncol=T)
+    xidata <- matrix(runif(N*T, vectau[1], vectau[length(vectau)]), nrow=N, ncol=T)
     #Aggregate depreciations rates from data
-    dp <- US %>% group_by(year) %>% summarise(dp=mean(dp))
+    dp <- 0.8
     #Data for initial capital and investment
     dat1 <- US %>% group_by(id) %>% slice(1) %>% transmute(K=K, I=I)
 	#Initial Productivity
@@ -137,7 +128,7 @@ for (i in 2:length(NAICS)){
 	for (t in 2:T){
 		lagomg <- omgdata[,t-1]
 		omgdata[,t] <- rowSums(cbind(1, lagomg, lagomg^2, lagomg^3)*lspline(vectau=vectau, bvec=parWT, b1=parWTb[1], bL=parWTb[2], u=xidata[,t]))
-		lnkdata[,t] <- log(dp$dp[t-1]*exp(lnkdata[,t-1])+exp(lnidata[,t-1])+exp(upsdata[,t-1]))
+		lnkdata[,t] <- log(dp*exp(lnkdata[,t-1])+exp(lnidata[,t-1])+exp(upsdata[,t-1]))
 		lnidata[,t] <- cbind(1, lnkdata[,t], omgdata[,t], lnkdata[,t]*omgdata[,t], lnkdata[,t]^2, omgdata[,t]^2)%*%as.matrix(parI[-length(parI)])+rnorm(N, 0, sd=sqrt(parI[length(parI)]))
 	}
 	#Labor and Materials
@@ -161,58 +152,95 @@ for (i in 2:length(NAICS)){
 	kdat <- cbind(1, lab, mat, 2*cap, omg, omg*lab, omg*mat, 2*cap*omg)
 	kaqme_data <- data.frame(tau=vectau, kaqme=colMeans(apply(parY[kpost,], 2, function(x) kdat%*%x)))
 	kaqme_plot <- ggplot(kaqme_data, aes(x=tau, y=kaqme)) + xlab(expression('percentile-'*tau)) + ylab("Capital") + geom_line(aes(y=kaqme))
-	save_plot(paste("/Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Function_QR/Code/Empirical/US/Results/Plots/Elasticities/K_AQME_NAICS_", industries[i], ".png", sep=""), kaqme_plot)
+	save_plot("/Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Function_QR/Code/Empirical/US/Results/Plots/Elasticities/K_AQME.png", kaqme_plot)
 	# #Labor
 	lpost <- c(3,5,6,9,12,14,15,18)
 	ldat <- cbind(1, cap, mat, 2*lab, omg, omg*cap, omg*mat, 2*lab*omg)
 	laqme_data <- data.frame(tau=vectau, laqme=colMeans(apply(parY[lpost,], 2, function(x) ldat%*%x)))
 	laqme_plot <- ggplot(laqme_data, aes(x=tau, y=laqme)) + xlab(expression('percentile-'*tau)) + ylab("Labor") + geom_line(aes(y=laqme))
-	save_plot(paste("/Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Function_QR/Code/Empirical/US/Results/Plots/Elasticities/L_AQME_NAICS_", industries[i], ".png", sep=""), laqme_plot)
+	save_plot("/Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Function_QR/Code/Empirical/US/Results/Plots/Elasticities/L_AQME.png", laqme_plot)
 	# #Materials
 	mpost <- c(4,6,7,10,13,15,16,19)
 	mdat <- cbind(1, lab, cap, 2*mat, omg, omg*lab, omg*cap, 2*mat*omg)
 	maqme_data <- data.frame(tau=vectau, maqme=colMeans(apply(parY[mpost,], 2, function(x) mdat%*%x)))
 	maqme_plot <- ggplot(maqme_data, aes(x=tau, y=maqme)) + xlab(expression('percentile-'*tau)) + ylab("Materials") + geom_line(aes(y=maqme))
-	save_plot(paste("/Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Function_QR/Code/Empirical/US/Results/Plots/Elasticities/M_AQME_NAICS_", industries[i], ".png", sep=""), maqme_plot)
+	save_plot("/Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Function_QR/Code/Empirical/US/Results/Plots/Elasticities/M_AQME.png", maqme_plot)
 	# #Hicks-Capital
 	hkpost <- c(11,14,16,17)
 	hkdat <- cbind(1, lab, mat, 2*cap)
 	hkaqme_data <- data.frame(tau=vectau, hkaqme=colMeans(apply(parY[hkpost,], 2, function(x) hkdat%*%x)))
 	hkaqme_plot <- ggplot(hkaqme_data, aes(x=tau, y=hkaqme)) + xlab(expression('percentile-'*tau)) + ylab("Capital-Productivity") + geom_line(aes(y=hkaqme))
-	save_plot(paste("/Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Function_QR/Code/Empirical/US/Results/Plots/Hicks/HICKS_K_AQME_NAICS_", industries[i], ".png", sep=""), hkaqme_plot)
+	save_plot("/Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Function_QR/Code/Empirical/US/Results/Plots/Hicks/HICKS_K_AQME.png", hkaqme_plot)
 	# #Hicks-Labor
 	hlpost <- c(12,14,15,18)
 	hldat <- cbind(1, cap, mat, 2*lab)
 	hlaqme_data <- data.frame(tau=vectau, hlaqme=colMeans(apply(parY[hlpost,], 2, function(x) hldat%*%x)))
 	hlaqme_plot <- ggplot(hlaqme_data, aes(x=tau)) + xlab(expression('percentile-'*tau)) + ylab("Labor-Productivity") + geom_line(aes(y=hlaqme))
-	save_plot(paste("/Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Function_QR/Code/Empirical/US/Results/Plots/Hicks/HICKS_L_AQME_NAICS_", industries[i], ".png", sep=""), hlaqme_plot)
+	save_plot("/Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Function_QR/Code/Empirical/US/Results/Plots/Hicks/HICKS_L_AQME.png", hlaqme_plot)
 	# #Hicks-Materials
 	hmpost <- c(13,15,16,19)
 	hmdat <- cbind(1, lab, cap, 2*mat)
 	hmaqme_data <- data.frame(tau=vectau, hmaqme=colMeans(apply(parY[hmpost,], 2, function(x) hmdat%*%x)))
 	hmaqme_plot <- ggplot(hmaqme_data, aes(x=tau)) + xlab(expression('percentile-'*tau)) + ylab("Materials-Productivity") + geom_line(aes(y=hmaqme))
-	save_plot(paste("/Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Function_QR/Code/Empirical/US/Results/Plots/Hicks/HICKS_M_AQME_NAICS_", industries[i], ".png", sep=""), hmaqme_plot)
+	save_plot("/Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Function_QR/Code/Empirical/US/Results/Plots/Hicks/HICKS_M_AQME.png", hmaqme_plot)
 	# #Productivity Persistence
 	omglag <- c(t(omgdata[,1:(T-1)]))
 	omgcon <- c(t(omgdata[,2:T]))
 	omgx <- cbind(1, 2*omglag, 3*omglag^2)
 	omgaqme_data <- data.frame(tau=vectau, omgaqme=colMeans(apply(parWT[-1,], 2, function(x) omgx%*%x)))
 	omgaqme_plot <- ggplot(omgaqme_data, aes(x=tau)) + xlab(expression('percentile-'*tau)) + ylab("Average Persistence") + geom_line(aes(y=omgaqme))
-	save_plot(paste("/Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Function_QR/Code/Empirical/US/Results/Plots/TFP/OMG_AQME_NAICS_", industries[i], ".png", sep=""), omgaqme_plot)
+	save_plot("/Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Function_QR/Code/Empirical/US/Results/Plots/TFP/OMG_AQME.png", omgaqme_plot)
 	###############
 	#Density Plots
 	##############
 	omgdat <- data.frame(omg)
 	omgdens_plot <- ggplot(omgdat, aes(x=omg)) + geom_density() + xlab("Productivity") + ylab("")
-	save_plot(paste("/Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Function_QR/Code/Empirical/US/Results/Plots/TFP/OMG_DENS_NAICS_", industries[i], ".png", sep=""), omgdens_plot)
+	save_plot("/Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Function_QR/Code/Empirical/US/Results/Plots/TFP/OMG_DENS.png", omgdens_plot)
+	#######################
+	#Surface Plots
+	#####################
+	#Commands for Colors
+	nrz <- length(vectau)
+	ncz <- length(vectau)
+	jet.colors <-  colorRampPalette(c("midnightblue","blue", "cyan","green", "yellow","orange","red", "darkred"))
+	nbcol <- 64
+	color <- jet.colors(nbcol)
+	###############################################
+	#Dynamic Effects of Innovation on Static Inputs
+	################################################
+	omgmat <- cbind(1, omglag, omglag^2, omglag^3)
+	capcon <- c(t(lnkdata[,2:T]))
+	#Labor
+	l3d <- function(tau1, tau2){
+		l3d <- colMeans((cbind(1, capcon)%*%parL[c(3,4),tau1]+2*parL[6,tau1]*(omgmat%*%parWT[,tau2]))*(omgmat%*%t(lsplinedif(vectau=vectau, bvec=parWT, b1=parWTb[1], bL=parWTb[2], u=vectau)[tau2,])))
+		return(l3d)
+	}
+	lz <- outer(1:length(vectau), 1:length(vectau), l3d)
+	lzfacet <- lz[-1,-1]+lz[-1,-ncz]+lz[-nrz,-1]+lz[-nrz,-ncz]
+	facetcol <- cut(lzfacet,nbcol)
+	png("/Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Function_QR/Code/Empirical/US/Results/Plots/Dynamic/L3d.png")
+	persp(x=vectau, y=vectau, z=lz, xlab="percentile-labor", ylab="percentile-shock", zlab="Labor Response", col=color[facetcol], ticktype="detailed", phi=20,theta=-60)
+	dev.off()
+	#Materials
+	m3d <- function(tau1, tau2){
+		m3d <- colMeans(cbind(1, capcon)%*%parM[c(3,4),tau1]+2*parM[6,tau1]*(omgmat%*%parWT[,tau2])*(omgmat%*%t(lsplinedif(vectau=vectau, bvec=parWT, b1=parWTb[1], bL=parWTb[2], u=vectau)[tau2,])))
+		return(m3d)
+	}
+	mz <- outer(1:length(vectau), 1:length(vectau), m3d)
+	mzfacet <- mz[-1,-1]+mz[-1,-ncz]+mz[-nrz,-1]+mz[-nrz,-ncz]
+	facetcol <- cut(mzfacet,nbcol)
+	png("/Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Function_QR/Code/Empirical/US/Results/Plots/Dynamic/M3d.png")
+	persp(x=vectau, y=vectau, z=mz, xlab="percentile-materials", ylab="percentile-shock", zlab="Materials Response", col=color[facetcol], ticktype="detailed", phi=20,theta=-60)
+	dev.off()
 
-}
 
 
 
 
 
-
+w1 <- rnorm(N, mean=parW1[1], sd=sqrt(parW1[2]))
+pfit <- rowSums(cbind(1, w1, w1^2, w1^3)*lspline(vectau=vectau, bvec=parWT, b1=parWTb[1], bL=parWTb[2], u=runif(N)))
+print(summary(pfit))
 
 
 
