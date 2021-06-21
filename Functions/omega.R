@@ -36,8 +36,9 @@ omega_est <- function(idvar, timevar, Y, A, K, L, M){
     mZ=LPmZ, fitphi=LPfitphi, fitlagphi=LPfitlagphi), gr=NULL, method="L-BFGS-B", 
     lower=c(0,0,0), upper=c(1,1,1))$par
   LPvec <- c(LPhat[1], LPhat[2], LPLabor, LPhat[3])
-  omega <- phihat-cbind(A, K, M)%*%as.matrix(as.numeric(LPhat))
-  return(list(LPhat=LPvec, omega=omega))
+  omega <- Y-cbind(A, K, L, M)%*%as.matrix(as.numeric(LPvec))
+  LPrho <- LPrho(bhat=LPhat, mY=LPmY, mX=LPmX, mlX=LPmlX, fitphi=LPfitphi, fitlagphi=LPfitlagphi)
+  return(list(LPhat=LPvec, omega=omega, rho=LPrho))
 }
 ############################################################################################
 #Functions for Estimating LP Coefficients
@@ -60,3 +61,11 @@ LPobj <- function(b, mY, mX, mlX, mZ, fitphi, fitlagphi){
   go <- t(crossprod(mZ, xifit))%*%mW%*%(crossprod(mZ, xifit))
   return(go)
 }
+LPrho <- function(bhat, mY, mX, mlX, fitphi, fitlagphi){
+  b <- as.matrix(as.numeric(bhat))
+  A <- fitphi-mX%*%b[1:ncol(mX)]
+  B <- fitlagphi-mlX%*%b[1:ncol(mX)]
+  step1 <- lm(A~B)
+  step1param <- as.numeric(coef(step1))[2]
+  return(step1param)
+} 

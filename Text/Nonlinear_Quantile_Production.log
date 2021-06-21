@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.18 (TeX Live 2017) (preloaded format=pdflatex 2017.5.23)  25 MAY 2021 17:02
+This is pdfTeX, Version 3.14159265-2.6-1.40.18 (TeX Live 2017) (preloaded format=pdflatex 2017.5.23)  20 JUN 2021 23:54
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -520,48 +520,49 @@ LaTeX Info: Redefining \cite on input line 694.
 )
 \c@assump=\count170
 \c@lemma=\count171
-\c@theorem=\count172
+\c@corollary=\count172
+\c@theorem=\count173
 (/usr/local/texlive/2017/texmf-dist/tex/latex/appendix/appendix.sty
 Package: appendix 2009/09/02 v1.2b extra appendix facilities
-\c@@pps=\count173
-\c@@ppsavesec=\count174
-\c@@ppsaveapp=\count175
+\c@@pps=\count174
+\c@@ppsavesec=\count175
+\c@@ppsaveapp=\count176
 )
 (/Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Functio
 n_QR/Code/Text/Nonlinear_Quantile_Production.aux
 
-LaTeX Warning: Label `ymoment' multiply defined.
+LaTeX Warning: Label `stationary' multiply defined.
 
 
-LaTeX Warning: Label `ymoment@cref' multiply defined.
+LaTeX Warning: Label `stationary@cref' multiply defined.
 
 )
 \openout1 = `Nonlinear_Quantile_Production.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 36.
-LaTeX Font Info:    ... okay on input line 36.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 36.
-LaTeX Font Info:    ... okay on input line 36.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 36.
-LaTeX Font Info:    ... okay on input line 36.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 36.
-LaTeX Font Info:    ... okay on input line 36.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 36.
-LaTeX Font Info:    ... okay on input line 36.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 36.
-LaTeX Font Info:    ... okay on input line 36.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 37.
+LaTeX Font Info:    ... okay on input line 37.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 37.
+LaTeX Font Info:    ... okay on input line 37.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 37.
+LaTeX Font Info:    ... okay on input line 37.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 37.
+LaTeX Font Info:    ... okay on input line 37.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 37.
+LaTeX Font Info:    ... okay on input line 37.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 37.
+LaTeX Font Info:    ... okay on input line 37.
 (/usr/local/texlive/2017/texmf-dist/tex/context/base/mkii/supp-pdf.mkii
 [Loading MPS to PDF converter (version 2006.09.02).]
-\scratchcounter=\count176
+\scratchcounter=\count177
 \scratchdimen=\dimen189
 \scratchbox=\box54
-\nofMPsegments=\count177
-\nofMParguments=\count178
+\nofMPsegments=\count178
+\nofMParguments=\count179
 \everyMPshowfont=\toks32
-\MPscratchCnt=\count179
+\MPscratchCnt=\count180
 \MPscratchDim=\dimen190
-\MPnumerator=\count180
-\makeMPintoPDFobject=\count181
+\MPnumerator=\count181
+\makeMPintoPDFobject=\count182
 \everyMPtoPDFconversion=\toks33
 ) (/usr/local/texlive/2017/texmf-dist/tex/generic/oberdiek/pdftexcmds.sty
 Package: pdftexcmds 2017/03/19 v0.25 Utility functions of pdfTeX for LuaTeX (HO
@@ -612,107 +613,210 @@ File: siunitx-abbreviations.cfg 2017/05/19 v2.7g siunitx: Abbreviated units
 )
 Package caption Info: Begin \AtBeginDocument code.
 Package caption Info: End \AtBeginDocument code.
-\c__siunitx_mathsf_int=\count182
-LaTeX Font Info:    Try loading font information for U+msa on input line 36.
+\c__siunitx_mathsf_int=\count183
+LaTeX Font Info:    Try loading font information for U+msa on input line 37.
 (/usr/local/texlive/2017/texmf-dist/tex/latex/amsfonts/umsa.fd
 File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 )
-LaTeX Font Info:    Try loading font information for U+msb on input line 36.
+LaTeX Font Info:    Try loading font information for U+msb on input line 37.
 (/usr/local/texlive/2017/texmf-dist/tex/latex/amsfonts/umsb.fd
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 )
-\c__siunitx_mathtt_int=\count183
-LaTeX Font Info:    Try loading font information for OMS+cmr on input line 37.
+\c__siunitx_mathtt_int=\count184
+LaTeX Font Info:    Try loading font information for OMS+cmr on input line 38.
 (/usr/local/texlive/2017/texmf-dist/tex/latex/base/omscmr.fd
 File: omscmr.fd 2014/09/29 v2.5h Standard LaTeX font definitions
 )
 LaTeX Font Info:    Font shape `OMS/cmr/m/n' in size <8> not available
-(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 37.
+(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 38.
 LaTeX Font Info:    Font shape `OMS/cmr/m/n' in size <6> not available
-(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 37.
+(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 38.
 
-Underfull \hbox (badness 10000) in paragraph at lines 50--52
+Underfull \hbox (badness 10000) in paragraph at lines 54--56
 
  []
 
 [1
 
 {/usr/local/texlive/2017/texmf-var/fonts/map/pdftex/updmap/pdftex.map}]
-LaTeX Font Info:    Try loading font information for U+bbm on input line 89.
+LaTeX Font Info:    Try loading font information for U+bbm on input line 93.
 (/usr/local/texlive/2017/texmf-dist/tex/latex/bbm-macros/ubbm.fd
 File: ubbm.fd 1999/03/15 V 1.2 Font definition for bbm font - TH
-) [2]
-Underfull \hbox (badness 10000) in paragraph at lines 112--113
-
- []
-
-[3]
-Underfull \hbox (badness 10000) in paragraph at lines 125--126
-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 130--132
-
- []
-
-
-Overfull \hbox (35.28242pt too wide) detected at line 136
-\OT1/cmr/m/n/10 [\OML/cmm/m/it/10 L[] \OMS/cmsy/m/n/10 ^^N \OML/cmm/m/it/10 g\O
-T1/cmr/m/n/10 ](\OML/cmm/m/it/10 I[]\OT1/cmr/m/n/10 ) \OMS/cmsy/m/n/10 ^^Q [] \
-OML/cmm/m/it/10 f[]\OT1/cmr/m/n/10 (\OML/cmm/m/it/10 Z[]; I[]\OMS/cmsy/m/n/10 j
-\OML/cmm/m/it/10 Z[]; I[]; Z[]; I[]\OT1/cmr/m/n/10 )\OML/cmm/m/it/10 g\OT1/cmr/
-m/n/10 (\OML/cmm/m/it/10 I[]\OT1/cmr/m/n/10 )\OML/cmm/m/it/10 dI[]
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 159--161
-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 162--163
+) [2] [3]
+Underfull \hbox (badness 10000) in paragraph at lines 143--145
 
  []
 
 [4]
-Underfull \hbox (badness 10000) in paragraph at lines 166--167
+Underfull \hbox (badness 10000) in paragraph at lines 164--165
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 169--173
+Overfull \hbox (3.89302pt too wide) in paragraph at lines 168--169
+\OML/cmm/m/it/10 f[]\OMS/cmsy/m/n/10 8\OML/cmm/m/it/10 t \OMS/cmsy/m/n/10 2 f\O
+T1/cmr/m/n/10 1\OML/cmm/m/it/10 ; []  ; T\OMS/cmsy/m/n/10 g$\OT1/cmr/m/it/10 . 
+Then, un-der As-sump-tions 4.2[], 4.3[], 4.4[], and 4.5[], the ob-served den-si
+ty $\OML/cmm/m/it/10 f[]$
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 170--171
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 187--188
+Underfull \hbox (badness 10000) in paragraph at lines 173--174
 
  []
 
+[5] [6] [7]
+Overfull \hbox (25.00003pt too wide) detected at line 312
+[]
+ []
 
-Underfull \hbox (badness 10000) in paragraph at lines 196--198
+[8]
+Underfull \hbox (badness 10000) in paragraph at lines 318--319
 
  []
 
-[5]
-Underfull \hbox (badness 10000) in paragraph at lines 247--249
+[9]
+</Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Functio
+n_QR/Code/Empirical/Results/Nonparametric/Translog/Plots/Elasticities/K_AQME.pn
+g, id=56, 1324.95pt x 1204.5pt>
+File: /Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Fu
+nction_QR/Code/Empirical/Results/Nonparametric/Translog/Plots/Elasticities/K_AQ
+ME.png Graphic file (type png)
 
- []
+<use /Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Fun
+ction_QR/Code/Empirical/Results/Nonparametric/Translog/Plots/Elasticities/K_AQM
+E.png>
+Package pdftex.def Info: /Users/justindoty/Documents/Research/Dissertation/Nonl
+inear_Production_Function_QR/Code/Empirical/Results/Nonparametric/Translog/Plot
+s/Elasticities/K_AQME.png used on input line 343.
+(pdftex.def)             Requested size: 256.06956pt x 256.07692pt.
 
-[6] [7]
-Underfull \hbox (badness 10000) in paragraph at lines 295--296
+</Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Functio
+n_QR/Code/Empirical/Results/Nonparametric/Translog/Plots/Elasticities/L_AQME.pn
+g, id=58, 1324.95pt x 1204.5pt>
+File: /Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Fu
+nction_QR/Code/Empirical/Results/Nonparametric/Translog/Plots/Elasticities/L_AQ
+ME.png Graphic file (type png)
 
- []
+<use /Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Fun
+ction_QR/Code/Empirical/Results/Nonparametric/Translog/Plots/Elasticities/L_AQM
+E.png>
+Package pdftex.def Info: /Users/justindoty/Documents/Research/Dissertation/Nonl
+inear_Production_Function_QR/Code/Empirical/Results/Nonparametric/Translog/Plot
+s/Elasticities/L_AQME.png used on input line 350.
+(pdftex.def)             Requested size: 256.06956pt x 256.07692pt.
+[10 </Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Fun
+ction_QR/Code/Empirical/Results/Nonparametric/Translog/Plots/Elasticities/K_AQM
+E.png>]
+</Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Functio
+n_QR/Code/Empirical/Results/Nonparametric/Translog/Plots/Elasticities/M_AQME.pn
+g, id=63, 1324.95pt x 1204.5pt>
+File: /Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Fu
+nction_QR/Code/Empirical/Results/Nonparametric/Translog/Plots/Elasticities/M_AQ
+ME.png Graphic file (type png)
 
-[8] [9]
+<use /Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Fun
+ction_QR/Code/Empirical/Results/Nonparametric/Translog/Plots/Elasticities/M_AQM
+E.png>
+Package pdftex.def Info: /Users/justindoty/Documents/Research/Dissertation/Nonl
+inear_Production_Function_QR/Code/Empirical/Results/Nonparametric/Translog/Plot
+s/Elasticities/M_AQME.png used on input line 357.
+(pdftex.def)             Requested size: 256.06956pt x 256.07692pt.
+
+</Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Functio
+n_QR/Code/Empirical/Results/Nonparametric/Translog/Plots/Hicks/HICKS_K_AQME.png
+, id=64, 1324.95pt x 1204.5pt>
+File: /Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Fu
+nction_QR/Code/Empirical/Results/Nonparametric/Translog/Plots/Hicks/HICKS_K_AQM
+E.png Graphic file (type png)
+
+<use /Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Fun
+ction_QR/Code/Empirical/Results/Nonparametric/Translog/Plots/Hicks/HICKS_K_AQME
+.png>
+Package pdftex.def Info: /Users/justindoty/Documents/Research/Dissertation/Nonl
+inear_Production_Function_QR/Code/Empirical/Results/Nonparametric/Translog/Plot
+s/Hicks/HICKS_K_AQME.png used on input line 365.
+(pdftex.def)             Requested size: 256.06956pt x 256.07692pt.
+[11 </Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Fun
+ction_QR/Code/Empirical/Results/Nonparametric/Translog/Plots/Elasticities/L_AQM
+E.png> </Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_
+Function_QR/Code/Empirical/Results/Nonparametric/Translog/Plots/Elasticities/M_
+AQME.png>]
+</Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Functio
+n_QR/Code/Empirical/Results/Nonparametric/Translog/Plots/Hicks/HICKS_L_AQME.png
+, id=70, 1324.95pt x 1204.5pt>
+File: /Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Fu
+nction_QR/Code/Empirical/Results/Nonparametric/Translog/Plots/Hicks/HICKS_L_AQM
+E.png Graphic file (type png)
+
+<use /Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Fun
+ction_QR/Code/Empirical/Results/Nonparametric/Translog/Plots/Hicks/HICKS_L_AQME
+.png>
+Package pdftex.def Info: /Users/justindoty/Documents/Research/Dissertation/Nonl
+inear_Production_Function_QR/Code/Empirical/Results/Nonparametric/Translog/Plot
+s/Hicks/HICKS_L_AQME.png used on input line 372.
+(pdftex.def)             Requested size: 256.06956pt x 256.07692pt.
+
+</Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Functio
+n_QR/Code/Empirical/Results/Nonparametric/Translog/Plots/Hicks/HICKS_M_AQME.png
+, id=71, 1324.95pt x 1204.5pt>
+File: /Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Fu
+nction_QR/Code/Empirical/Results/Nonparametric/Translog/Plots/Hicks/HICKS_M_AQM
+E.png Graphic file (type png)
+
+<use /Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Fun
+ction_QR/Code/Empirical/Results/Nonparametric/Translog/Plots/Hicks/HICKS_M_AQME
+.png>
+Package pdftex.def Info: /Users/justindoty/Documents/Research/Dissertation/Nonl
+inear_Production_Function_QR/Code/Empirical/Results/Nonparametric/Translog/Plot
+s/Hicks/HICKS_M_AQME.png used on input line 379.
+(pdftex.def)             Requested size: 256.06956pt x 256.07692pt.
+[12 </Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Fun
+ction_QR/Code/Empirical/Results/Nonparametric/Translog/Plots/Hicks/HICKS_K_AQME
+.png> </Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_F
+unction_QR/Code/Empirical/Results/Nonparametric/Translog/Plots/Hicks/HICKS_L_AQ
+ME.png>]
+</Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Functio
+n_QR/Code/Empirical/Results/Nonparametric/Translog/Plots/TFP/OMG_AQME.png, id=7
+7, 1324.95pt x 1204.5pt>
+File: /Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Fu
+nction_QR/Code/Empirical/Results/Nonparametric/Translog/Plots/TFP/OMG_AQME.png 
+Graphic file (type png)
+
+<use /Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Fun
+ction_QR/Code/Empirical/Results/Nonparametric/Translog/Plots/TFP/OMG_AQME.png>
+Package pdftex.def Info: /Users/justindoty/Documents/Research/Dissertation/Nonl
+inear_Production_Function_QR/Code/Empirical/Results/Nonparametric/Translog/Plot
+s/TFP/OMG_AQME.png used on input line 386.
+(pdftex.def)             Requested size: 256.06956pt x 256.07692pt.
+
+</Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Functio
+n_QR/Code/Empirical/Results/Nonparametric/Translog/Plots/TFP/OMG_DENS.png, id=7
+8, 1324.95pt x 1204.5pt>
+File: /Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Fu
+nction_QR/Code/Empirical/Results/Nonparametric/Translog/Plots/TFP/OMG_DENS.png 
+Graphic file (type png)
+
+<use /Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Fun
+ction_QR/Code/Empirical/Results/Nonparametric/Translog/Plots/TFP/OMG_DENS.png>
+Package pdftex.def Info: /Users/justindoty/Documents/Research/Dissertation/Nonl
+inear_Production_Function_QR/Code/Empirical/Results/Nonparametric/Translog/Plot
+s/TFP/OMG_DENS.png used on input line 393.
+(pdftex.def)             Requested size: 256.06956pt x 256.07692pt.
+[13 </Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Fun
+ction_QR/Code/Empirical/Results/Nonparametric/Translog/Plots/Hicks/HICKS_M_AQME
+.png> </Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_F
+unction_QR/Code/Empirical/Results/Nonparametric/Translog/Plots/TFP/OMG_AQME.png
+>] [14 </Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_
+Function_QR/Code/Empirical/Results/Nonparametric/Translog/Plots/TFP/OMG_DENS.pn
+g>]
 (/Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Functio
-n_QR/Code/Text/Nonlinear_Quantile_Production.bbl) [10]
-Underfull \hbox (badness 10000) in paragraph at lines 392--394
-
- []
-
-[11] [12] [13] [14] [15]
+n_QR/Code/Text/Nonlinear_Quantile_Production.bbl) [15]
 (/Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Functio
 n_QR/Code/Text/Nonlinear_Quantile_Production.aux)
 
@@ -720,13 +824,13 @@ LaTeX Warning: There were multiply-defined labels.
 
  ) 
 Here is how much of TeX's memory you used:
- 16708 strings out of 492995
- 331947 string characters out of 6132704
- 370058 words of memory out of 5000000
- 20092 multiletter control sequences out of 15000+600000
- 20536 words of font info for 82 fonts, out of 8000000 for 9000
+ 16755 strings out of 492995
+ 337748 string characters out of 6132704
+ 374129 words of memory out of 5000000
+ 20133 multiletter control sequences out of 15000+600000
+ 18686 words of font info for 74 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 39i,21n,38p,10494b,378s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 39i,21n,39p,10494b,537s stack positions out of 5000i,500n,10000p,200000b,80000s
  </Users/justindoty/Library/texlive/2017/texmf-var/fonts/pk/ljfour/public/bbm
 /bbm10.600pk></usr/local/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm
 /cmbx10.pfb></usr/local/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/
@@ -734,35 +838,31 @@ cmbx12.pfb></usr/local/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/c
 mbx9.pfb></usr/local/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmc
 sc10.pfb></usr/local/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cme
 x10.pfb></usr/local/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi
-10.pfb></usr/local/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi1
-2.pfb></usr/local/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi5.
-pfb></usr/local/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi6.pf
-b></usr/local/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi7.pfb>
-</usr/local/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi8.pfb></
-usr/local/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi9.pfb></us
-r/local/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmmib10.pfb></us
-r/local/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cmextra/cmmib7.pfb>
-</usr/local/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></
-usr/local/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb></us
-r/local/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmr17.pfb></usr/
-local/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmr5.pfb></usr/loc
-al/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmr6.pfb></usr/local/
-texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb></usr/local/tex
-live/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb></usr/local/texliv
-e/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmr9.pfb></usr/local/texlive/2
-017/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/local/texlive/20
-17/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy5.pfb></usr/local/texlive/2017
-/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy6.pfb></usr/local/texlive/2017/t
-exmf-dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb></usr/local/texlive/2017/tex
-mf-dist/fonts/type1/public/amsfonts/cm/cmsy8.pfb></usr/local/texlive/2017/texmf
--dist/fonts/type1/public/amsfonts/cm/cmti10.pfb></usr/local/texlive/2017/texmf-
-dist/fonts/type1/public/amsfonts/cm/cmtt8.pfb>
+10.pfb></usr/local/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi5
+.pfb></usr/local/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi7.p
+fb></usr/local/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmmib10.p
+fb></usr/local/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cmextra/cmmi
+b7.pfb></usr/local/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10
+.pfb></usr/local/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.p
+fb></usr/local/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmr17.pfb
+></usr/local/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmr5.pfb></
+usr/local/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmr6.pfb></usr
+/local/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb></usr/lo
+cal/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb></usr/local
+/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmr9.pfb></usr/local/te
+xlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/local/tex
+live/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy5.pfb></usr/local/texli
+ve/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy6.pfb></usr/local/texlive
+/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb></usr/local/texlive/2
+017/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy8.pfb></usr/local/texlive/201
+7/texmf-dist/fonts/type1/public/amsfonts/cm/cmti10.pfb></usr/local/texlive/2017
+/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt8.pfb>
 Output written on /Users/justindoty/Documents/Research/Dissertation/Nonlinear_P
-roduction_Function_QR/Code/Text/Nonlinear_Quantile_Production.pdf (15 pages, 35
-7876 bytes).
+roduction_Function_QR/Code/Text/Nonlinear_Quantile_Production.pdf (15 pages, 70
+6020 bytes).
 PDF statistics:
- 176 PDF objects out of 1000 (max. 8388607)
- 126 compressed objects within 2 object streams
+ 177 PDF objects out of 1000 (max. 8388607)
+ 115 compressed objects within 2 object streams
  0 named destinations out of 1000 (max. 500000)
- 1 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 41 words of extra memory for PDF output out of 10000 (max. 10000000)
 

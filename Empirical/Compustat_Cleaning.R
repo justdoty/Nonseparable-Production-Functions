@@ -19,15 +19,14 @@ group_by(naics3, year) %>% summarise(lprice=mean(avgpay), drate=mean(dep))
 #This is the main dataset, it includes all variables needed for production function estimation using OP, LP, ACF, or GNR
 compstat <- read.csv('/Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Function_QR/Data/compustat.csv', header=TRUE) %>% rename(year=fyear, employ=emp) %>% 
 	select(gvkey, year, sale, employ, ppegt, ppent, cogs, xsga, capx, naics, fic, oibdp, dp, ipodate) %>%
-	filter(str_detect(naics, "^31|^32|^33"), fic=="USA", year>=2002, year<=2016) %>%
+	filter(str_detect(naics, "^31|^32|^33"), fic=="USA", year>=1990, year<=2016) %>%
 	transmute(id=gvkey, year=year, sale=sale*1e3, oibdp=oibdp*1e3, cogs=cogs*1e3, xsga=xsga*1e3, ppegt=ppegt*1e3, ppent=ppent*1e3, employ=employ*1e3, capx=capx*1e3, dp=dp*1e3, naics3=str_extract(as.character(naics), "^.{3}"), ipoyear=as.numeric(str_extract(as.character(ipodate), "^.{4}"))) %>%
 	#Merge with US GDP deflator and NBER Data
 	inner_join(macro, "year") %>% inner_join(nberdef, c("naics3", "year")) %>% mutate(lexp=employ*lprice) %>% mutate(mexp=cogs+xsga-lexp) %>%
 	mutate(id=id, year=year, Y=(sale/USGDP)*100, K=(ppegt/USGDP)*100, K2=(ppent/USGDP)*100, M=(mexp/USGDP)*100, I=(capx/USGDP)*100, L=employ, dp=dp) %>% 
 	mutate(VA=((sale-mexp)/USGDP)*100, S=mexp/sale) %>% 
 	group_by(id) %>% na.omit() %>% filter(Y>0, K>0, K2>0, M>0, I>0, L>0, VA>0, year>ipoyear) %>% group_by(year) %>% mutate(age=year-ipoyear)
-compstat <- compstat %>% select(id, year, Y, K, K2, M, I, L, VA, S, ipoyear, age, naics3) %>% group_by(id) %>% filter(n()>=3)
-test <- compstat %>% select(id, year, ipoyear, age)
+compstat <- compstat %>% select(id, year, Y, K, K2, M, I, L, VA, S, ipoyear, age, naics3) %>% group_by(id) %>% filter(n()>=4)
 ####################################################################################################
 #Summary statistics for the cleaned data set
 print(summary(compstat))
@@ -49,3 +48,4 @@ print(nrow(compstat))
 path_out <- '/Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Function_QR/Data/'
 fileName <- paste(path_out, 'USdata.csv',sep = '')
 write.csv(compstat,fileName, row.names=FALSE)
+

@@ -1,4 +1,4 @@
-\begin{thebibliography}{12}
+\begin{thebibliography}{11}
 \providecommand{\natexlab}[1]{#1}
 
 \bibitem[{Ackerberg \textit{et~al.}(2007)Ackerberg, Benkard, Berry and
@@ -38,15 +38,10 @@
   treatment of nonclassical measurement error models. \textit{Econometrica},
   \textbf{76}~(1), 195--216.
 
-\bibitem[{Hu and Shum(2012)}]{Hu2012}
-\textsc{---} and \textsc{Shum, M.} (2012). Nonparametric identification of
-  dynamic models with unobserved state variables. \textit{Journal of
-  Econometrics}, \textbf{171}~(1), 32--44.
-
 \bibitem[{Hu and Shum(2013)}]{Hu2013}
-\textsc{---} and \textsc{---} (2013). Identifying dynamic games with serially
-  correlated unobservables. In \textit{Structural Econometric Models}, Emerald
-  Group Publishing Limited, pp. 97--113.
+\textsc{---} and \textsc{Shum, M.} (2013). Identifying dynamic games with
+  serially correlated unobservables. In \textit{Structural Econometric Models},
+  Emerald Group Publishing Limited, pp. 97--113.
 
 \bibitem[{Olley and Pakes(1996)}]{Olley1996}
 \textsc{Olley, G.~S.} and \textsc{Pakes, A.} (1996). The dynamics of
