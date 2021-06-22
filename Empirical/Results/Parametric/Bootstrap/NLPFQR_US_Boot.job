@@ -1,5 +1,0 @@
-#$ -cwd -V -e ~/err -o ~/out -q all.q,COB
-#$ -pe smp 1
-module load R
-#!/bin/bash
-R CMD BATCH "--args $SGE_TASK_ID" NLPFQR/DATA/Parametric/Bootstrap/NL_PAR_Boot.R NLPFQR/DATA/Parametric/Bootstrap/NL_PAR_Boot.Rout

@@ -52,7 +52,7 @@ Consider a nonlinear model for a firm's gross-output production function (in log
 \begin{equation}\label{modelY}
 y_{it}=f_{t}(k_{it}, l_{it}, m_{it}, \omega_{it}; \beta(\eta_{t}))
 \end{equation}
-where $y_{it}$ is firm $i$'s' output at time $t$ and $l_{it}, m_{it}, k_{it}$ denotes optimal input choices for labor, materials, and capital respectively. The unobserved productivity is denoted by $\omega_{it}$ which is correlated to input choices of the firm at time $t$. I let the output elasticities $\beta$ be functionally dependent on unobserved production shocks $\eta_{i1},\dots, \eta_{iT}$ which are independent of input choices and productivity at time $t$.\\
+where $y_{it}$ is firm $i$'s output at time $t$ and $l_{it}, m_{it}, k_{it}$ denotes optimal input choices for labor, materials, and capital respectively. The unobserved productivity is denoted by $\omega_{it}$ which is correlated to input choices of the firm at time $t$. I let the output elasticities $\beta$ be functionally dependent on unobserved production shocks $\eta_{i1},\dots, \eta_{iT}$ which are independent of input choices and productivity at time $t$.\\
 
 Without loss of generality I normalize $\eta_{it}\sim U[0,1]$. This model corresponds to a nonlinear random coefficient model where the outcome $y_{it}$ is assumed to be strictly monotonic in $\eta_{it}$. In practice I can allow for nonlinear interactions between inputs and unobserved productivity at different quantiles so that marginal effects can be modeled as non-Hick's neutral. For empirical simplicity I can model separability in the unobserved productivity to calculate total factor productivity (TFP). The function $f_{t}$ is an unknown nonlinear function.
 
@@ -70,19 +70,19 @@ Material inputs are chosen to maximize current period profits and therefore are 
 \begin{equation} \label{modelM}
 m_{it}=\mu_{t}(k_{it}, \omega_{it}, \alpha_{m}(\varepsilon_{it}))
 \end{equation}
-where $\varepsilon_{it}$ is iid and independent of current period state variables. I assume the labor demand function $\mu$ is strictly increasing in $\varepsilon_{it}$ which is normalized to be uniformly distributed on the interval $[0,1]$. I can extend this to the case where labor is chosen prior to choosing material inputs in which case I would include $l_{it}$ as a state variable in equation \eqref{modelM}.
+where $\varepsilon_{it}$ is iid and independent of current period state variables. I assume the materials demand function $\mu$ is strictly increasing in $\varepsilon_{it}$ which is normalized to be uniformly distributed on the interval $[0,1]$. I can extend this to the case where labor is chosen prior to choosing material inputs in which case I would include $l_{it}$ as a state variable in equation \eqref{modelM}.
 
 \subsection*{Capital Accumulation}
 Capital accumulates to the following generalized law of motion
 \begin{equation} \label{modelK}
 K_{it}=\kappa_{t}(K_{it-1}, I_{it-1}, \upsilon_{it-1})
 \end{equation}
-where $I_{it-1}$ denotes firm investment in the prior period. Under this specification, capital is determined in the period $t-1$. I introduce a random error term $\upsilon_{it-1}$ which eliminates the deterministic relationship of capital with respect to previous period state and choice variables. I will show later that this step is crucial for our nonparametric identification result which is used by \cite{Hu2019}. I assume this error term is independent of the arguments in the capital accumulation law.
+where $I_{it-1}$ denotes firm investment in the prior period. Under this specification, capital is determined in period $t-1$. I introduce a random error term $\upsilon_{it-1}$ which eliminates the deterministic relationship of capital with respect to previous period state and decision variables. I will show later that this step is crucial for my nonparametric identification result which is used by \cite{Hu2019}. I assume $\upsilon_{it}$ is independent of $\eta_{it}$ conditional on $(\omega_{it}, k_{it}, l_{it}, m_{it})$
 
 \subsection*{Productivity}
 Productivity evolves according to the exogenous first order Markov process:
 \begin{equation}\label{modelw}
-\omega_{it}=g(\omega_{it-1}; \rho(\xi_{it}))
+\omega_{it}=g_{t}(\omega_{it-1}; \rho(\xi_{it}))
 \end{equation}
 
 where $\xi_{i1},\dots, \xi_{iT}$ are independent uniform random variables which represent innovation shocks to productivity. I assume $\omega_{it}$ is monotonic in $\xi_{it}$ I let $g$ be another unknown nonlinear function that allows the persistence in productivity in firms to be nonlinear across different quantiles. The exogeneity of the productivity process can be relaxed when I consider productivity enhancing activities such as R\&D similar to \cite{Doraszelski2013}.
@@ -92,20 +92,20 @@ I introduce a dynamic model of firm investment that is a slight modification of 
 \begin{equation} \label{valuefn}
 I_{it}=I^{*}(K_{it}, \omega_{it}; \delta(\zeta_{it}))=\underset{I_{t}\geq 0}{\operatorname{argmax}}\Bigg[\Pi_{t}(K_{it}, \omega_{it}, \zeta_{it})-c(I_{it})+\beta\mathbbm{E}\big[V_{t+1}(K_{it+1}, \omega_{it+1}, \zeta_{it+1})|\mathcal{I}_{t}\big]\Bigg],
 \end{equation}
-Here, $\pi_{t}(\cdot)$ is current period profits as a function of the state variables and an unobservable demand shock $\zeta_{it}$. These are shocks to a firm's product demand which are privately observed by each firm and i.i.d across $i$ and $t$. I assume these shocks are independent from the firm's state variables. Current costs to investment are given by $c(I_{t})$ and $\beta$ is the firm's discount factor. \cite{Pakesa} provides specific conditions for which the investment policy function is strictly increasing in its unobservable components.\textcolor{red}{I can interpret conditions for strict monotonicity here and leave a detailed explanation in the appendix.} Without loss of generality, I normalize $\zeta_{t}\sim U[0,1]$
+Here, $\pi_{t}(\cdot)$ is current period profits as a function of the state variables and an unobservable demand shock $\zeta_{it}$. These are shocks to a firm's product demand which are privately observed by each firm and i.i.d across $i$ and $t$. I assume these shocks are independent from the firm's state variables. Current costs to investment are given by $c(I_{t})$ and $\beta$ is the firm's discount factor. \cite{Pakesa} provides specific conditions for which the investment policy function is strictly increasing in its unobservable components. Without loss of generality, I normalize $\zeta_{it}\sim U[0,1]$
 
 
 %-----------------------------------------------------------------------------------------------------
 \section{Identification}
 
-I begin by listing preliminary assumptions regarding the main econometric restrictions of the model, some of which were informally stated in the previous section.
+I begin by listing preliminary assumptions regarding the main econometric restrictions of the model, some of which were informally stated in the previous section. Here, I focus on the restrictions on the production function.
 
 \begin{assump} \label{pfmomentassume}
 ~
 \begin{enumerate}[label=(\roman*)]
     \item $\eta_{it}$ follows a standard uniform distribution independent $\mathcal{I}_{it}$, where $\mathcal{I}_{it}$ denotes the firm $i's$ information set at time $t$
     \item The production function $y_{it}=f_{t}(k_{it}, l_{it}, m_{it}, \omega_{it}, \beta(\eta_{t}))$ is strictly increasing in $\eta_{it}$
-    \item $\eta_{it}$ is independent and identically distributed across firm's and time
+    \item $\eta_{it}$ is independent and identically distributed across firms and time
     \end{enumerate}
 \end{assump}
 
@@ -122,7 +122,7 @@ where $g_{i}(\omega^{T}_{i};\theta(\cdot))=f(\omega^{T}_{i}|y^{T}_{i}, k^{T}_{i}
 \begin{equation}\label{posterior}
 \begin{split}
 g_{i}(\omega^{T}_{i};\theta(\cdot))& \propto\prod_{t=1}^{T}f(y_{it}|k_{it}, l_{it}, m_{it}, \omega_{it};\beta(\cdot))f(l_{it}|k_{it}, \omega_{it};\alpha_{l}(\cdot))f(m_{it}|k_{it}, \omega_{it};\alpha_{m}(\cdot)) \\
-&\times f(I_{it}|k_{it}, \omega_{it};\delta(\cdot))\prod_{t=2}^{T}f(\omega_{it}|\omega_{it-1};\rho(\cdot))f_{i1}(\omega_{i1};\rho_{1}(\cdot)),
+&\times f(i_{it}|k_{it}, \omega_{it};\delta(\cdot))\prod_{t=2}^{T}f(\omega_{it}|\omega_{it-1};\rho(\cdot))f(\omega_{i1};\rho_{1}(\cdot)),
 \end{split}
 \end{equation}
 Therefore, the identification of the production function in \eqref{unconditional} relies on identification of the conditional densities of production, labor, materials, investment, and the productivity process\footnote{Note that since the capital accumulation process does not directly depend on productivity, it drops out of the conditioning density. Identifying the investment rule should be sufficient for identifying capital dependence on last period's productivity}. I show that these densities are nonparametrically identified using \cite{Hu2008}. To show this, I introduce some new notation. Let $Z_{t}=(l_{t}, k_{t}, m_{t}, k_{t+1})$ denote conditioning variables where I have dropped the $i$ subscript for convenience. Assume the following: 
@@ -149,11 +149,11 @@ This assumption is more restrictive than that of \cite{Hu2019}. Since their mode
 
 \begin{assump} \label{uniqueness} (Uniqueness): For any $\bar{\omega}_{t}, \tilde{\omega}_{t}\in \Omega$, the set $\{f_{I|\omega, Z}(I_{t}|\bar{\omega}_{t}, Z_{t})\neq f_{I|\omega, Z}(I_{t}|\tilde{\omega}_{t}, Z_{t})\}$ has positive probability whenever $\bar{\omega}_{t}\neq\tilde{\omega}_{t}$
 \end{assump}
-This assumption is relatively weak and is satisfied if there is conditional heteroskedasticity in $f_{I|\omega, Z}$ or if any functional of its distribution is strictly increasing in $\omega_{t}$. For example, this assumption is satisfied if $E[I_{t}|\omega_{t},Z_{t}]$ is strictly increasing in $\omega_{t}$ which is similar to the invertibility conditions required in \cite{Olley1996}. This assumption is problematic if investment is censored, in which case $E[I_{t}|\omega_{t},Z_{t}]$ can only be inverted for positive values of investment. In this case we can consider for some $\tau$, $Q_{\tau}(I_{t}|\bar{\omega}, Z_{t})\neq Q_{\tau}(I_{t}|\tilde{\omega}, Z_{t})$. Since I will estimate input decision rules in my model using quantile regression, correcting for censoring is straightforward as I will show later. However, in my application censoring is not an issue since I use publicly listed firms, most of which who report positive capital expenditure in their income statements.
+This assumption is relatively weak and is satisfied if there is conditional heteroskedasticity in $f_{I|\omega, Z}$ or if any functional of its distribution is strictly increasing in $\omega_{t}$. For example, this assumption is satisfied if $E[I_{t}|\omega_{t},Z_{t}]$ is strictly increasing in $\omega_{t}$ which is similar to the invertibility conditions required in \cite{Olley1996}. This assumption is problematic if investment is censored, in which case $E[I_{t}|\omega_{t},Z_{t}]$ can only be inverted for positive values of investment. In this case we can consider for some. Therefore, I can assume $E[\mathbbm{1}\{I_{it}>0\}|\omega_{t},Z_{t}]$ as the functional that satisfies the monotonicity assumption.  Since I will estimate input decision rules in my model using quantile regression, correcting for censoring is straightforward as I will show later. However, in my application censoring is not an issue since I use publicly listed firms, most of which who report positive capital expenditure in their income statements.
 
 \begin{assump} \label{normalization} (Normalization): There exists a functional $\Gamma$ such that $\Gamma[f_{y|\omega,Z}(y_{t}|\omega_{t}, Z_{t})]=\omega_{t}$
 \end{assump}
-This functional does not need to be known, it is sufficient to consider a known function of the data distribution as shown by \cite{Arellano2016}. For a general nonseparable panel model this assumption is satisfied if $E[y_{t}|\omega_{t}, Z_{t}]$ is strictly increasing in $\omega_{it}$, then one could normalize $\omega_{t}=E[y_{t}|\omega_{t}, Z_{t}]$. In our empirical application, we use a non-separable translog production function. In this case our normalization can be achieved by $E[y_{t}|\omega_{t}, 0]=\omega_{t}$. With these assumptions we can now state the first part of our identification results.
+This functional does not need to be known, it is sufficient to consider a known function of the data distribution as shown by \cite{Arellano2016}. For a general nonseparable panel model this assumption is satisfied if $E[y_{t}|\omega_{t}, Z_{t}]$ is strictly increasing in $\omega_{it}$, then one could normalize $\omega_{t}=E[y_{t}|\omega_{t}, Z_{t}]$. In my empirical application, we use a non-separable translog production function. In this case our normalization can be achieved by $E[y_{t}|\omega_{t}, 0]=\omega_{t}$. With these assumptions I can now state the first part of our identification results.
 
 \begin{theorem} \label{idpart1} Under Assumptions \ref{conditionalindependence}, \ref{injectivity}, \ref{uniqueness}, and \ref{normalization}, given the observed density $f_{y_{t}, I_{t}|y_{t+1}, Z_{t}}$, the equation
 \begin{equation}
@@ -172,7 +172,7 @@ This result identifies the conditional density of output and investment. It also
 \end{corollary}
 \textit{Proof:} See Appendix.\\
 
-The main conclusion of these two corollaries state is that under the condition of stationarity, the productivity process can be identified with $T=2$ observations per firms whereas under non-stationarity, the productivity process is identified with $T=3$ observations per firm. The number of time periods required for identification increases with the length of the auto-regressive process. It is standard to estimate an AR(1) process for productivity. The data requirements are similar to the control function approach where the instrument set often includes secondary lags of inputs. The main identification assumptions are stronger than those in \cite{Hu2019}, but necessary for the generality of the model I present in this paper.
+The main conclusion of these two corollaries state that under the condition of stationarity, the productivity process can be identified with $T=2$ observations per firms whereas under non-stationarity, the productivity process is identified with $T=3$ observations per firm. The number of time periods required for identification increases with the length of the auto-regressive process. It is standard to estimate an AR(1) process for productivity. The data requirements are similar to the control function approach where the instrument set often includes secondary lags of inputs. The main identification assumptions are stronger than those in \cite{Hu2019}, but necessary for the generality of the model I present in this paper.
 
 %----------------------------------------------------------------------------------------------------------
 
@@ -213,17 +213,17 @@ where $\psi_{m,j}$ is specified similarly as the labor decision rule. In the cas
 I specify the investment demand equation as:
 \begin{equation}\label{imodel}
 \begin{split}
-I^{*}_{it}=\iota_{t}(k_{it}, \omega_{it}, \tau)&=\iota(k_{it}, \omega_{it}, t, \tau)\\
-&=\sum_{j=1}^{J}\alpha_{\delta,j}(\tau)\psi_{\iota,j}(k_{it}, \omega_{it}, t)
+I^{*}_{it}=Q_{t}(I_{it}|K_{it}, \omega_{it}, \tau)&=Q(I_{it}|K_{it}, \omega_{it}, t, \tau)\\
+&=\sum_{j=1}^{J}\delta_{j}(\tau)\psi_{\iota,j}(K_{it}, \omega_{it}, t)
 \end{split}
 \end{equation}
 where $\psi_{\iota,j}$ is specified similarly as the labor and material input decision rule. In the case where investment is censored, I can write
 \begin{equation}
-I_{it}=\max\{0, I_{it}\}=\max\{0, I^{*}(K_{it}, \omega_{it}; \delta(\zeta_{it}))\}
+I_{it}=\max\{0, I^{*}_{it}\}=\max\{0, I^{*}(K_{it}, \omega_{it}; \delta(\zeta_{it}))\}
 \end{equation}
 in which case the conditional quantiles (in logs) can be written
 \begin{equation}
-Q_{\tau}(i_{it}|\mathcal{I}_{it})=\max\{0, \sum_{j=1}^{J}\delta_{j}(\tau)\psi_{\iota,j}(k_{it}, \omega_{it}, t)\},
+Q_{\tau}(I_{it}|\mathcal{I}_{it})=\max\{0, \sum_{j=1}^{J}\delta_{j}(\tau)\psi_{\iota,j}(K_{it}, \omega_{it}, t)\},
 \end{equation}
 due to the equivariance property of quantiles. The censored quantile regression model avoids distributional assumptions in estimation at the cost of computational complexity.
 
@@ -263,7 +263,7 @@ The following conditional moment restrictions hold as an implication of the cond
 \mathbbm{E}\Bigg[\Psi_{\tau_{q}}\bigg(m_{it}-\sum_{j=1}^{J}\alpha_{m,j}(\tau)\psi_{m,j}(k_{it}, \omega_{it}, t)\bigg)\Bigg|k_{it}, \omega_{it}, age_{it}\Bigg]=0
 \end{equation}
 \begin{equation}\label{imoment}
-\mathbbm{E}\Bigg[\Psi_{\tau_{q}}\bigg(i_{it}-\sum_{j=1}^{J}\alpha_{\iota,j}(\tau)\psi_{l,j}(k_{it}, \omega_{it}, t)\bigg)\Bigg|k_{it}, \omega_{it}, t\Bigg]=0
+\mathbbm{E}\Bigg[\Psi_{\tau_{q}}\bigg(i_{it}-\sum_{j=1}^{J}\delta_{j}(\tau)\psi_{l,j}(k_{it}, \omega_{it}, t)\bigg)\Bigg|k_{it}, \omega_{it}, t\Bigg]=0
 \end{equation}
 For $t\geq 2$,
 \begin{equation}\label{omegamoment}
@@ -283,30 +283,30 @@ k_{it} \\
 l_{it}\\
 m_{it} \\
 \omega_{it} \\
-age_{it}
+t
 \end{pmatrix}
 g_{i}(\omega_{it};\theta)d\omega_{it}\Bigg]=0
 \end{equation}
 
-The posterior density in equation \eqref{yimc} is a closed-form expression when using piecewise linear splines for $\theta(\cdot)$. The estimation is an Expectation Maximization (EM) algorithm. In \cite{Arellano2016} and \cite{Arellano2017}, the ``M-step'' is performed using quantile regression. Given an initial parameter value $\hat{\theta}^{0}$. Iterate on $s=0,1,2,\dots$ in the following two-step procedure until converge to a stationary distribution:
+The posterior density in equation \eqref{yimc} is a closed-form expression when using piecewise linear splines for $\theta(\cdot)$. I use an Expectation Maximization (EM) algorithm. In \cite{Arellano2016} and \cite{Arellano2017}, the ``M-step'' is performed using quantile regression. Given an initial parameter value $\hat{\theta}^{0}$. Iterate on $s=0,1,2,\dots$ in the following two-step procedure until converge to a stationary distribution:
 
 \begin{enumerate}
     \item \textit{Stochastic E-Step}: Draw $M$ values $\omega_{i}^{(m)}=(\omega_{i1}^{(m)}, \omega_{i2}^{(m)},\dots, \omega_{iT}^{(m)})$ from
         \begin{equation*}
         \begin{split}
             g_{i}(\omega_{it};\hat{\theta}^{(s)})&=f(\omega_{it}|y_{it}, k_{it}, l_{it}, m_{it}, I_{t},; \hat{\theta}^{(s)}) \propto\\
-            &\prod_{t=1}^{T}f(y_{it}|k_{it}, l_{it}, m_{it}, \omega_{it};\hat{\theta}^{(s)})f(l_{it}|k_{it}, \omega_{it};\hat{\theta}^{(s)})f(m_{it}|k_{it}, \omega_{it};\hat{\theta}^{(s)}) \\
-            &\times f(i_{it}|k_{it}, \omega_{it};\hat{\theta}^{(s)})\prod_{t=2}^{T}f(\omega_{it}|\omega_{it-1};\hat{\theta}^{(s)})f(\omega_{i1};\hat{\theta}^{(s)})
+            &\prod_{t=1}^{T}f(y_{it}|k_{it}, l_{it}, m_{it}, \omega_{it};\hat{\beta}^{(s)})f(l_{it}|k_{it}, \omega_{it};\hat{\alpha_{l}}^{(s)})f(m_{it}|k_{it}, \omega_{it};\hat{\alpha}_{m}^{(s)}) \\
+            &\times f(i_{it}|k_{it}, \omega_{it};\hat{\delta}^{(s)})\prod_{t=2}^{T}f(\omega_{it}|\omega_{it-1};\hat{\rho}^{(s)})f(\omega_{i1};\hat{\rho}_{1}^{(s)})
             \end{split}
         \end{equation*}
     \item \textit{Maximization Step}: For $q=1,\dots, Q$, solve
     \begin{equation*}
     \begin{split}
-    \hat{\boldsymbol\beta}(\tau_{q})^{(s+1)}&=\underset{\boldsymbol\beta(\tau_{q})}{\operatorname{argmin}}\,\sum_{i=1}^{N}\sum_{t=1}^{T}\sum_{m=1}^{M}\Psi_{\tau_{q}}\bigg(y_{it}-\beta_{0}(\tau_{q})-\beta_{t}(\tau_{q})t-\sum_{0<n_{x}\leq n}\beta_{n_{k}, n_{l}, n_{m}}(\tau_{q})k_{it}^{n_{k}}l^{n_{l}}_{it}m^{n_{m}}_{it}\omega^{(m)}_{it}\bigg)\\
-    \hat{\boldsymbol\alpha_{l}}(\tau_{q})^{(s+1)}&=\underset{\boldsymbol\alpha_{l}(\tau_{q})}{\operatorname{argmin}}\,\sum_{i=1}^{N}\sum_{t=1}^{T}\sum_{m=1}^{M}\Psi_{\tau_{q}}\bigg(l_{it}-\sum_{j=1}^{J}\alpha_{l,j}(\tau_{q})\psi_{l,j}(k_{it}, \omega^{(m)}_{it}, t)\bigg)\\
-    \hat{\boldsymbol\alpha_{m}}(\tau_{q})^{(s+1)}&=\underset{\boldsymbol\alpha_{m}(\tau_{q})}{\operatorname{argmin}}\,\sum_{i=1}^{N}\sum_{t=1}^{T}\sum_{m=1}^{M}\Psi_{\tau_{q}}\bigg(m_{it}-\sum_{j=1}^{J}\alpha_{m,j}(\tau_{q})\psi_{m,j}(k_{it}, \omega^{(m)}_{it}, t)\bigg)\\
-    \hat{\boldsymbol\iota}(\tau_{q})^{(s+1)}&=\underset{\boldsymbol\iota(\tau_{q})}{\operatorname{argmin}}\,\sum_{i=1}^{N}\sum_{t=1}^{T}\sum_{m=1}^{M}\Psi_{\tau_{q}}\bigg(i_{it}-\sum_{j=1}^{J}\iota_{j}(\tau_{q})\psi_{\iota,j}(k_{it}, \omega^{(m)}_{it}, t)\bigg)\\
-    \hat{\boldsymbol\rho}(\tau_{q})^{(s+1)}&=\underset{\boldsymbol\rho(\tau_{q})}{\operatorname{argmin}}\,\sum_{i=1}^{N}\sum_{t=1}^{T}\sum_{m=1}^{M}\Psi_{\tau_{q}}\bigg(\omega^{(m)}_{it}-\rho_{0}(\tau_{q})-\rho_{1}(\tau_{q})\omega^{(m)}_{it-1}-\rho_{2}(\tau_{q})\omega^{(m)2}_{it-1}-\rho_{3}(\tau_{q})\omega^{(m)3}_{it-1}\bigg)\\
+    \hat{\boldsymbol\beta}(\tau_{q})^{(s+1)}&=\underset{\boldsymbol\beta(\tau_{q})}{\operatorname{argmin}}\,\sum_{i=1}^{N}\sum_{t=1}^{T}\sum_{m=1}^{M}\Psi_{\tau_{q}}\bigg(y_{it}-\beta_{0}(\tau_{q})-\beta_{t}(\tau_{q})t-\sum_{0<n_{x}\leq n}\beta_{n_{k}, n_{l}, n_{m}}(\tau_{q})k_{it}^{n_{k}}l^{n_{l}}_{it}m^{n_{m}}_{it}\omega^{(m)}_{it}\bigg)\\%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    \hat{\boldsymbol\alpha_{l}}(\tau_{q})^{(s+1)}&=\underset{\boldsymbol\alpha_{l}(\tau_{q})}{\operatorname{argmin}}\,\sum_{i=1}^{N}\sum_{t=1}^{T}\sum_{m=1}^{M}\Psi_{\tau_{q}}\bigg(l_{it}-\sum_{j=1}^{J}\alpha_{l,j}(\tau_{q})\psi_{l,j}(k_{it}, \omega^{(m)}_{it}, t)\bigg)\\%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    \hat{\boldsymbol\alpha_{m}}(\tau_{q})^{(s+1)}&=\underset{\boldsymbol\alpha_{m}(\tau_{q})}{\operatorname{argmin}}\,\sum_{i=1}^{N}\sum_{t=1}^{T}\sum_{m=1}^{M}\Psi_{\tau_{q}}\bigg(m_{it}-\sum_{j=1}^{J}\alpha_{m,j}(\tau_{q})\psi_{m,j}(k_{it}, \omega^{(m)}_{it}, t)\bigg)\\%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    \hat{\boldsymbol\delta}(\tau_{q})^{(s+1)}&=\underset{\boldsymbol\delta(\tau_{q})}{\operatorname{argmin}}\,\sum_{i=1}^{N}\sum_{t=1}^{T}\sum_{m=1}^{M}\Psi_{\tau_{q}}\bigg(i_{it}-\sum_{j=1}^{J}\delta_{j}(\tau_{q})\psi_{\iota,j}(k_{it}, \omega^{(m)}_{it}, t)\bigg)\\%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    \hat{\boldsymbol\rho}(\tau_{q})^{(s+1)}&=\underset{\boldsymbol\rho(\tau_{q})}{\operatorname{argmin}}\,\sum_{i=1}^{N}\sum_{t=1}^{T}\sum_{m=1}^{M}\Psi_{\tau_{q}}\bigg(\omega^{(m)}_{it}-\rho_{0}(\tau_{q})-\rho_{1}(\tau_{q})\omega^{(m)}_{it-1}-\rho_{2}(\tau_{q})\omega^{(m)2}_{it-1}-\rho_{3}(\tau_{q})\omega^{(m)3}_{it-1}\bigg)\\%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     \hat{\boldsymbol\rho_{1}}(\tau_{q})^{(s+1)}&=\underset{\boldsymbol\rho_{1}(\tau_{q})}{\operatorname{argmin}}\,\sum_{i=1}^{N}\sum_{t=1}^{T}\sum_{m=1}^{M}\Psi_{\tau_{q}}\bigg(\omega^{(m)}_{i1}-\sum_{j=1}^{J}\rho_{1,j}(\tau_{q})\psi_{\omega_{1},j}(t)\bigg)\\
     \end{split}
     \end{equation*}
@@ -317,11 +317,11 @@ I apply the estimator to US manufacturers from the Standard and Poors Compustat 
 
 I use the stochastic EM algorithm presented in this paper. I run the estimation procedure with 500 random walk Metropolis-Hastings steps and 200 EM steps with $M=1$. I target a 10\% acceptance rate by setting the variance of the proposal distribution to $2.38^2/n_{t}$ where $n_{t}$ is the number of time-period observations per firm. Once estimates are obtained I simulate productivity from its initial conditions and the decision rules for labor and materials which are aggregated to final output. Using the simulated data, I compute a variety of estimates.\\
 
-Consider the average quantile marginal effect with respect to capital:
+For example consider the average quantile marginal effect with respect to capital (omitting age):
 \begin{equation*}
 \hat{\bar{\beta}}_{k}(\tau)=\mathbbm{E}\Bigg[\frac{\partial Q_{\tau}(y_{it}|k_{it}, l_{it}, m_{it}, \omega_{it})}{\partial k_{it}}\Bigg]
 \end{equation*}
-I compute this estimator for each input as well as the non-Hicks neutral effects. I use the same formulation to compute estimates of average quantile productivity persistence in addition to computing \textit{individual quantile effects} of the production function with respect to inputs (capital) by
+I compute this estimator for each input and the non-Hicks neutral effects. I use the same formulation to compute estimates of average quantile productivity persistence in addition to computing \textit{individual quantile effects} of the production function with respect to inputs (capital) by
 \begin{equation*}
 \hat{\beta}(\tau_{\eta}, \tau_{k})=\mathbbm{E}\Bigg[\frac{\partial Q_{\tau_{\eta}}(y_{it}|Q_{\tau_{k}}(k_{it}), l_{it}, m_{it}, \omega_{it})}{\partial k_{it}}\Bigg]
 \end{equation*}
@@ -331,7 +331,7 @@ where $\hat{\beta}(\tau_{\eta}, \tau_{k})$ is computed by the average derivative
 \end{equation*}
 Also of interest are the dynamic effects of productivity innovation shocks on inputs. Similar to \cite{Hu2019} I estimate how quickly firms respond to shocks to current productivity. This analysis would show whether input decision rules such as labor and materials are subject to adjustment frictions. For example, if I find that labor responds positively to increases in productivity, then policies designed to increase productivity will have a faster effect depending on how quickly the firm is able to adjust how many workers it can hire. My model allows me to examine this effect on two different dimensions: the size of the shock to labor demand and the size of the innovation shock. The estimator is given by 
 \begin{equation*}
-\hat{l}(\tau_{\epsilon}, \tau_{\xi})=\mathbbm{E}\Bigg[\frac{\partial Q_{\tau_{\epsilon}}\big(l_{it}|k_{it},Q_{\tau_{\xi}}(\omega_{it})\big)}{\omega_{it}}\times\Bigg(\frac{\partial Q_{\tau_{\xi}}(\omega_{it}|\omega_{it-1})}{\xi_{it}}\Bigg)\Bigg]
+\hat{l}(\tau_{\epsilon}, \tau_{\xi})=\mathbbm{E}\Bigg[\frac{\partial Q_{\tau_{\epsilon}}\big(l_{it}|k_{it},Q_{\tau_{\xi}}(\omega_{it}|\omega_{it-1})\big)}{\omega_{it}}\times\Bigg(\frac{\partial Q_{\tau_{\xi}}(\omega_{it}|\omega_{it-1})}{\xi_{it}}\Bigg)\Bigg]
 \end{equation*}
 where $\partial Q_{\tau_{\xi}}(\omega_{it}|\omega_{it-1})/\partial \xi_{it}$ can be approximated by finite differences.
 
@@ -368,14 +368,14 @@ where $\partial Q_{\tau_{\xi}}(\omega_{it}|\omega_{it-1})/\partial \xi_{it}$ can
 
 \begin{figure}[H]
 \centering
-\caption{Average Capital-Labor Effect}
+\caption{Average Labor-Productivity Effect}
 \includegraphics[width=9cm, height=9cm]{/Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Function_QR/Code/Empirical/Results/Nonparametric/Translog/Plots/Hicks/HICKS_L_AQME.png}
 \label{hlaqme}
 \end{figure} 
 
 \begin{figure}[H]
 \centering
-\caption{Average Capital-Materials Effect}
+\caption{Average Materials-Productivity Effect}
 \includegraphics[width=9cm, height=9cm]{/Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Function_QR/Code/Empirical/Results/Nonparametric/Translog/Plots/Hicks/HICKS_M_AQME.png}
 \label{hmaqme}
 \end{figure} 

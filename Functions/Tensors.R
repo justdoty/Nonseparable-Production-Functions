@@ -27,54 +27,68 @@ PF <- function(A, K, L, M, omega, method){
 		prod <- cbind(omega, A, K, L, M)
 		prodf <- cbind(1, prod, sweep(prod[,-c(1:2)], 1, omega, `*`))
 	} else if (method=="trans"){
-		A <- (A-mean(A))/sd(A)
-		K <- (K-mean(K))/sd(K)
-		L <- (L-mean(L))/sd(K)
-		M <- (M-mean(M))/sd(K)
-		omega <- (omega-mean(omega))/sd(omega)
-		prod <- cbind(omega, A, K, L, M, K*L, L*M, K*M, K^2, L^2, M^2)
-		prodf <- cbind(1, prod, sweep(prod[,-c(1:2)], 1, omega, `*`))
+		# A <- (A-mean(A))/sd(A)
+		# K <- (K-mean(K))/sd(K)
+		# L <- (L-mean(L))/sd(K)
+		# M <- (M-mean(M))/sd(K)
+		# omega <- (omega-mean(omega))/sd(omega)
+		prod <- cbind(A, omega, K, L, M, K*L, L*M, K*M, K^2, L^2, M^2)
+		prodf <- cbind(1, prod, sweep(prod[,-c(1,2)], 1, omega, `*`))
 	} else if (method=="hermite"){
-		prodf <- cbind(1, (A-mean(A)/sd(A)), tensor.prod(c(2,2,2,2), cbind(K, L, M, omega), norm=TRUE)[,-1])
+		prodf <- cbind(1, tensor.prod(c(1,2,2,1), cbind(K, L, M, omega), norm=TRUE)[,-1])
 	}
 	return(prodf)
 }
 #Labor Decision Rule
 LX <- function(A, K, omega){
-	L <- cbind(1, (A-mean(A)/sd(A)), tensor.prod(c(2,2), cbind(K, omega), norm=TRUE)[,-1])
-	return(L)
+	# LX <- cbind(1, (A-mean(A)/sd(A)), tensor.prod(c(2,2), cbind(K, omega), norm=TRUE)[,-1])
+	# A <- (A-mean(A))/sd(A)
+	# K <- (K-mean(K))/sd(K)
+	# omega <- (omega-mean(omega))/sd(omega)
+	LX <- cbind(1, A, K, omega, omega*K, K^2, omega^2, omega*K^2, K*omega^2, (K^2)*(omega^2), K^3, omega^3)
+	return(LX)
 }
 #Material Input Decision Rule
 MX <- function(A, K, omega){
-	M <- cbind(1, (A-mean(A)/sd(A)), tensor.prod(c(2,2), cbind(K, omega), norm=TRUE)[,-1])
-	return(M)
+	# MX <- cbind(1, (A-mean(A)/sd(A)), tensor.prod(c(2,2), cbind(K, omega), norm=TRUE)[,-1])
+	# A <- (A-mean(A))/sd(A)
+	# K <- (K-mean(K))/sd(K)
+	# omega <- (omega-mean(omega))/sd(omega)
+	MX <- cbind(1, A, K, omega, omega*K, K^2, omega^2, omega*K^2, K*omega^2, (K^2)*(omega^2), K^3, omega^3)
+	return(MX)
 }
-#Investment Decision Rule
-# IX <- function(A, K, omega){
-# 	I <- cbind(1, (A-mean(A)/sd(A)), tensor.prod(c(2,2), cbind(K, omega), norm=TRUE)[,-1])
-# 	return(I)
-# }
+#Investment Input Decision Rule
+IX <- function(A, K, omega){
+	# IX <- cbind(1, (A-mean(A)/sd(A)), tensor.prod(c(2,2), cbind(K, omega), norm=TRUE)[,-1])
+	# A <- (A-mean(A))/sd(A)
+	# K <- (K-mean(K))/sd(K)
+	# omega <- (omega-mean(omega))/sd(omega)
+	IX <- cbind(1, A, K, omega, omega*K, K^2, omega^2, omega*K^2, K*omega^2, (K^2)*(omega^2), K^3, omega^3)
+	return(IX)
+}
 #Productivity Process for t>1
 WX <- function(A, omega){
-	# WX <- omega
-	A <- (A-mean(A))/sd(A)
-	omega <- (omega-mean(omega))/sd(omega)
-	W <- cbind(1, A, omega, omega^2, omega^3)
+	# A <- (A-mean(A))/sd(A)
+	omega <- (omega-mean(omega))
+	# WX <- cbind(1, A, omega, omega^2, omega^3)
 	# WX <- cbind(1, (A-mean(A)/sd(A)), tensor.prod(3, as.matrix(omega), norm=TRUE)[,-1])
-	return(W)
+	WX <- cbind(1, A, omega, omega^2, omega^3)
+	return(WX)
 }
 #Capital Accumulation Process for t>1
 KX <- function(A, K, I, omega){
 	#Tensor Product Hermite Polynomial (Normalized)
-	KX <- cbind(1, (A-mean(A)/sd(A)), tensor.prod(c(2,2), cbind(K, omega), norm=TRUE)[,-1])
-	# K <- cbind(1, A, K, I, omega)
+	# KX <- cbind(1, (A-mean(A)/sd(A)), tensor.prod(c(2,2), cbind(K, omega), norm=TRUE)[,-1])
+	# A <- (A-mean(A))/sd(A)
+	# K <- (K-mean(K))/sd(K)
+	# omega <- (omega-mean(omega))/sd(omega)
+	KX <- cbind(1, A, K, omega, omega*K, K^2, omega^2, omega*K^2, K*omega^2, (K^2)*(omega^2), K^3, omega^3)
 	return(KX)
 }
 #Initial Condition for Productivity (t=1)
 W1X <- function(A){
-	# A <- A-mean(A)
 	W1 <- cbind(1, A)
-	# W1 <- cbind(1, A, A^2, A^3)
+	# W1 <- cbind(1, A, A^2)
 	return(W1)
 }
 #Initial Condition for Capital (t=1)
@@ -134,102 +148,5 @@ hermite <- function(n, x){
 	}
 	return(hmat)
 }
-#####################################################################################################
-#Function that creates a tensor product from the hermite polynomials
-#####################################################################################################
-tensor.prod <- function(M, vars, norm){
-	#Standardize Data (this should always be the case)
-	vars <- as.matrix(vars)
-	if (norm==TRUE){
-		vars <- (vars-colMeans(vars))/apply(vars, 2, sd)
-	}
-	#If we just want a univariate hermite polynomial (tensor.prod(2, data, norm=TRUE))
-	#For example, when the productivity process evolves exogeneously
-	if (length(M)==1){
-		if (length(M)<ncol(vars)){
-			print("Error: Number of vars should be equal to one")
-		}
-		prodlist <- sapply(0:M, function(z) hermite(z, vars))
-		return(prodlist)
-	#This covers the case when mapply cant return a list when all M is the same
-	#For example, tensor.prod(c(2,2,2,2), data, norm=TRUE) means that the dimension
-	#of each univariate hermite polynomial is the same
-	} else if (length(unique(M))==1){
-		if (length(M)!=ncol(vars)){
-			print('Error: M needs to equal to the number of vars')
-		}
-		vecs <- mapply(seq, 0, M)
-		tmp <- split(vecs, rep(1:ncol(vecs), each=nrow(vecs)))
-		tmp <- as.matrix(do.call(expand.grid, tmp))
-		prodlist <- apply(tmp, 1, function(z) apply(hermite(z, x=vars), 1, prod))
-		return(prodlist)
-	#This covers the case when the user wants to specify a tensor product hermite polynomial
-	#with different dimensions of the univariate hermite polynomials
-	#For example, tensor.prod(c(1,2,3,4), data, norm=TRUE)
-	} else {
-		if (length(M)!=ncol(vars)){
-			print('Error: M needs to equal to the number of vars')
-		}
-		vecs <- mapply(seq, 0, M)
-		tmp <- as.matrix(do.call(expand.grid, vecs))
-		prodlist <- apply(tmp, 1, function(z) apply(hermite(z, x=vars), 1, prod))
-		return(prodlist)
-	}
-}
-######################################################################################################
-#Function that creates the derivative of a univariate hermite polynomial
-#####################################################################################################
-D.hermite <- function(n, x){
-	if (n==0){
-		Hprime <- matrix(0, nrow=nrow(x))
-	} else {
-		Hprime <- n*hermite(n=(n-1), x=x)
-	}
-	return(Hprime)
-}
-#####################################################################################################
-#Function that creates a tensor product from the derivative of univariate hermite polynomials
-#####################################################################################################
-D.tensor.prod <- function(M, vars, norm){
-	#Standardize Data (this should always be the case)
-	vars <- as.matrix(vars)
-	if (norm==TRUE){
-		vars <- (vars-colMeans(vars))/apply(vars, 2, sd)
-	}
-	#If we just want a univariate hermite polynomial (D.tensor.prod(2, data, norm=TRUE))
-	#For example, when the productivity process evolves exogeneously
-	if (length(M)==1){
-		if (length(M)<ncol(vars)){
-			print("Error: Number of vars should be equal to one")
-		}
-		prodlist <- sapply(0:M, function(z) D.hermite(z, vars))
-		return(prodlist)
-	#This covers the case when mapply cant return a list when all M is the same
-	#For example, tensor.prod(c(2,2,2,2), data, norm=TRUE) means that the dimension
-	#of each univariate hermite polynomial is the same
-	} else if (length(unique(M))==1){
-		if (length(M)!=ncol(vars)){
-			print('Error: M needs to equal to the number of vars')
-		}
-		vecs <- mapply(seq, 0, M)
-		tmp <- split(vecs, rep(1:ncol(vecs), each=nrow(vecs)))
-		tmp <- as.matrix(do.call(expand.grid, tmp))
-		prodlist <- apply(tmp, 1, function(z) D.hermite(z[1], x=as.matrix(vars[,1]))*apply(hermite(z[-1], x=vars[,-1]), 1, prod))
-		return(prodlist)
-	#This covers the case when the user wants to specify a tensor product hermite polynomial
-	#with different dimensions of the univariate hermite polynomials
-	#For example, tensor.prod(c(1,2,3,4), data, norm=TRUE)
-	} else {
-		if (length(M)!=ncol(vars)){
-			print('Error: M needs to equal to the number of vars')
-		}
-		vecs <- mapply(seq, 0, M)
-		tmp <- as.matrix(do.call(expand.grid, vecs))
-		prodlist <- apply(tmp, 1, function(z) D.hermite(z[1], x=as.matrix(vars[,1]))*apply(hermite(z[-1], x=vars[,-1]), 1, prod))
-		return(prodlist)
-	}
-}
-
-
-
+################################################################################
 
