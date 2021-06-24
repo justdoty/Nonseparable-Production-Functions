@@ -310,9 +310,29 @@ dev.off()
 omgdat <- data.frame(omg)
 omgdens_plot <- ggplot(omgdat, aes(x=omg)) + geom_density() + xlab("Productivity") + ylab("")
 save_plot("/Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Function_QR/Code/Empirical/Capital/Plots/TFP/OMG_DENS.png", omgdens_plot)
-
-
-
+#Input Decision Rules###################################################################
+#Labor###################################################################################
+lwpost <- c(4,5,7,8,9,10,12)
+lw3d <- function(x){
+	return(colMeans(cbind(1, cap, 2*x, cap^2, 2*x*cap, 2*x*cap^2, 3*x^2)))
+}
+lw3dq <- t(sapply(vectau, function(q) lw3d(quantile(omg, probs=q))))%*%parL[lwpost,]
+lwfacet <- lw3dq[-1,-1]+lw3dq[-1,-ncz]+lw3dq[-nrz,-1]+lw3dq[-nrz,-ncz]
+facetcol <- cut(lwfacet, nbcol)
+png("/Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Function_QR/Code/Empirical/Capital/Plots/Inputs/LW3D.png")
+persp(x=vectau, y=vectau, z=lw3dq, xlab="percentile-productivity", ylab="percentile-labor", zlab="Labor-Productivity", col=color[facetcol], ticktype="detailed", phi=20,theta=-60)
+dev.off()
+#Materials###############################################################################
+mwpost <- c(4,5,7,8,9,10,12)
+mw3d <- function(x){
+	return(colMeans(cbind(1, cap, 2*x, cap^2, 2*x*cap, 2*x*cap^2, 3*x^2)))
+}
+mw3dq <- t(sapply(vectau, function(q) mw3d(quantile(omg, probs=q))))%*%parM[mwpost,]
+mwfacet <- mw3dq[-1,-1]+mw3dq[-1,-ncz]+mw3dq[-nrz,-1]+mw3dq[-nrz,-ncz]
+facetcol <- cut(mwfacet, nbcol)
+png("/Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Function_QR/Code/Empirical/Capital/Plots/Inputs/MW3D.png")
+persp(x=vectau, y=vectau, z=mw3dq, xlab="percentile-productivity", ylab="percentile-materials", zlab="Materials-Productivity", col=color[facetcol], ticktype="detailed", phi=20,theta=-60)
+dev.off()
 
 
 
