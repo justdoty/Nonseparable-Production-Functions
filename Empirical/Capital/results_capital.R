@@ -28,7 +28,7 @@ omegainit <- as.matrix(omega_est(idvar=US$id, timevar=US$year, Y=US$Y, A=US$A, K
 # #Some pretty formatting
 # NAICS_labels <- array(NA, 5*length(NAICS)); NAICS_labels[seq(1, 5*length(NAICS), by=5)] <- paste(NAICS, paste("(Total=", size$Total, ")", sep=""))
 # NAICS_labels[is.na(NAICS_labels)] <- ""
-# summary_table <- cbind(NAICS_labels, rep(c("Output", "Capital", "Labor", "Materials", "Investment"), 4), sumstat)
+# summary_table <- cbind(NAICS_labels, rep(c("Output", "Capital", "Labor", "Materials", "Capital"), 4), sumstat)
 # colnames(summary_table) <- c("Industry (NAICS code)", " ", "1st Qu.", 'Median', "3rd Qu.", 'Mean', "sd")
 
 # summary_table <- xtable(summary_table, digits=c(2,2,0,4,4,2,2,2), type="latex")
@@ -114,7 +114,7 @@ etadata <- matrix(runif(N*T), nrow=N, ncol=T)
 #Productivity
 omgdata <- matrix(0, N, T)
 #Unobservable Shock to Productivity
-xidata <- matrix(runif(N*T, vectau[1], vectau[length(vectau)]), nrow=N, ncol=T)
+xidata <- matrix(runif(N*T), nrow=N, ncol=T)
 #Simulate Data at T=1
 t1data <- US %>% group_by(id) %>% slice(1)
 A1 <- log(t1data$A)
@@ -170,15 +170,10 @@ for (t in 2:T){
 #Vectorize
 out <- c(t(lnydata))
 cap <- c(t(lnkdata))
-capy <- (cap-mean(cap))/sd(cap)
 lab <- c(t(lnldata))
-laby <- (lab-mean(lab))/sd(lab)
 mat <- c(t(lnmdata))
-maty <- (mat-mean(mat))/sd(mat)
 omg <- c(t(omgdata))
-omgy <- (omg-mean(omg))/sd(omg)
 age <- c(t(adata))
-agey <- (age-mean(age))/sd(age)
 ##################################################
 #Calculate Average QMEs of the Output Elasticities
 ##################################################
@@ -205,25 +200,92 @@ hkpost <- c(12,16,17,18)+1
 hkdat <- cbind(1, lab, mat, 2*cap)
 hkaqme_data <- data.frame(tau=vectau, hkaqme=colMeans(apply(parY[hkpost,], 2, function(x) hkdat%*%x)))
 hkaqme_plot <- ggplot(hkaqme_data, aes(x=tau, y=hkaqme)) + xlab(expression('percentile-'*tau)) + ylab("Capital-Productivity") + geom_line(aes(y=hkaqme))
-save_plot("/Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Function_QR/Code/Empirical/Capital/Plots/Hicks/HICKS_K_AQME.png", hkaqme_plot)
+save_plot("/Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Function_QR/Code/Empirical/Capital/Plots/Elasticities/HICKS_K_AQME.png", hkaqme_plot)
 #Hicks-Labor
 hlpost <- c(13,15,16,19)+1
 hldat <- cbind(1, cap, mat, 2*lab)
 hlaqme_data <- data.frame(tau=vectau, hlaqme=colMeans(apply(parY[hlpost,], 2, function(x) hldat%*%x)))
 hlaqme_plot <- ggplot(hlaqme_data, aes(x=tau)) + xlab(expression('percentile-'*tau)) + ylab("Labor-Productivity") + geom_line(aes(y=hlaqme))
-save_plot("/Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Function_QR/Code/Empirical/Capital/Plots/Hicks/HICKS_L_AQME.png", hlaqme_plot)
+save_plot("/Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Function_QR/Code/Empirical/Capital/Plots/Elasticities/HICKS_L_AQME.png", hlaqme_plot)
 #Hicks-Materials
 hmpost <- c(14,16,17,20)+1
 hmdat <- cbind(1, lab, cap, 2*mat)
 hmaqme_data <- data.frame(tau=vectau, hmaqme=colMeans(apply(parY[hmpost,], 2, function(x) hmdat%*%x)))
 hmaqme_plot <- ggplot(hmaqme_data, aes(x=tau)) + xlab(expression('percentile-'*tau)) + ylab("Materials-Productivity") + geom_line(aes(y=hmaqme))
-save_plot("/Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Function_QR/Code/Empirical/Capital/Plots/Hicks/HICKS_M_AQME.png", hmaqme_plot)
+save_plot("/Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Function_QR/Code/Empirical/Capital/Plots/Elasticities/HICKS_M_AQME.png", hmaqme_plot)
 #Hicks-Productivity
 hwpost <- c(2,12:20)+1
 hwdat <- cbind(1, cap, lab, mat, cap*lab, lab*mat, cap*mat, cap^2, lab^2, mat^2)
 hwaqme_data <- data.frame(tau=vectau, hwaqme=colMeans(apply(parY[hwpost,], 2, function(x) hwdat%*%x)))
 hwaqme_plot <- ggplot(hwaqme_data, aes(x=tau)) + xlab(expression('percentile-'*tau)) + ylab("Productivity") + geom_line(aes(y=hwaqme))
-save_plot("/Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Function_QR/Code/Empirical/Capital/Plots/Hicks/HICKS_W_AQME.png", hwaqme_plot)
+save_plot("/Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Function_QR/Code/Empirical/Capital/Plots/Elasticities/HICKS_W_AQME.png", hwaqme_plot)
+#3D Plots#########################################################################################
+#Commands for Colors
+nrz <- length(vectau)
+ncz <- length(vectau)
+jet.colors <-  colorRampPalette(c("midnightblue", "blue", "cyan","green", "yellow","orange","red", "darkred"))
+nbcol <- 64
+color <- jet.colors(nbcol)
+#Capital##############################################################################################
+k3d <- function(x){
+	return(colMeans(cbind(1, lab, mat, 2*x, omg, omg*lab, omg*mat, 2*x*omg)))
+}
+k3dq <- t(sapply(vectau, function(q) k3d(quantile(cap, probs=q))))%*%parY[kpost,]
+kfacet <- k3dq[-1,-1]+k3dq[-1,-ncz]+k3dq[-nrz,-1]+k3dq[-nrz,-ncz]
+facetcol <- cut(kfacet, nbcol)
+png("/Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Function_QR/Code/Empirical/Capital/Plots/Elasticities/3dK.png")
+persp(x=vectau, y=vectau, z=k3dq, xlab="percentile-capital", ylab="percentile-output", zlab="Capital", col=color[facetcol], ticktype="detailed", phi=20,theta=-60)
+dev.off()
+#Labor##############################################################################################
+l3d <- function(x){
+	return(colMeans(cbind(1, cap, mat, 2*x, omg, omg*cap, omg*mat, 2*x*omg)))
+}
+l3dq <- t(sapply(vectau, function(q) l3d(quantile(lab, probs=q))))%*%parY[lpost,]
+lfacet <- l3dq[-1,-1]+l3dq[-1,-ncz]+l3dq[-nrz,-1]+l3dq[-nrz,-ncz]
+facetcol <- cut(lfacet, nbcol)
+png("/Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Function_QR/Code/Empirical/Capital/Plots/Elasticities/3dL.png")
+persp(x=vectau, y=vectau, z=l3dq, xlab="percentile-labor", ylab="percentile-output", zlab="Labor", col=color[facetcol], ticktype="detailed", phi=20,theta=-60)
+dev.off()
+#Materials##############################################################################################
+m3d <- function(x){
+	return(colMeans(cbind(1, lab, cap, 2*x, omg, omg*lab, omg*cap, 2*x*omg)))
+}
+m3dq <- t(sapply(vectau, function(q) m3d(quantile(mat, probs=q))))%*%parY[mpost,]
+mfacet <- m3dq[-1,-1]+m3dq[-1,-ncz]+m3dq[-nrz,-1]+m3dq[-nrz,-ncz]
+facetcol <- cut(mfacet, nbcol)
+png("/Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Function_QR/Code/Empirical/Capital/Plots/Elasticities/3dM.png")
+persp(x=vectau, y=vectau, z=m3dq, xlab="percentile-materials", ylab="percentile-output", zlab="Materials", col=color[facetcol], ticktype="detailed", phi=20,theta=-60)
+dev.off()
+#Hicks-Capital###########################################################################################
+hk3d <- function(x){
+	return(colMeans(cbind(1, lab, mat, 2*x)))
+}
+hk3dq <- t(sapply(vectau, function(q) hk3d(quantile(cap, probs=q))))%*%parY[hkpost,]
+hkfacet <- hk3dq[-1,-1]+hk3dq[-1,-ncz]+hk3dq[-nrz,-1]+hk3dq[-nrz,-ncz]
+facetcol <- cut(hkfacet, nbcol)
+png("/Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Function_QR/Code/Empirical/Capital/Plots/Elasticities/3dhk.png")
+persp(x=vectau, y=vectau, z=hk3dq, xlab="percentile-capital", ylab="percentile-output", zlab="Hicks-Capital", col=color[facetcol], ticktype="detailed", phi=20,theta=-60)
+dev.off()
+#Hicks-Labor###########################################################################################
+hl3d <- function(x){
+	return(colMeans(cbind(1, cap, mat, 2*x)))
+}
+hl3dq <- t(sapply(vectau, function(q) hl3d(quantile(lab, probs=q))))%*%parY[hlpost,]
+hlfacet <- hl3dq[-1,-1]+hl3dq[-1,-ncz]+hl3dq[-nrz,-1]+hl3dq[-nrz,-ncz]
+facetcol <- cut(hlfacet, nbcol)
+png("/Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Function_QR/Code/Empirical/Capital/Plots/Elasticities/3dhl.png")
+persp(x=vectau, y=vectau, z=hl3dq, xlab="percentile-labor", ylab="percentile-output", zlab="Hicks-Labor", col=color[facetcol], ticktype="detailed", phi=20,theta=-60)
+dev.off()
+#Hicks-Materials###########################################################################################
+hm3d <- function(x){
+	return(colMeans(cbind(1, lab, cap, 2*x)))
+}
+hm3dq <- t(sapply(vectau, function(q) hm3d(quantile(mat, probs=q))))%*%parY[hmpost,]
+hmfacet <- hm3dq[-1,-1]+hm3dq[-1,-ncz]+hm3dq[-nrz,-1]+hm3dq[-nrz,-ncz]
+facetcol <- cut(hmfacet, nbcol)
+png("/Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Function_QR/Code/Empirical/Capital/Plots/Elasticities/3dhm.png")
+persp(x=vectau, y=vectau, z=hm3dq, xlab="percentile-materials", ylab="percentile-output", zlab="Hicks-Materials", col=color[facetcol], ticktype="detailed", phi=20,theta=-60)
+dev.off()
 ######################################################################################################################################################################################
 #Productivity
 #####################################################################################################################################################################################
@@ -235,48 +297,19 @@ omgx <- sweep(WX(A=acon, omega=omglag)[,-c(2,dims$W)], 2, c(1:3), "*")
 omgaqme_data <- data.frame(tau=vectau, omgaqme=colMeans(apply(parWT[-c(1,2),], 2, function(x) omgx%*%x)))
 omgaqme_plot <- ggplot(omgaqme_data, aes(x=tau)) + xlab(expression('percentile-'*tau)) + ylab("Average Persistence") + geom_line(aes(y=omgaqme))
 save_plot("/Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Function_QR/Code/Empirical/Capital/Plots/TFP/OMG_AQME.png", omgaqme_plot)
+#3D Productivity
+omg3dq <- apply(omgx, 2, function(q) quantile(q, probs=vectau))%*%parWT[-c(1,2),]
+omgfacet <- omg3dq[-1,-1]+omg3dq[-1,-ncz]+omg3dq[-nrz,-1]+omg3dq[-nrz,-ncz]
+facetcol <- cut(omgfacet, nbcol)
+png("/Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Function_QR/Code/Empirical/Capital/Plots/TFP/3dpers.png")
+persp(x=vectau, y=vectau, z=omg3dq, xlab="percentile-productivity", ylab="percentile-innovation", zlab="Persistence", col=color[facetcol], ticktype="detailed", phi=20,theta=-60)
+dev.off()
 ################
 ##Density Plots
 ###############
 omgdat <- data.frame(omg)
 omgdens_plot <- ggplot(omgdat, aes(x=omg)) + geom_density() + xlab("Productivity") + ylab("")
 save_plot("/Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Function_QR/Code/Empirical/Capital/Plots/TFP/OMG_DENS.png", omgdens_plot)
-# #######################
-# #Surface Plots
-# #####################
-# #Commands for Colors
-# nrz <- length(vectau)
-# ncz <- length(vectau)
-# jet.colors <-  colorRampPalette(c("midnightblue","blue", "cyan","green", "yellow","orange","red", "darkred"))
-# nbcol <- 64
-# color <- jet.colors(nbcol)
-# ###############################################
-# #Dynamic Effects of Innovation on Static Inputs
-# ################################################
-# omgmat <- cbind(1, omglag, omglag^2, omglag^3)
-# capcon <- c(t(lnkdata[,2:T]))
-# #Labor
-# l3d <- function(tau1, tau2){
-# 	l3d <- colMeans((cbind(1, capcon)%*%parL[c(3,4),tau1]+2*parL[6,tau1]*(omgmat%*%parWT[,tau2]))*(omgmat%*%t(lsplinedif(vectau=vectau, bvec=parWT, b1=parWTb[1], bL=parWTb[2], u=vectau)[tau2,])))
-# 	return(l3d)
-# }
-# lz <- outer(1:length(vectau), 1:length(vectau), l3d)
-# lzfacet <- lz[-1,-1]+lz[-1,-ncz]+lz[-nrz,-1]+lz[-nrz,-ncz]
-# facetcol <- cut(lzfacet,nbcol)
-# png("/Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Function_QR/Code/Empirical/US/Results/Translog/Plots/Dynamic/L3d.png")
-# persp(x=vectau, y=vectau, z=lz, xlab="percentile-labor", ylab="percentile-shock", zlab="Labor Response", col=color[facetcol], ticktype="detailed", phi=20,theta=-60)
-# dev.off()
-# #Materials
-# m3d <- function(tau1, tau2){
-# 	m3d <- colMeans(cbind(1, capcon)%*%parM[c(3,4),tau1]+2*parM[6,tau1]*(omgmat%*%parWT[,tau2])*(omgmat%*%t(lsplinedif(vectau=vectau, bvec=parWT, b1=parWTb[1], bL=parWTb[2], u=vectau)[tau2,])))
-# 	return(m3d)
-# }
-# mz <- outer(1:length(vectau), 1:length(vectau), m3d)
-# mzfacet <- mz[-1,-1]+mz[-1,-ncz]+mz[-nrz,-1]+mz[-nrz,-ncz]
-# facetcol <- cut(mzfacet,nbcol)
-# png("/Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Function_QR/Code/Empirical/US/Results/Translog/Plots/Dynamic/M3d.png")
-# persp(x=vectau, y=vectau, z=mz, xlab="percentile-materials", ylab="percentile-shock", zlab="Materials Response", col=color[facetcol], ticktype="detailed", phi=20,theta=-60)
-# dev.off()
 
 
 
