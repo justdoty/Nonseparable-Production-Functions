@@ -173,29 +173,63 @@ for (t in 1:T){
 		lab2 <- rowSums(LX(A=adata[,t], K=medcap[,t], omega=medomg[,t])*lspline(vectau=vectau, bvec=parL, b1=parLb[1], bL=parLb[2], u=epsdata[,t]))
 		lab3 <- rowSums(LX(A=adata[,t], K=lowcap[,t], omega=lowomg[,t])*lspline(vectau=vectau, bvec=parL, b1=parLb[1], bL=parLb[2], u=epsdata[,t]))
 		#Restrict the Supports
-		highlab[t,q] <- mean((lab1>max(ttdata$L))*max(ttdata$L)+(lab1<min(ttdata$L))*min(ttdata$L)+(lab1<=max(ttdata$L))*(lab1>=min(ttdata$L))*lab1)
-		medlab[t,q] <- mean((lab2>max(ttdata$L))*max(ttdata$L)+(lab2<min(ttdata$L))*min(ttdata$L)+(lab2<=max(ttdata$L))*(lab2>=min(ttdata$L))*lab2)
-		lowlab[t,q] <- mean((lab3>max(ttdata$L))*max(ttdata$L)+(lab3<min(ttdata$L))*min(ttdata$L)+(lab3<=max(ttdata$L))*(lab3>=min(ttdata$L))*lab3)
+		highlab[t,q] <- median((lab1>max(ttdata$L))*max(ttdata$L)+(lab1<min(ttdata$L))*min(ttdata$L)+(lab1<=max(ttdata$L))*(lab1>=min(ttdata$L))*lab1)
+		medlab[t,q] <- median((lab2>max(ttdata$L))*max(ttdata$L)+(lab2<min(ttdata$L))*min(ttdata$L)+(lab2<=max(ttdata$L))*(lab2>=min(ttdata$L))*lab2)
+		lowlab[t,q] <- median((lab3>max(ttdata$L))*max(ttdata$L)+(lab3<min(ttdata$L))*min(ttdata$L)+(lab3<=max(ttdata$L))*(lab3>=min(ttdata$L))*lab3)
 		#Material Paths
 		varepsdata[,t] <- tauinp[q]
 		mat1 <- rowSums(MX(A=adata[,t], K=highcap[,t], omega=highomg[,t])*lspline(vectau=vectau, bvec=parM, b1=parMb[1], bL=parMb[2], u=varepsdata[,t]))
 		mat2 <- rowSums(MX(A=adata[,t], K=medcap[,t], omega=medomg[,t])*lspline(vectau=vectau, bvec=parM, b1=parMb[1], bL=parMb[2], u=varepsdata[,t]))
 		mat3 <- rowSums(MX(A=adata[,t], K=lowcap[,t], omega=lowomg[,t])*lspline(vectau=vectau, bvec=parM, b1=parMb[1], bL=parMb[2], u=varepsdata[,t]))
 		#Restrict the Supports
-		highmat[t,q] <- mean((mat1>max(ttdata$M))*max(ttdata$M)+(mat1<min(ttdata$M))*min(ttdata$M)+(mat1<=max(ttdata$M))*(mat1>=min(ttdata$M))*mat1)
-		medmat[t,q] <- mean((mat2>max(ttdata$M))*max(ttdata$M)+(mat2<min(ttdata$M))*min(ttdata$M)+(mat2<=max(ttdata$M))*(mat2>=min(ttdata$M))*mat2)
-		lowmat[t,q] <- mean((mat3>max(ttdata$M))*max(ttdata$M)+(mat3<min(ttdata$M))*min(ttdata$M)+(mat3<=max(ttdata$M))*(mat3>=min(ttdata$M))*mat3)
+		highmat[t,q] <- median((mat1>max(ttdata$M))*max(ttdata$M)+(mat1<min(ttdata$M))*min(ttdata$M)+(mat1<=max(ttdata$M))*(mat1>=min(ttdata$M))*mat1)
+		medmat[t,q] <- median((mat2>max(ttdata$M))*max(ttdata$M)+(mat2<min(ttdata$M))*min(ttdata$M)+(mat2<=max(ttdata$M))*(mat2>=min(ttdata$M))*mat2)
+		lowmat[t,q] <- median((mat3>max(ttdata$M))*max(ttdata$M)+(mat3<min(ttdata$M))*min(ttdata$M)+(mat3<=max(ttdata$M))*(mat3>=min(ttdata$M))*mat3)
 	}
 }
-#Paths for Labor
-highlabpath <- highlab-medlab
-lowlabpath <- lowlab-medlab
-#Paths for Materials
-highmatpath <- highmat-medmat
-lowmatpath <- lowmat-medmat
-
-plot(1:T, lowmatpath[,1], type="l")
-
+#Paths for Labor at different ranks of labor shock
+labpath <- data.frame(1:T, lowlab-medlab, highlab-medlab)
+names(labpath) <- c("Time", "LowLow", "LowMed", "LowHigh", "HighLow", "HighMed", "HighHigh")
+#Paths for Materials at different ranks of materials shock
+matpath <- data.frame(1:T, lowmat-medmat, highmat-medmat)
+names(matpath) <- c("Time", "LowLow", "LowMed", "LowHigh", "HighLow", "HighMed", "HighHigh")
+#Plotting
+titles <- c(0.1, 0.1, 0.1, 0.9, 0.9, 0.9)
+Lplot <- list()
+Mplot <- list()
+for (i in 1:6){
+	if (i<=3){
+		ldat <- data.frame(Time=labpath$Time, Y=labpath[,i+1])
+		Lplot[[i]] <- ggplot(ldat, aes(x=Time, y=Y)) + geom_line() + xlab("Time") + ylab("Labor") + ggtitle(expression(paste(tau, "-innovation=0.1")))
+		mdat <- data.frame(Time=matpath$Time, Y=matpath[,i+1])
+		Mplot[[i]] <- ggplot(mdat, aes(x=Time, y=Y)) + geom_line() + xlab("Time") + ylab("Materials") + ggtitle(expression(paste(tau, "-innovation=0.1")))
+	} else {
+		ldat <- data.frame(Time=labpath$Time, Y=labpath[,i+1])
+		Lplot[[i]] <- ggplot(ldat, aes(x=Time, y=Y)) + geom_line() + xlab("Time") + ylab("Labor") + ggtitle(expression(paste(tau, "-innovation=0.9")))
+		mdat <- data.frame(Time=matpath$Time, Y=matpath[,i+1])
+		Mplot[[i]] <- ggplot(mdat, aes(x=Time, y=Y)) + geom_line() + xlab("Time") + ylab("Materials") + ggtitle(expression(paste(tau, "-innovation=0.9")))
+	}
+}
+#Labor
+names(Lplot) <- c("LowLow", "LowMed", "LowHigh", "HighLow", "HighMed", "HighHigh")
+Ltitle1 <- ggdraw() + draw_label(expression(paste(tau, "-labor=0.1")))
+Lrow1 <- plot_grid(Ltitle1, plot_grid(Lplot$LowLow, Lplot$HighLow), ncol=1, rel_heights = c(0.1,1))
+Ltitle2 <- ggdraw() + draw_label(expression(paste(tau, "-labor=0.5")))
+Lrow2 <- plot_grid(Ltitle2, plot_grid(Lplot$LowMed, Lplot$HighMed), ncol=1, rel_heights = c(0.1,1))
+Ltitle3 <- ggdraw() + draw_label(expression(paste(tau, "-labor=0.9")))
+Lrow3 <- plot_grid(Ltitle3, plot_grid(Lplot$LowHigh, Lplot$HighHigh), ncol=1, rel_heights = c(0.1,1))
+impulseL <- plot_grid(Lrow1, Lrow2, Lrow3, nrow=3)
+save_plot("/Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Function_QR/Code/Empirical/Capital/Plots/Inputs/impulseL.png", impulseL, base_height = 13, base_width = 10)
+#Materials
+names(Mplot) <- c("LowLow", "LowMed", "LowHigh", "HighLow", "HighMed", "HighHigh")
+Mtitle1 <- ggdraw() + draw_label(expression(paste(tau, "-materials=0.1")))
+Mrow1 <- plot_grid(Mtitle1, plot_grid(Mplot$LowLow, Mplot$HighLow), ncol=1, rel_heights = c(0.1,1))
+Mtitle2 <- ggdraw() + draw_label(expression(paste(tau, "-materials=0.5")))
+Mrow2 <- plot_grid(Mtitle2, plot_grid(Mplot$LowMed, Mplot$HighMed), ncol=1, rel_heights = c(0.1,1))
+Mtitle3 <- ggdraw() + draw_label(expression(paste(tau, "-materials=0.9")))
+Mrow3 <- plot_grid(Mtitle3, plot_grid(Mplot$LowHigh, Mplot$HighHigh), ncol=1, rel_heights = c(0.1,1))
+impulseM <- plot_grid(Mrow1, Mrow2, Mrow3, nrow=3)
+save_plot("/Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Function_QR/Code/Empirical/Capital/Plots/Inputs/impulseM.png", impulseM, base_height = 13, base_width = 10)
 
 
 
