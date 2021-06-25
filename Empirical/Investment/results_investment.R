@@ -6,6 +6,7 @@ require(stringr)
 require(truncnorm)
 require(RColorBrewer)
 require(reshape2)
+require(gridGraphics)
 source('/Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Function_QR/Code/Functions/Auxfuns.R')
 source('/Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Function_QR/Code/Functions/Tensors.R')
 source('/Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Function_QR/Code/Functions/omega.R')
@@ -204,43 +205,48 @@ kpost <- c(3,6,8,9,12,15,17,18)+1
 kdat <- cbind(1, lab, mat, 2*cap, omg, omg*lab, omg*mat, 2*cap*omg)
 kaqme_data <- data.frame(tau=vectau, kaqme=colMeans(apply(parY[kpost,], 2, function(x) kdat%*%x)))
 kaqme_plot <- ggplot(kaqme_data, aes(x=tau, y=kaqme)) + xlab(expression('percentile-'*tau)) + ylab("Capital") + geom_line(aes(y=kaqme))
-save_plot("/Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Function_QR/Code/Empirical/Investment/Plots/Elasticities/K_AQME.png", kaqme_plot)
+# save_plot("/Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Function_QR/Code/Empirical/Investment/Plots/Elasticities/K_AQME.png", kaqme_plot)
 #Labor
 lpost <- c(4,6,7,10,13,15,16,19)+1
 ldat <- cbind(1, cap, mat, 2*lab, omg, omg*cap, omg*mat, 2*lab*omg)
 laqme_data <- data.frame(tau=vectau, laqme=colMeans(apply(parY[lpost,], 2, function(x) ldat%*%x)))
 laqme_plot <- ggplot(laqme_data, aes(x=tau, y=laqme)) + xlab(expression('percentile-'*tau)) + ylab("Labor") + geom_line(aes(y=laqme))
-save_plot("/Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Function_QR/Code/Empirical/Investment/Plots/Elasticities/L_AQME.png", laqme_plot)
+# save_plot("/Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Function_QR/Code/Empirical/Investment/Plots/Elasticities/L_AQME.png", laqme_plot)
 #Materials
 mpost <- c(5,7,8,11,14,16,17,20)+1
 mdat <- cbind(1, lab, cap, 2*mat, omg, omg*lab, omg*cap, 2*mat*omg)
 maqme_data <- data.frame(tau=vectau, maqme=colMeans(apply(parY[mpost,], 2, function(x) mdat%*%x)))
 maqme_plot <- ggplot(maqme_data, aes(x=tau, y=maqme)) + xlab(expression('percentile-'*tau)) + ylab("Materials") + geom_line(aes(y=maqme))
-save_plot("/Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Function_QR/Code/Empirical/Investment/Plots/Elasticities/M_AQME.png", maqme_plot)
+# save_plot("/Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Function_QR/Code/Empirical/Investment/Plots/Elasticities/M_AQME.png", maqme_plot)
+#Combine into grid plot
+klmaqme <- plot_grid(kaqme_plot, laqme_plot, maqme_plot, ncol=3)
+save_plot("/Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Function_QR/Code/Empirical/Investment/Plots/Elasticities/KLMAQME.png", klmaqme, base_height =5, base_width = 15)
 #Hicks-Capital
 hkpost <- c(12,16,17,18)+1
 hkdat <- cbind(1, lab, mat, 2*cap)
 hkaqme_data <- data.frame(tau=vectau, hkaqme=colMeans(apply(parY[hkpost,], 2, function(x) hkdat%*%x)))
 hkaqme_plot <- ggplot(hkaqme_data, aes(x=tau, y=hkaqme)) + xlab(expression('percentile-'*tau)) + ylab("Capital-Productivity") + geom_line(aes(y=hkaqme))
-save_plot("/Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Function_QR/Code/Empirical/Investment/Plots/Elasticities/HICKS_K_AQME.png", hkaqme_plot)
+# save_plot("/Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Function_QR/Code/Empirical/Investment/Plots/Elasticities/HICKS_K_AQME.png", hkaqme_plot)
 #Hicks-Labor
 hlpost <- c(13,15,16,19)+1
 hldat <- cbind(1, cap, mat, 2*lab)
 hlaqme_data <- data.frame(tau=vectau, hlaqme=colMeans(apply(parY[hlpost,], 2, function(x) hldat%*%x)))
 hlaqme_plot <- ggplot(hlaqme_data, aes(x=tau)) + xlab(expression('percentile-'*tau)) + ylab("Labor-Productivity") + geom_line(aes(y=hlaqme))
-save_plot("/Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Function_QR/Code/Empirical/Investment/Plots/Elasticities/HICKS_L_AQME.png", hlaqme_plot)
+# save_plot("/Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Function_QR/Code/Empirical/Investment/Plots/Elasticities/HICKS_L_AQME.png", hlaqme_plot)
 #Hicks-Materials
 hmpost <- c(14,16,17,20)+1
 hmdat <- cbind(1, lab, cap, 2*mat)
 hmaqme_data <- data.frame(tau=vectau, hmaqme=colMeans(apply(parY[hmpost,], 2, function(x) hmdat%*%x)))
 hmaqme_plot <- ggplot(hmaqme_data, aes(x=tau)) + xlab(expression('percentile-'*tau)) + ylab("Materials-Productivity") + geom_line(aes(y=hmaqme))
-save_plot("/Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Function_QR/Code/Empirical/Investment/Plots/Elasticities/HICKS_M_AQME.png", hmaqme_plot)
+# save_plot("/Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Function_QR/Code/Empirical/Investment/Plots/Elasticities/HICKS_M_AQME.png", hmaqme_plot)
+hklmaqme <- plot_grid(hkaqme_plot, hlaqme_plot, hmaqme_plot, ncol=3)
+save_plot("/Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Function_QR/Code/Empirical/Investment/Plots/Elasticities/HKLMAQME.png", hklmaqme, base_height =5, base_width = 15)
 #Hicks-Productivity
 hwpost <- c(2,12:20)+1
 hwdat <- cbind(1, cap, lab, mat, cap*lab, lab*mat, cap*mat, cap^2, lab^2, mat^2)
 hwaqme_data <- data.frame(tau=vectau, hwaqme=colMeans(apply(parY[hwpost,], 2, function(x) hwdat%*%x)))
 hwaqme_plot <- ggplot(hwaqme_data, aes(x=tau)) + xlab(expression('percentile-'*tau)) + ylab("Productivity") + geom_line(aes(y=hwaqme))
-save_plot("/Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Function_QR/Code/Empirical/Investment/Plots/Elasticities/HICKS_W_AQME.png", hwaqme_plot)
+# save_plot("/Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Function_QR/Code/Empirical/Investment/Plots/Elasticities/HICKS_W_AQME.png", hwaqme_plot)
 #3D Plots#########################################################################################
 #Commands for Colors
 nrz <- length(vectau)
@@ -255,8 +261,9 @@ k3d <- function(x){
 k3dq <- t(sapply(vectau, function(q) k3d(quantile(cap, probs=q))))%*%parY[kpost,]
 kfacet <- k3dq[-1,-1]+k3dq[-1,-ncz]+k3dq[-nrz,-1]+k3dq[-nrz,-ncz]
 facetcol <- cut(kfacet, nbcol)
-png("/Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Function_QR/Code/Empirical/Investment/Plots/Elasticities/3dK.png")
+# png("/Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Function_QR/Code/Empirical/Investment/Plots/Elasticities/3dK.png")
 persp(x=vectau, y=vectau, z=k3dq, xlab="percentile-capital", ylab="percentile-output", zlab="Capital", col=color[facetcol], ticktype="detailed", phi=20,theta=-60)
+k3dplot <- recordPlot()
 dev.off()
 #Labor##############################################################################################
 l3d <- function(x){
@@ -265,8 +272,9 @@ l3d <- function(x){
 l3dq <- t(sapply(vectau, function(q) l3d(quantile(lab, probs=q))))%*%parY[lpost,]
 lfacet <- l3dq[-1,-1]+l3dq[-1,-ncz]+l3dq[-nrz,-1]+l3dq[-nrz,-ncz]
 facetcol <- cut(lfacet, nbcol)
-png("/Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Function_QR/Code/Empirical/Investment/Plots/Elasticities/3dL.png")
+# png("/Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Function_QR/Code/Empirical/Investment/Plots/Elasticities/3dL.png")
 persp(x=vectau, y=vectau, z=l3dq, xlab="percentile-labor", ylab="percentile-output", zlab="Labor", col=color[facetcol], ticktype="detailed", phi=20,theta=-60)
+l3dplot <- recordPlot()
 dev.off()
 #Materials##############################################################################################
 m3d <- function(x){
@@ -275,9 +283,12 @@ m3d <- function(x){
 m3dq <- t(sapply(vectau, function(q) m3d(quantile(mat, probs=q))))%*%parY[mpost,]
 mfacet <- m3dq[-1,-1]+m3dq[-1,-ncz]+m3dq[-nrz,-1]+m3dq[-nrz,-ncz]
 facetcol <- cut(mfacet, nbcol)
-png("/Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Function_QR/Code/Empirical/Investment/Plots/Elasticities/3dM.png")
+# png("/Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Function_QR/Code/Empirical/Investment/Plots/Elasticities/3dM.png")
 persp(x=vectau, y=vectau, z=m3dq, xlab="percentile-materials", ylab="percentile-output", zlab="Materials", col=color[facetcol], ticktype="detailed", phi=20,theta=-60)
+m3dplot <- recordPlot()
 dev.off()
+klm3dplots <- plot_grid(k3dplot, l3dplot, m3dplot, ncol=3)
+save_plot("/Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Function_QR/Code/Empirical/Investment/Plots/Elasticities/KLMIQME.png", klm3dplots, base_height =5, base_width = 15)
 #Hicks-Capital###########################################################################################
 hk3d <- function(x){
 	return(colMeans(cbind(1, lab, mat, 2*x)))
@@ -285,8 +296,9 @@ hk3d <- function(x){
 hk3dq <- t(sapply(vectau, function(q) hk3d(quantile(cap, probs=q))))%*%parY[hkpost,]
 hkfacet <- hk3dq[-1,-1]+hk3dq[-1,-ncz]+hk3dq[-nrz,-1]+hk3dq[-nrz,-ncz]
 facetcol <- cut(hkfacet, nbcol)
-png("/Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Function_QR/Code/Empirical/Investment/Plots/Elasticities/3dhk.png")
+# png("/Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Function_QR/Code/Empirical/Investment/Plots/Elasticities/3dhk.png")
 persp(x=vectau, y=vectau, z=hk3dq, xlab="percentile-capital", ylab="percentile-output", zlab="Hicks-Capital", col=color[facetcol], ticktype="detailed", phi=20,theta=-60)
+hk3dplot <- recordPlot()
 dev.off()
 #Hicks-Labor###########################################################################################
 hl3d <- function(x){
@@ -295,8 +307,9 @@ hl3d <- function(x){
 hl3dq <- t(sapply(vectau, function(q) hl3d(quantile(lab, probs=q))))%*%parY[hlpost,]
 hlfacet <- hl3dq[-1,-1]+hl3dq[-1,-ncz]+hl3dq[-nrz,-1]+hl3dq[-nrz,-ncz]
 facetcol <- cut(hlfacet, nbcol)
-png("/Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Function_QR/Code/Empirical/Investment/Plots/Elasticities/3dhl.png")
+# png("/Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Function_QR/Code/Empirical/Investment/Plots/Elasticities/3dhl.png")
 persp(x=vectau, y=vectau, z=hl3dq, xlab="percentile-labor", ylab="percentile-output", zlab="Hicks-Labor", col=color[facetcol], ticktype="detailed", phi=20,theta=-60)
+hl3dplot <- recordPlot()
 dev.off()
 #Hicks-Materials###########################################################################################
 hm3d <- function(x){
@@ -305,9 +318,12 @@ hm3d <- function(x){
 hm3dq <- t(sapply(vectau, function(q) hm3d(quantile(mat, probs=q))))%*%parY[hmpost,]
 hmfacet <- hm3dq[-1,-1]+hm3dq[-1,-ncz]+hm3dq[-nrz,-1]+hm3dq[-nrz,-ncz]
 facetcol <- cut(hmfacet, nbcol)
-png("/Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Function_QR/Code/Empirical/Investment/Plots/Elasticities/3dhm.png")
+# png("/Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Function_QR/Code/Empirical/Investment/Plots/Elasticities/3dhm.png")
 persp(x=vectau, y=vectau, z=hm3dq, xlab="percentile-materials", ylab="percentile-output", zlab="Hicks-Materials", col=color[facetcol], ticktype="detailed", phi=20,theta=-60)
+hm3dplot <- recordPlot()
 dev.off()
+hklm3dplots <- plot_grid(hk3dplot, hl3dplot, hm3dplot, ncol=3)
+save_plot("/Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Function_QR/Code/Empirical/Investment/Plots/Elasticities/HKLMIQME.png", hklm3dplots, base_height =5, base_width = 15)
 ######################################################################################################################################################################################
 #Productivity
 #####################################################################################################################################################################################
@@ -341,8 +357,9 @@ lw3d <- function(x){
 lw3dq <- t(sapply(vectau, function(q) lw3d(quantile(omg, probs=q))))%*%parL[lwpost,]
 lwfacet <- lw3dq[-1,-1]+lw3dq[-1,-ncz]+lw3dq[-nrz,-1]+lw3dq[-nrz,-ncz]
 facetcol <- cut(lwfacet, nbcol)
-png("/Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Function_QR/Code/Empirical/Investment/Plots/Inputs/LW3D.png")
+# png("/Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Function_QR/Code/Empirical/Investment/Plots/Inputs/LW3D.png")
 persp(x=vectau, y=vectau, z=lw3dq, xlab="percentile-productivity", ylab="percentile-labor", zlab="Labor-Productivity", col=color[facetcol], ticktype="detailed", phi=20,theta=-60)
+lw3dplot <- recordPlot()
 dev.off()
 #Materials###############################################################################
 mwpost <- c(4,5,7,8,9,10,12)
@@ -352,9 +369,12 @@ mw3d <- function(x){
 mw3dq <- t(sapply(vectau, function(q) mw3d(quantile(omg, probs=q))))%*%parM[mwpost,]
 mwfacet <- mw3dq[-1,-1]+mw3dq[-1,-ncz]+mw3dq[-nrz,-1]+mw3dq[-nrz,-ncz]
 facetcol <- cut(mwfacet, nbcol)
-png("/Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Function_QR/Code/Empirical/Investment/Plots/Inputs/MW3D.png")
+# png("/Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Function_QR/Code/Empirical/Investment/Plots/Inputs/MW3D.png")
 persp(x=vectau, y=vectau, z=mw3dq, xlab="percentile-productivity", ylab="percentile-materials", zlab="Materials-Productivity", col=color[facetcol], ticktype="detailed", phi=20,theta=-60)
+mw3dplot <- recordPlot()
 dev.off()
+lmwplot <- plot_grid(lw3dplot, mw3dplot, ncol=2)
+save_plot("/Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Function_QR/Code/Empirical/Investment/Plots/Inputs/LMWPlot.png", lmwplot, base_height =5, base_width = 10)
 
 
 
