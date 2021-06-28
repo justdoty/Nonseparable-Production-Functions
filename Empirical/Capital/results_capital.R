@@ -166,14 +166,31 @@ for (t in 2:T){
 	#Restrict Support of Output
 	lnydata[,t] <- (lnydata[,t]>max(ttdata$Y))*max(ttdata$Y)+(lnydata[,t]<min(ttdata$Y))*min(ttdata$Y)+(lnydata[,t]<=max(ttdata$Y))*(lnydata[,t]>=min(ttdata$Y))*lnydata[,t]
 }
-
 #Vectorize
+#Output
 out <- c(t(lnydata))
+outcon <- c(t(lnydata[,2:T]))
+outlag <- c(t(lnydata[,1:(T-1)]))
+#Capital
 cap <- c(t(lnkdata))
+capcon <- c(t(lnkdata[,2:T]))
+caplag <- c(t(lnkdata[,1:(T-1)]))
+#Labor
 lab <- c(t(lnldata))
+labcon <- c(t(lnldata[,2:T]))
+lablag <- c(t(lnldata[,1:(T-1)]))
+#Materials
 mat <- c(t(lnmdata))
+matcon <- c(t(lnmdata[,2:T]))
+matlag <- c(t(lnmdata[,1:(T-1)]))
+#Productivity
 omg <- c(t(omgdata))
+omgcon <- c(t(omgdata[,2:T]))
+omglag <- c(t(omgdata[,1:(T-1)]))
+#Age
 age <- c(t(adata))
+agecon <- c(t(adata[,2:T]))
+agelag <- c(t(adata[,1:(T-1)]))
 ##################################################
 #Calculate Average QMEs of the Output Elasticities
 ##################################################
@@ -326,6 +343,20 @@ omgdat <- data.frame(omg)
 omgdens_plot <- ggplot(omgdat, aes(x=omg)) + geom_density() + xlab("Productivity") + ylab("")
 save_plot("/Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Function_QR/Code/Empirical/Capital/Plots/TFP/OMG_DENS.png", omgdens_plot)
 #Input Decision Rules###################################################################
+#Capital##################################################################################
+kwpost <- c(4,5,7,8,9,10,12)
+kw3d <- function(x){
+	kq <- quantile(caplag, probs=vectau[x[1]])
+	wq <- quantile(omglag, probs=vectau[x[2]])
+	return(c(1, kq, 2*wq, kq^2, 2*wq*kq, 2*wq*kq^2, 3*wq^2)%*%as.matrix(parKT[kwpost]))
+}
+kw3dq <- matrix(apply(expand.grid(1:ntau, 1:ntau), 1, kw3d), nrow=ntau, ncol=ntau)
+kwfacet <- kw3dq[-1,-1]+kw3dq[-1,-ncz]+kw3dq[-nrz,-1]+kw3dq[-nrz,-ncz]
+facetcol <- cut(kwfacet, nbcol)
+# png("/Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Function_QR/Code/Empirical/Capital/Plots/Inputs/LW3D.png")
+persp(x=vectau, y=vectau, z=kw3dq, xlab="percentile-capital", ylab="percentile-productivity", zlab="Capital-Productivity", col=color[facetcol], ticktype="detailed", phi=20,theta=-60)
+kw3dplot <- recordPlot()
+dev.off()
 #Labor###################################################################################
 lwpost <- c(4,5,7,8,9,10,12)
 lw3d <- function(x){
@@ -350,9 +381,8 @@ facetcol <- cut(mwfacet, nbcol)
 persp(x=vectau, y=vectau, z=mw3dq, xlab="percentile-productivity", ylab="percentile-materials", zlab="Materials-Productivity", col=color[facetcol], ticktype="detailed", phi=20,theta=-60)
 mw3dplot <- recordPlot()
 dev.off()
-lmwplot <- plot_grid(lw3dplot, mw3dplot, ncol=2)
-save_plot("/Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Function_QR/Code/Empirical/Capital/Plots/Inputs/LMWPlot.png", lmwplot, base_height =5, base_width = 10)
-
+klmwplot <- plot_grid(kw3dplot, lw3dplot, mw3dplot, ncol=3)
+save_plot("/Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Function_QR/Code/Empirical/Capital/Plots/Inputs/KLMWPlot.png", klmwplot, base_height =5, base_width = 10)
 
 
 

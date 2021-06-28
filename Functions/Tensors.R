@@ -9,7 +9,7 @@
 ####################################################################################################
 #The Production Function: (Hicks Neutral Cobb-Douglas and Translog, Non Hicks Neutral Cobb-Douglass and Translog
 #and Non Hicks Neutral Tensor Product Hermite Polynomial)
-PF <- function(A, K, L, M, omega, method){
+PF <- function(A, T, K, L, M, omega, method){
 	if (method=="cobbN"){
 		prodf <- cbind(1, A, K, L, M, omega)
 	} else if (method=="transN") {
@@ -40,7 +40,7 @@ PF <- function(A, K, L, M, omega, method){
 	return(prodf)
 }
 #Labor Decision Rule
-LX <- function(A, K, omega){
+LX <- function(A, T, K, omega){
 	# LX <- cbind(1, (A-mean(A)/sd(A)), tensor.prod(c(2,2), cbind(K, omega), norm=TRUE)[,-1])
 	# A <- (A-mean(A))/sd(A)
 	# K <- (K-mean(K))/sd(K)
@@ -49,7 +49,7 @@ LX <- function(A, K, omega){
 	return(LX)
 }
 #Material Input Decision Rule
-MX <- function(A, K, omega){
+MX <- function(A, T, K, omega){
 	# MX <- cbind(1, (A-mean(A)/sd(A)), tensor.prod(c(2,2), cbind(K, omega), norm=TRUE)[,-1])
 	# A <- (A-mean(A))/sd(A)
 	# K <- (K-mean(K))/sd(K)
@@ -58,7 +58,7 @@ MX <- function(A, K, omega){
 	return(MX)
 }
 #Investment Input Decision Rule
-IX <- function(A, K, omega){
+IX <- function(A, T, K, omega){
 	# IX <- cbind(1, (A-mean(A)/sd(A)), tensor.prod(c(2,2), cbind(K, omega), norm=TRUE)[,-1])
 	# A <- (A-mean(A))/sd(A)
 	# K <- (K-mean(K))/sd(K)
@@ -72,17 +72,17 @@ WX <- function(A, omega){
 	omega <- (omega-mean(omega))
 	# WX <- cbind(1, A, omega, omega^2, omega^3)
 	# WX <- cbind(1, (A-mean(A)/sd(A)), tensor.prod(3, as.matrix(omega), norm=TRUE)[,-1])
-	WX <- cbind(1, A, omega, omega^2, omega^3)
+	WX <- cbind(1, omega, omega^2, omega^3)
 	return(WX)
 }
 #Capital Accumulation Process for t>1
-KX <- function(A, K, I, omega){
+KX <- function(A, T, K, I, omega){
 	#Tensor Product Hermite Polynomial (Normalized)
 	# KX <- cbind(1, (A-mean(A)/sd(A)), tensor.prod(c(2,2), cbind(K, omega), norm=TRUE)[,-1])
 	# A <- (A-mean(A))/sd(A)
 	# K <- (K-mean(K))/sd(K)
 	# omega <- (omega-mean(omega))/sd(omega)
-	KX <- cbind(1, A, K, omega, omega*K, K^2, omega^2, omega*K^2, K*omega^2, (K^2)*(omega^2), K^3, omega^3)
+	KX <- cbind(1, K, omega, omega*K, K^2, omega^2, omega*K^2, K*omega^2, (K^2)*(omega^2), K^3, omega^3)
 	return(KX)
 }
 #Initial Condition for Productivity (t=1)

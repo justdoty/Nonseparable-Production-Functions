@@ -61,7 +61,6 @@ parYb <- results$resyb1bLmat
 parLb <- results$reslb1bLmat
 parMb <- results$resmb1bLmat
 parWTb <- results$reswtb1bLmat
-parW1b <- results$resw1tb1bLmat
 parIb <- results$resib1bLmat
 WTminmax <- results$maxminwtmat
 #Load the method used (e.g. Cobb, Translog, Hermite)
@@ -95,7 +94,8 @@ save_plot("/Users/justindoty/Documents/Research/Dissertation/Nonlinear_Productio
 #correction to the productivity equation and drop firms according to this rule
 #in the simulated model
 #############################################################################
-N <- 10000
+Nsim <- 20
+N <- length(unique(US$id))*Nsim
 T <- length(unique(US$year))
 #Age
 adata <- matrix(0, N, T)
@@ -123,13 +123,12 @@ omgdata <- matrix(0, N, T)
 xidata <- matrix(runif(N*T), nrow=N, ncol=T)
 #Simulate Data at T=1
 t1data <- US %>% group_by(id) %>% slice(1)
-A1 <- log(t1data$A)
-A <- exp(rtruncnorm(n=N, a=min(A1), b=max(A1), mean=mean(A1), sd=sd(A1)))
-adata[,1] <- A
+adata[,1] <- kronecker(array(1, c(Nsim,1)), t1data$A)
 #Initial Productivity
-omgdata[,1] <- rowSums(W1X(A=A)*lspline(vectau=vectau, bvec=parW1, b1=parW1b[1], bL=parW1b[2], u=xidata[,1]))
+omgdata[,1] <- rnorm(N, mean=parW1[1], sd=sqrt(parW1[2]))
 #########################################################################################################
 #Capital is not estimated in the main model, but needs to be estimated for simulation purposes
+#Or use standard capital accumulation rule + iid noise
 #For K>1
 KT <- function(Klag, Ilag){
 	return(cbind(1, Klag, Ilag, Klag*Ilag, Klag^2, Ilag^2))
@@ -142,36 +141,26 @@ ktlm <- lm(K[idcon]~KT(Klag=K[idlag], Ilag=I[idlag])-1, data=US)
 ktcoef <- as.numeric(coef(ktlm))
 ktsd <- sigma(ktlm)
 #For K=1
-K1 <- function(A1){
-	return(cbind(1, A1))
-}
-k1lm <- lm(K[id1]~K1(A=A[id1])-1, data=US)
-k1coef <- as.numeric(coef(k1lm))
-k1sd <- sigma(k1lm)
-#Initial Capital
-lnkdata[,1] <- rnorm(N, mean=K1(A1=A)%*%as.matrix(k1coef), sd=k1sd)
-#Restrict the Support of Initial Capital
-lnkdata[,1] <- (lnkdata[,1]>max(t1data$K))*max(t1data$K)+(lnkdata[,1]<min(t1data$K))*min(t1data$K)+(lnkdata[,1]<=max(t1data$K))*(lnkdata[,1]>=min(t1data$K))*lnkdata[,1]
+lnkdata[,1] <- kronecker(array(1, c(Nsim,1)), t1data$K)
 #Initial Investment
-lnidata[,1] <- rowSums(IX(A=A, K=lnkdata[,1], omega=omgdata[,1])*lspline(vectau=vectau, bvec=parI, b1=parIb[1], bL=parIb[2], u=iotadata[,1]))
+lnidata[,1] <- rowSums(IX(A=adata[,1], K=lnkdata[,1], omega=omgdata[,1])*lspline(vectau=vectau, bvec=parI, b1=parIb[1], bL=parIb[2], u=iotadata[,1]))
 #Restrict Support of Initial Investment
 lnidata[,1] <- (lnidata[,1]>max(t1data$I))*max(t1data$I)+(lnidata[,1]<min(t1data$I))*min(t1data$I)+(lnidata[,1]<=max(t1data$I))*(lnidata[,1]>=min(t1data$I))*lnidata[,1]
 #Evolution of Productivity and Capital
 for (t in 2:T){
 	ttdata <- US %>% group_by(id) %>% slice(t)
 	#Age
-	A <- A+1
-	adata[,t] <- A
+	adata[,t] <- adata[,t-1]+1
 	#Capital
 	lnkdata[,t] <- rnorm(N, mean=KT(Klag=lnkdata[,t-1], Ilag=lnidata[,t-1])%*%as.matrix(ktcoef), sd=ktsd)
 	#Restrict the Support of Capital 
 	lnkdata[,t] <- (lnkdata[,t]>max(ttdata$K))*max(ttdata$K)+(lnkdata[,t]<min(ttdata$K))*min(ttdata$K)+(lnkdata[,t]<=max(ttdata$K))*(lnkdata[,t]>=min(ttdata$K))*lnkdata[,t]
 	#Productivity
-	omgdata[,t] <- rowSums(WX(A=A, omega=omgdata[,t-1])*lspline(vectau=vectau, bvec=parWT, b1=parWTb[1], bL=parWTb[2], u=xidata[,t]))
+	omgdata[,t] <- rowSums(WX(A=adata[,t], omega=omgdata[,t-1])*lspline(vectau=vectau, bvec=parWT, b1=parWTb[1], bL=parWTb[2], u=xidata[,t]))
 	#Restrict the Support of Productivity
 	omgdata[,t] <- (omgdata[,t]>WTminmax[1])*WTminmax[1]+(omgdata[,t]<WTminmax[2])*WTminmax[2]+(omgdata[,t]<=WTminmax[1])*(omgdata[,t]>=WTminmax[2])*omgdata[,t]
 	#Investment
-	lnidata[,t] <- rowSums(IX(A=A, K=lnkdata[,t], omega=omgdata[,t])*lspline(vectau=vectau, bvec=parI, b1=parIb[1], bL=parIb[2], u=iotadata[,t]))
+	lnidata[,t] <- rowSums(IX(A=adata[,t], K=lnkdata[,t], omega=omgdata[,t])*lspline(vectau=vectau, bvec=parI, b1=parIb[1], bL=parIb[2], u=iotadata[,t]))
 	#Restrict the Support of Investment
 	lnidata[,t] <- (lnidata[,t]>max(ttdata$I))*max(ttdata$I)+(lnidata[,t]<min(ttdata$I))*min(ttdata$I)+(lnidata[,t]<=max(ttdata$I))*(lnidata[,t]>=min(ttdata$I))*lnidata[,t]
 }
@@ -191,12 +180,30 @@ for (t in 1:T){
 	lnydata[,t] <- (lnydata[,t]>max(ttdata$Y))*max(ttdata$Y)+(lnydata[,t]<min(ttdata$Y))*min(ttdata$Y)+(lnydata[,t]<=max(ttdata$Y))*(lnydata[,t]>=min(ttdata$Y))*lnydata[,t]
 }
 #Vectorize
+#Output
 out <- c(t(lnydata))
+outcon <- c(t(lnydata[,2:T]))
+outlag <- c(t(lnydata[,1:(T-1)]))
+#Capital
 cap <- c(t(lnkdata))
+capcon <- c(t(lnkdata[,2:T]))
+caplag <- c(t(lnkdata[,1:(T-1)]))
+#Labor
 lab <- c(t(lnldata))
+labcon <- c(t(lnldata[,2:T]))
+lablag <- c(t(lnldata[,1:(T-1)]))
+#Materials
 mat <- c(t(lnmdata))
+matcon <- c(t(lnmdata[,2:T]))
+matlag <- c(t(lnmdata[,1:(T-1)]))
+#Productivity
 omg <- c(t(omgdata))
+omgcon <- c(t(omgdata[,2:T]))
+omglag <- c(t(omgdata[,1:(T-1)]))
+#Age
 age <- c(t(adata))
+agecon <- c(t(adata[,2:T]))
+agelag <- c(t(adata[,1:(T-1)]))
 ##################################################
 #Calculate Average QMEs of the Output Elasticities
 ##################################################
@@ -328,15 +335,12 @@ save_plot("/Users/justindoty/Documents/Research/Dissertation/Nonlinear_Productio
 #Productivity
 #####################################################################################################################################################################################
 #Productivity Persistence
-omglag <- c(t(omgdata[,1:(T-1)]))
-omgcon <- c(t(omgdata[,2:T]))
-acon <- c(t(adata[,2:T]))
-omgx <- sweep(WX(A=acon, omega=omglag)[,-c(2,dims$W)], 2, c(1:3), "*")
-omgaqme_data <- data.frame(tau=vectau, omgaqme=colMeans(apply(parWT[-c(1,2),], 2, function(x) omgx%*%x)))
+omgx <- sweep(WX(A=agecon, omega=omglag)[,-c(dims$W)], 2, c(1:3), "*")
+omgaqme_data <- data.frame(tau=vectau, omgaqme=colMeans(apply(parWT[-c(1),], 2, function(x) omgx%*%x)))
 omgaqme_plot <- ggplot(omgaqme_data, aes(x=tau)) + xlab(expression('percentile-'*tau)) + ylab("Average Persistence") + geom_line(aes(y=omgaqme))
 save_plot("/Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Function_QR/Code/Empirical/Investment/Plots/TFP/OMG_AQME.png", omgaqme_plot)
 #3D Productivity
-omg3dq <- apply(omgx, 2, function(q) quantile(q, probs=vectau))%*%parWT[-c(1,2),]
+omg3dq <- apply(omgx, 2, function(q) quantile(q, probs=vectau))%*%parWT[-c(1),]
 omgfacet <- omg3dq[-1,-1]+omg3dq[-1,-ncz]+omg3dq[-nrz,-1]+omg3dq[-nrz,-ncz]
 facetcol <- cut(omgfacet, nbcol)
 png("/Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Function_QR/Code/Empirical/Investment/Plots/TFP/3dpers.png")
@@ -375,11 +379,37 @@ mw3dplot <- recordPlot()
 dev.off()
 lmwplot <- plot_grid(lw3dplot, mw3dplot, ncol=2)
 save_plot("/Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Function_QR/Code/Empirical/Investment/Plots/Inputs/LMWPlot.png", lmwplot, base_height =5, base_width = 10)
-
-
-
-
-
+#Investment##############################################################################
+iwpost <- c(4,5,7,8,9,10,12)
+iw3d <- function(x){
+	return(colMeans(cbind(1, cap, 2*x, cap^2, 2*x*cap, 2*x*cap^2, 3*x^2)))
+}
+iw3dq <- t(sapply(vectau, function(q) iw3d(quantile(omg, probs=q))))%*%parI[iwpost,]
+iwfacet <- iw3dq[-1,-1]+iw3dq[-1,-ncz]+iw3dq[-nrz,-1]+iw3dq[-nrz,-ncz]
+facetcol <- cut(iwfacet, nbcol)
+# png("/Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Function_QR/Code/Empirical/Investment/Plots/Inputs/IW3D.png")
+persp(x=vectau, y=vectau, z=iw3dq, xlab="percentile-productivity", ylab="percentile-investment", zlab="Investment-Productivity", col=color[facetcol], ticktype="detailed", phi=20,theta=-60)
+iw3dplot <- recordPlot()
+dev.off()
+#Capital (Here is examine the effect of lagged productivity on current capital though investment, i.e. chain rule)
+#Calculated at the quantiles or lagged productivity and investment
+kw3d <- function(x){
+	#Investment Rule
+	I <- IX(A=agecon, K=caplag, omega=rep(x, length(caplag)))%*%parI
+	#Derivative of Investment Rule w.r.t productivity
+	IW <- cbind(1, caplag, 2*x, caplag^2, 2*caplag*x, 2*x*caplag^2, 3*x^2)%*%parI[iwpost,]
+	#Derivative of Capital Accumulation Rule w.r.t investment
+	KW <- sapply(1:ntau, function(tau)  mean((cbind(1, caplag, 2*I[,tau])%*%as.matrix(ktcoef[c(3,4,6)]))*IW[,tau]))
+	return(KW)
+}
+kw3dq <- sapply(vectau, function(q) kw3d(quantile(omglag, probs=q)))
+kwfacet <- kw3dq[-1,-1]+kw3dq[-1,-ncz]+kw3dq[-nrz,-1]+kw3dq[-nrz,-ncz]
+facetcol <- cut(kwfacet, nbcol)
+persp(x=vectau, y=vectau, z=kw3dq, xlab="percentile-productivity", ylab="percentile-capital", zlab="Capital-Productivity", col=color[facetcol], ticktype="detailed", phi=20,theta=-60)
+kw3dplot <- recordPlot()
+dev.off()
+ikwplot <- plot_grid(iw3dplot, kw3dplot, ncol=2)
+save_plot("/Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Function_QR/Code/Empirical/Investment/Plots/Inputs/IKWPlot.png", ikwplot, base_height =5, base_width = 10)
 
 
 
