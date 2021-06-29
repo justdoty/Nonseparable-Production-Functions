@@ -11,9 +11,11 @@ source('/Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_F
 source('/Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Function_QR/Code/Functions/omega.R')
 #Load US Dataset
 US <- read.csv('/Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Function_QR/Data/USdata.csv') %>% 
-select(id, year, Y, K, K2, L, M, I, age) %>% transmute(id=id, year=year, Y=log(Y), K=log(K), L=log(L), M=log(M), I=log(I), A=age)
+select(id, year, Y, K, K2, L, M, I, age, drate) %>% transmute(id=id, year=year, Y=log(Y), K=log(K), L=log(L), M=log(M), I=log(I), A=age, dp=drate)
 #Productivity from LP
 omegainit <- omega_est(idvar=US$id, timevar=US$year, Y=US$Y, A=US$A, K=US$K, L=US$L, M=US$M)$omega
+#Merge with US Data
+US <- US %>% mutate(omega=omegainit)
 ########################################################################################################
 ##########################################Load Results############################################
 ########################################################################################################
@@ -33,9 +35,8 @@ parYb <- results$resyb1bLmat
 parLb <- results$reslb1bLmat
 parMb <- results$resmb1bLmat
 parWTb <- results$reswtb1bLmat
-parW1b <- results$resw1tb1bLmat
 parIb <- results$resib1bLmat
-WTminmax <- c(10,-10)
+WTminmax <- results$maxminwtmat
 #Load the method used (e.g. Cobb, Translog, Hermite)
 method <- results$method
 resY <- results$resY
@@ -47,65 +48,38 @@ resY <- results$resY
 #correction to the productivity equation and drop firms according to this rule
 #in the simulated model
 #############################################################################
-N <- 10000
+#Expand the sample
+Nsim <- 20
+N <- length(unique(US$id))*Nsim
 T <- length(unique(US$year))
-#Vector or rank of input demand functions (small, medium, large shocks)
+#Vector of ranks of input demand functions (small, medium, large shocks)
 tauinp <- c(0.1, 0.5, 0.9)
+#Shocks to productivity
+tauxi <- c(0.1, 0.5, 0.9)
 #Rank of initial productivity
 tauinit <- 0.5
 #Age##################################################################
 adata <- matrix(0, N, T)
 #Labor###############################################################
-lnldata <- matrix(0, N, T)
-# labpath <- matrix(0, T, length(tauinp))
-#High Labor Path
-highlab <- lnldata
-#Median Labor Path
-medlab <- lnldata
-#Low Labor Path
-lowlab <- lnldata
-#Unobservable Shock to Labor
-epsdata <- matrix(runif(N*T), nrow=N, ncol=T)
+lnldata <- array(0, c(T, length(tauxi), length(tauinp)))
+epsdata <- array(0, c(N, T, length(tauinp)))
 #Intermediate Input#####################################################
-lnmdata <- matrix(0, N, T)
-# matpath <- matrix(0, T, length(tauinp))
-#High Materials Path
-highmat <- lnmdata
-#Median Labor Path
-medmat <- lnmdata
-#Low Labor Path
-lowmat <- lnmdata
-#Unobservable Shock to Intermediate Inputs
-varepsdata <- matrix(runif(N*T), nrow=N, ncol=T)
+lnmdata <- array(0, c(T, length(tauxi), length(tauinp)))
+varepsdata <- array(0, c(N, T, length(tauinp)))
 #Investment###############################################################
-lnidata <- matrix(0, N, T)
-#High Investment Path
-highinv <- lnidata
-#Median Labor Path
-medinv <- lnidata
-#Low Labor Path
-lowinv <- lnidata
-#Unobservable Shock to Investment
-iotadata <- matrix(runif(N*T), nrow=N, ncol=T)
+lnidata <- array(0, c(N, T, length(tauxi)))
+iotadata <- matrix(0.5, nrow=N, ncol=T)
 #Capital##################################################################
-lnkdata <- matrix(0, N, T)
-#High Capital Path
-highcap <- lnkdata
-#Median Labor Path
-medcap <- lnkdata
-#Low Labor Path
-lowcap <- lnkdata
+lnkdata <- array(0, c(N, T, length(tauxi)))
 #Productivity#############################################################
-omgdata <- matrix(0, N, T)
-#High Productivity Path
-highomg <- omgdata
-#Median Productivity Path
-medomg <- omgdata
-#Low Productivity Path
-lowomg <- omgdata
-#Unobservable Shock to Productivity
-xidata <- matrix(runif(N*T), nrow=N, ncol=T)
-highxi <- xidata; medxi <- xidata; lowxi <- xidata
+omgdata <- array(0, c(N, T, length(tauxi)))
+xi <- matrix(runif(N*T), nrow=N, ncol=T)
+xidata <- replicate(length(tauxi), xi, simplify="array")
+#Ranks for Input Shocks
+for (q2 in 1:length(tauinp)){
+	epsdata[,,q2] <- array(tauinp[q2], c(N,T))
+	varepsdata[,,q2] <- array(tauinp[q2], c(N,T))
+}
 #########################################################################################################
 #Data at T=1
 t1data <- US %>% group_by(id) %>% slice(1)
@@ -114,134 +88,67 @@ A1 <- t1data$A
 #Give each firm the same age at T=1
 adata[,1] <- round(median(A1))
 #Initial Productivity (Give each firm the same rank initial  productivity specified by tauinit)
-omgdata[,1] <- rowSums(W1X(A=adata[,1])*lspline(vectau=vectau, bvec=parW1, b1=parW1b[1], bL=parW1b[2], u=xidata[,1]))
-omgdata[,1] <- quantile(omgdata[,1], tauinit)
-#All Productivity Paths start at this inital value
-highomg[,1] <- omgdata[,1]
-medomg[,1] <- omgdata[,1]
-lowomg[,1] <- omgdata[,1]
-#Capital is not estimated in the main model, but needs to be estimated for simulation purposes
-#For example one could use the standard capital accumulation process with depreciation rates from NBER-CES data
-#Or estimate the distribution of capital from the data as a function of previous period capital and investment
-KT <- function(A, Klag, Ilag){
-	return(cbind(1, A, Klag, Ilag, Klag*Ilag, Klag^2, Ilag^2))
-}
-#Then estimatate
-idcon <- duplicated(US$id)
-idlag <- duplicated(US$id, fromLast=TRUE)
-id1 <- !idcon
-ktlm <- lm(K[idcon]~KT(A=A[idcon], Klag=K[idlag], Ilag=I[idlag])-1, data=US)
-ktcoef <- as.numeric(coef(ktlm))
-ktsd <- sigma(ktlm)
-#For K=1
-K1 <- function(A1){
-	return(cbind(1, A1))
-}
-k1lm <- lm(K[id1]~K1(A=A[id1])-1, data=US)
-k1coef <- as.numeric(coef(k1lm))
-k1sd <- sigma(k1lm)
+omg1 <- quantile(rnorm(N, mean=parW1[1], sd=sqrt(parW1[2])), tauinit)
 #Initial Capital
-lnkdata[,1] <- rnorm(N, mean=K1(A1=adata[,1])%*%as.matrix(k1coef), sd=k1sd)
-#Restrict the Support of Initial Capital
-lnkdata[,1] <- (lnkdata[,1]>max(t1data$K))*max(t1data$K)+(lnkdata[,1]<min(t1data$K))*min(t1data$K)+(lnkdata[,1]<=max(t1data$K))*(lnkdata[,1]>=min(t1data$K))*lnkdata[,1]
-#Paths for Initial Capital
-highcap[,1] <- lnkdata[,1]
-medcap[,1] <- lnkdata[,1]
-lowcap[,1] <- lnkdata[,1]
-#Initial Investment 
-lnidata[,1] <- rowSums(IX(A=adata[,1], K=lnkdata[,1], omega=omgdata[,1])*lspline(vectau=vectau, bvec=parI, b1=parIb[1], bL=parIb[2], u=iotadata[,1]))
+k1 <- kronecker(array(1, c(Nsim,1)), t1data$K)
+#Initial Investment (Same for Each Firm)
+i1 <- rowSums(IX(A=adata[,1], K=k1, omega=omg1)*lspline(vectau=vectau, bvec=parI, b1=parIb[1], bL=parIb[2], u=iotadata[,1]))
 #Restrict Support of Initial Investment
-lnidata[,1] <- (lnidata[,1]>max(t1data$I))*max(t1data$I)+(lnidata[,1]<min(t1data$I))*min(t1data$I)+(lnidata[,1]<=max(t1data$I))*(lnidata[,1]>=min(t1data$I))*lnidata[,1]
-#Paths for Initial Investment
-highinv[,1] <- lnidata[,1]
-medinv[,1] <- lnidata[,1]
-lowinv[,1] <- lnidata[,1]
-#Evolution of Productivity, Capital, and Investment
+i1 <- (i1>max(t1data$I))*max(t1data$I)+(i1<min(t1data$I))*min(t1data$I)+(i1<=max(t1data$I))*(i1>=min(t1data$I))*i1
+#Initial Inputs
+for (q1 in 1:length(tauxi)){
+	omgdata[,,q1][,1] <- omg1
+	lnkdata[,,q1][,1] <- k1
+	lnidata[,,q1][,1] <- i1
+	xidata[,,q1][,2] <- tauxi[q1]
+	for (q2 in 1:length(tauinp)){
+		l1 <- rowSums(LX(A=adata[,1], K=lnkdata[,,q1][,1], omega=omgdata[,,q1][,1])*lspline(vectau=vectau, bvec=parL, b1=parLb[1], bL=parLb[2], u=epsdata[,,q2][,1]))
+		m1 <- rowSums(MX(A=adata[,1], K=lnkdata[,,q1][,1], omega=omgdata[,,q1][,1])*lspline(vectau=vectau, bvec=parM, b1=parMb[1], bL=parMb[2], u=varepsdata[,,q2][,1]))
+		#Restricting the Supports
+		l1 <- (l1>max(t1data$L))*max(t1data$L)+(l1<min(t1data$L))*min(t1data$L)+(l1<=max(t1data$L))*(l1>=min(t1data$L))*l1
+		m1 <- (m1>max(t1data$M))*max(t1data$M)+(m1<min(t1data$M))*min(t1data$M)+(m1<=max(t1data$M))*(m1>=min(t1data$M))*m1
+		#Median Across Firms
+		lnldata[,,q1][1,q2] <- median(l1)
+		lnmdata[,,q1][1,q2] <- median(m1)
+	}
+}
+#Evolution of Productivity, Capital, Investment, and Input Decisions for Labor and Materials
+#This Loop is Pretty Slow
+wmin <- -10
+wmax <- 10
 for (t in 2:T){
 	ttdata <- US %>% group_by(id) %>% slice(t)
 	#Age
 	adata[,t] <- adata[,t-1]+1
-	#Capital
-	highcap[,t] <- rnorm(N, mean=KT(A=adata[,t], Klag=highcap[,t-1], Ilag=highinv[,t-1])%*%as.matrix(ktcoef), sd=ktsd)
-	medcap[,t] <- rnorm(N, mean=KT(A=adata[,t], Klag=medcap[,t-1], Ilag=medinv[,t-1])%*%as.matrix(ktcoef), sd=ktsd)
-	lowcap[,t] <- rnorm(N, mean=KT(A=adata[,t], Klag=lowcap[,t-1], Ilag=lowinv[,t-1])%*%as.matrix(ktcoef), sd=ktsd)
-	#Restrict the Support of Capital 
-	highcap[,t] <- (highcap[,t]>max(ttdata$K))*max(ttdata$K)+(highcap[,t]<min(ttdata$K))*min(ttdata$K)+(highcap[,t]<=max(ttdata$K))*(highcap[,t]>=min(ttdata$K))*highcap[,t]
-	medcap[,t] <- (medcap[,t]>max(ttdata$K))*max(ttdata$K)+(medcap[,t]<min(ttdata$K))*min(ttdata$K)+(medcap[,t]<=max(ttdata$K))*(medcap[,t]>=min(ttdata$K))*medcap[,t]
-	lowcap[,t] <- (lowcap[,t]>max(ttdata$K))*max(ttdata$K)+(lowcap[,t]<min(ttdata$K))*min(ttdata$K)+(lowcap[,t]<=max(ttdata$K))*(lowcap[,t]>=min(ttdata$K))*lowcap[,t]
-	#Productivity
-	highomg[,t] <- rowSums(WX(A=adata[,t], omega=highomg[,t-1])*lspline(vectau=vectau, bvec=parWT, b1=parWTb[1], bL=parWTb[2], u=highxi[,t]))
-	#Restrict the Support of High Productivity
-	highomg[,t] <- (highomg[,t]>WTminmax[1])*WTminmax[1]+(highomg[,t]<WTminmax[2])*WTminmax[2]+(highomg[,t]<=WTminmax[1])*(highomg[,t]>=WTminmax[2])*highomg[,t]
-	#Median Productivity
-	medomg[,t] <- rowSums(WX(A=adata[,t], omega=medomg[,t-1])*lspline(vectau=vectau, bvec=parWT, b1=parWTb[1], bL=parWTb[2], u=medxi[,t]))
-	#Restrict the Support of Median Productivity
-	medomg[,t] <- (medomg[,t]>WTminmax[1])*WTminmax[1]+(medomg[,t]<WTminmax[2])*WTminmax[2]+(medomg[,t]<=WTminmax[1])*(medomg[,t]>=WTminmax[2])*medomg[,t]
-	#Low Productivity
-	lowomg[,t] <- rowSums(WX(A=adata[,t], omega=lowomg[,t-1])*lspline(vectau=vectau, bvec=parWT, b1=parWTb[1], bL=parWTb[2], u=lowxi[,t]))
-	#Restrict the Support of Low Productivity
-	lowomg[,t] <- (lowomg[,t]>WTminmax[1])*WTminmax[1]+(lowomg[,t]<WTminmax[2])*WTminmax[2]+(lowomg[,t]<=WTminmax[1])*(lowomg[,t]>=WTminmax[2])*lowomg[,t]
-	#Investment
-	highinv[,t] <- rowSums(IX(A=adata[,t], K=highcap[,t], omega=highomg[,t])*lspline(vectau=vectau, bvec=parI, b1=parIb[1], bL=parIb[2], u=iotadata[,t]))
-	medinv[,t] <- rowSums(IX(A=adata[,t], K=medcap[,t], omega=medomg[,t])*lspline(vectau=vectau, bvec=parI, b1=parIb[1], bL=parIb[2], u=iotadata[,t]))
-	lowinv[,t] <- rowSums(IX(A=adata[,t], K=lowcap[,t], omega=lowomg[,t])*lspline(vectau=vectau, bvec=parI, b1=parIb[1], bL=parIb[2], u=iotadata[,t]))
-	#Restrict the Support of Investment
-	highinv[,t] <- (highinv[,t]>max(ttdata$I))*max(ttdata$I)+(highinv[,t]<min(ttdata$I))*min(ttdata$I)+(highinv[,t]<=max(ttdata$I))*(highinv[,t]>=min(ttdata$I))*highinv[,t]
-	medinv[,t] <- (medinv[,t]>max(ttdata$I))*max(ttdata$I)+(medinv[,t]<min(ttdata$I))*min(ttdata$I)+(medinv[,t]<=max(ttdata$I))*(medinv[,t]>=min(ttdata$I))*medinv[,t]
-	lowinv[,t] <- (lowinv[,t]>max(ttdata$I))*max(ttdata$I)+(lowinv[,t]<min(ttdata$I))*min(ttdata$I)+(lowinv[,t]<=max(ttdata$I))*(lowinv[,t]>=min(ttdata$I))*lowinv[,t]
-	#At t=2, simulate productivity paths when hit by different sized innovation shocks
-	if (t==2){
-		#High Innovation Shock
-		highxi[,t] <- array(0.9, N)
-		#Medium Innovation Shock
-		medxi[,t] <- array(0.5, N)
-		#Low Innovation Shock
-		lowxi[,t] <- array(0.1, N)
-	} 
-	#Productivity
-	highomg[,t] <- rowSums(WX(A=adata[,t], omega=highomg[,t-1])*lspline(vectau=vectau, bvec=parWT, b1=parWTb[1], bL=parWTb[2], u=highxi[,t]))
-	#Restrict the Support of High Productivity
-	highomg[,t] <- (highomg[,t]>WTminmax[1])*WTminmax[1]+(highomg[,t]<WTminmax[2])*WTminmax[2]+(highomg[,t]<=WTminmax[1])*(highomg[,t]>=WTminmax[2])*highomg[,t]
-	#Median Productivity
-	medomg[,t] <- rowSums(WX(A=adata[,t], omega=medomg[,t-1])*lspline(vectau=vectau, bvec=parWT, b1=parWTb[1], bL=parWTb[2], u=medxi[,t]))
-	#Restrict the Support of Median Productivity
-	medomg[,t] <- (medomg[,t]>WTminmax[1])*WTminmax[1]+(medomg[,t]<WTminmax[2])*WTminmax[2]+(medomg[,t]<=WTminmax[1])*(medomg[,t]>=WTminmax[2])*medomg[,t]
-	#Low Productivity
-	lowomg[,t] <- rowSums(WX(A=adata[,t], omega=lowomg[,t-1])*lspline(vectau=vectau, bvec=parWT, b1=parWTb[1], bL=parWTb[2], u=lowxi[,t]))
-	#Restrict the Support of Low Productivity
-	lowomg[,t] <- (lowomg[,t]>WTminmax[1])*WTminmax[1]+(lowomg[,t]<WTminmax[2])*WTminmax[2]+(lowomg[,t]<=WTminmax[1])*(lowomg[,t]>=WTminmax[2])*lowomg[,t]
-
+	for (q1 in 1:length(tauxi)){
+		omgdata[,,q1][,t] <- rowSums(WX(A=adata[,t], omega=omgdata[,,q1][,t-1])*lspline(vectau=vectau, bvec=parWT, b1=parWTb[1], bL=parWTb[2], u=xidata[,,q1][,t]))
+		#Restricting the Supports
+		omgdata[,,q1][,t] <- (omgdata[,,q1][,t]>wmax)*wmax+(omgdata[,,q1][,t]<wmin)*wmin+(omgdata[,,q1][,t]<=wmax)*(omgdata[,,q1][,t]>=wmin)*omgdata[,,q1][,t]
+		#Generate Capital According to Accumulation Process with Industry-Average Depreciation Rates
+		lnkdata[,,q1][,t] <- log(mean(ttdata$dp)*exp(lnkdata[,,q1][,t-1])+exp(lnidata[,,q1][,t-1]))
+		#Generate Investment
+		lnidata[,,q1][,t] <- rowSums(IX(A=adata[,t], K=lnkdata[,,q1][,t], omega=omgdata[,,q1][,t])*lspline(vectau=vectau, bvec=parI, b1=parIb[1], bL=parIb[2], u=iotadata[,t]))
+		#Restricting Supports
+		lnidata[,,q1][,t] <- (lnidata[,,q1][,t]>max(ttdata$I))*max(ttdata$I)+(lnidata[,,q1][,t]<min(ttdata$I))*min(ttdata$I)+(lnidata[,,q1][,t]<=max(ttdata$I))*(lnidata[,,q1][,t]>=min(ttdata$I))*lnidata[,,q1][,t]
+		#Generate Optimal Input Decisions Following Innovation Shocks for Various Ranks of Demand Functions
+		for (q2 in 1:length(tauinp)){
+			labdata <- rowSums(LX(A=adata[,t], K=lnkdata[,,q1][,t], omega=omgdata[,,q1][,t])*lspline(vectau=vectau, bvec=parL, b1=parLb[1], bL=parLb[2], u=epsdata[,,q2][,t]))
+			matdata <- rowSums(MX(A=adata[,t], K=lnkdata[,,q1][,t], omega=omgdata[,,q1][,t])*lspline(vectau=vectau, bvec=parM, b1=parMb[1], bL=parMb[2], u=varepsdata[,,q2][,t]))
+			#Restricting the Supports
+			labdata <- (labdata>max(ttdata$L))*max(ttdata$L)+(labdata<min(ttdata$L))*min(ttdata$L)+(labdata<=max(ttdata$L))*(labdata>=min(ttdata$L))*labdata
+			matdata <- (matdata>max(ttdata$M))*max(ttdata$M)+(matdata<min(ttdata$M))*min(ttdata$M)+(matdata<=max(ttdata$M))*(matdata>=min(ttdata$M))*matdata
+			#Median Across Firms
+			lnldata[,,q1][t,q2] <- median(labdata)
+			lnmdata[,,q1][t,q2] <- median(matdata)
+		}
+	}
 }
-for (t in 1:T){
-	ttdata <- US %>% group_by(id) %>% slice(t)
-	#Labor Paths
-	lab1 <- rowSums(LX(A=adata[,t], K=highcap[,t], omega=highomg[,t])*lspline(vectau=vectau, bvec=parL, b1=parLb[1], bL=parLb[2], u=epsdata[,t]))
-	lab2 <- rowSums(LX(A=adata[,t], K=medcap[,t], omega=medomg[,t])*lspline(vectau=vectau, bvec=parL, b1=parLb[1], bL=parLb[2], u=epsdata[,t]))
-	lab3 <- rowSums(LX(A=adata[,t], K=lowcap[,t], omega=lowomg[,t])*lspline(vectau=vectau, bvec=parL, b1=parLb[1], bL=parLb[2], u=epsdata[,t]))
-	#Restrict the Supports
-	highlab[,t] <- (lab1>max(ttdata$L))*max(ttdata$L)+(lab1<min(ttdata$L))*min(ttdata$L)+(lab1<=max(ttdata$L))*(lab1>=min(ttdata$L))*lab1
-	medlab[,t] <- (lab2>max(ttdata$L))*max(ttdata$L)+(lab2<min(ttdata$L))*min(ttdata$L)+(lab2<=max(ttdata$L))*(lab2>=min(ttdata$L))*lab2
-	lowlab[,t] <- (lab3>max(ttdata$L))*max(ttdata$L)+(lab3<min(ttdata$L))*min(ttdata$L)+(lab3<=max(ttdata$L))*(lab3>=min(ttdata$L))*lab3
-	#Material Paths
-	mat1 <- rowSums(MX(A=adata[,t], K=highcap[,t], omega=highomg[,t])*lspline(vectau=vectau, bvec=parM, b1=parMb[1], bL=parMb[2], u=varepsdata[,t]))
-	mat2 <- rowSums(MX(A=adata[,t], K=medcap[,t], omega=medomg[,t])*lspline(vectau=vectau, bvec=parM, b1=parMb[1], bL=parMb[2], u=varepsdata[,t]))
-	mat3 <- rowSums(MX(A=adata[,t], K=lowcap[,t], omega=lowomg[,t])*lspline(vectau=vectau, bvec=parM, b1=parMb[1], bL=parMb[2], u=varepsdata[,t]))
-	#Restrict the Supports
-	highmat[,t] <- (mat1>max(ttdata$M))*max(ttdata$M)+(mat1<min(ttdata$M))*min(ttdata$M)+(mat1<=max(ttdata$M))*(mat1>=min(ttdata$M))*mat1
-	medmat[,t] <- (mat2>max(ttdata$M))*max(ttdata$M)+(mat2<min(ttdata$M))*min(ttdata$M)+(mat2<=max(ttdata$M))*(mat2>=min(ttdata$M))*mat2
-	lowmat[,t] <- (mat3>max(ttdata$M))*max(ttdata$M)+(mat3<min(ttdata$M))*min(ttdata$M)+(mat3<=max(ttdata$M))*(mat3>=min(ttdata$M))*mat3
-}
-highlab <- t(apply(highlab, 2, function(x) quantile(x, probs=tauinp)))
-medlab <- t(apply(medlab, 2, function(x) quantile(x, probs=tauinp)))
-lowlab <- t(apply(lowlab, 2, function(x) quantile(x, probs=tauinp)))
-highmat <- t(apply(highmat, 2, function(x) quantile(x, probs=tauinp)))
-medmat <- t(apply(medmat, 2, function(x) quantile(x, probs=tauinp)))
-lowmat <- t(apply(lowmat, 2, function(x) quantile(x, probs=tauinp)))
-# Paths for Labor at different ranks of labor shock
-labpath <- data.frame(1:T, lowlab-medlab, highlab-medlab)
+#For the arrays, lnldata and lnmdata, the 1st dimension is time, 2nd is rank of input, 3rd is rank of productivity innovation
+#So "Low-Low" represents low labor shock and low innovation shock
+labpath <- data.frame(1:T, lnldata[,,1]-lnldata[,,2], lnldata[,,3]-lnldata[,,2])
 names(labpath) <- c("Time", "LowLow", "LowMed", "LowHigh", "HighLow", "HighMed", "HighHigh")
 #Paths for Materials at different ranks of materials shock
-matpath <- data.frame(1:T, lowmat-medmat, highmat-medmat)
+matpath <- data.frame(1:T, lnmdata[,,1]-lnmdata[,,2], lnmdata[,,3]-lnmdata[,,2])
 names(matpath) <- c("Time", "LowLow", "LowMed", "LowHigh", "HighLow", "HighMed", "HighHigh")
 #Plotting
 titles <- c(0.1, 0.1, 0.1, 0.9, 0.9, 0.9)
@@ -250,9 +157,9 @@ Mplot <- list()
 for (i in 1:6){
 	if (i<=3){
 		ldat <- data.frame(Time=labpath$Time, Y=labpath[,i+1])
-		Lplot[[i]] <- ggplot(ldat, aes(x=Time, y=Y)) + geom_line() + xlab("Time") + ylab("Labor") + coord_cartesian(ylim=c(min(ldat$Y), max(ldat$Y))*2) + ggtitle(expression(paste(tau, "-innovation=0.1")))+ geom_hline(yintercept=0, linetype='dashed', color='red')
+		Lplot[[i]] <- ggplot(ldat, aes(x=Time, y=Y)) + geom_line() + xlab("Time") + ylab("Labor") + coord_cartesian(ylim=c(min(ldat$Y), max(ldat$Y)*2))+ ggtitle(expression(paste(tau, "-innovation=0.1")))+ geom_hline(yintercept=0, linetype='dashed', color='red')
 		mdat <- data.frame(Time=matpath$Time, Y=matpath[,i+1])
-		Mplot[[i]] <- ggplot(mdat, aes(x=Time, y=Y)) + geom_line() + xlab("Time") + ylab("Materials")+ coord_cartesian(ylim=c(min(mdat$Y), max(mdat$Y))*2) + ggtitle(expression(paste(tau, "-innovation=0.1")))+ geom_hline(yintercept=0, linetype='dashed', color='red')
+		Mplot[[i]] <- ggplot(mdat, aes(x=Time, y=Y)) + geom_line() + xlab("Time") + ylab("Materials")+ coord_cartesian(ylim=c(min(mdat$Y), max(mdat$Y)*2)) + ggtitle(expression(paste(tau, "-innovation=0.1")))+ geom_hline(yintercept=0, linetype='dashed', color='red')
 	} else {
 		ldat <- data.frame(Time=labpath$Time, Y=labpath[,i+1])
 		Lplot[[i]] <- ggplot(ldat, aes(x=Time, y=Y)) + geom_line() + xlab("Time") + ylab("Labor") + coord_cartesian(ylim=c(min(ldat$Y), max(ldat$Y))*2) + ggtitle(expression(paste(tau, "-innovation=0.9")))+ geom_hline(yintercept=0, linetype='dashed', color='red')
@@ -281,8 +188,12 @@ Mrow3 <- plot_grid(Mtitle3, plot_grid(Mplot$LowHigh, Mplot$HighHigh), ncol=1, re
 impulseM <- plot_grid(Mrow1, Mrow2, Mrow3, nrow=3)
 save_plot("/Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Function_QR/Code/Empirical/Investment/Plots/Inputs/impulseM.png", impulseM, base_height = 13, base_width = 10)
 #Capital
-highcappath <- data.frame(Time=1:T, High=apply(highcap-medcap, 2, median))
-lowcappath <- data.frame(Time=1:T, Low=apply(lowcap-medcap, 2, median))
+cappath <- array(0, c(T, length(tauxi)))
+for (q1 in 1:length(tauxi)){
+	cappath[,q1] <- apply(lnkdata[,,q1], 2, median)
+}
+highcappath <- data.frame(Time=1:T, High=cappath[,3]-cappath[,2])
+lowcappath <- data.frame(Time=1:T, Low=cappath[,1]-cappath[,2])
 highcapplot <- ggplot(highcappath, aes(x=Time, y=High)) + geom_line() + xlab("Time") + ylab("Capital") + coord_cartesian(ylim=c(min(highcappath$High), max(highcappath$High))*2) + geom_hline(yintercept=0, linetype='dashed', color='red')
 lowcapplot <- ggplot(lowcappath, aes(x=Time, y=Low)) + geom_line() + xlab("Time") + ylab("Capital") + coord_cartesian(ylim=c(min(lowcappath$Low), max(lowcappath$Low))*2) + geom_hline(yintercept=0, linetype='dashed', color='red')
 impulseK <- plot_grid(lowcapplot, highcapplot, ncol=2)

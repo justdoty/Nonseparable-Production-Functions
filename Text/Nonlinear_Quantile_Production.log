@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.18 (TeX Live 2017) (preloaded format=pdflatex 2017.5.23)  21 JUN 2021 12:38
+This is pdfTeX, Version 3.14159265-2.6-1.40.18 (TeX Live 2017) (preloaded format=pdflatex 2017.5.23)  29 JUN 2021 15:39
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -682,141 +682,160 @@ Underfull \hbox (badness 10000) in paragraph at lines 318--319
 
 [9]
 </Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Functio
-n_QR/Code/Empirical/Results/Nonparametric/Translog/Plots/Elasticities/K_AQME.pn
-g, id=56, 1324.95pt x 1204.5pt>
+n_QR/Code/Empirical/Investment/Plots/Elasticities/KLMAQME.png, id=56, 4516.875p
+t x 1505.625pt>
 File: /Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Fu
-nction_QR/Code/Empirical/Results/Nonparametric/Translog/Plots/Elasticities/K_AQ
-ME.png Graphic file (type png)
+nction_QR/Code/Empirical/Investment/Plots/Elasticities/KLMAQME.png Graphic file
+ (type png)
 
 <use /Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Fun
-ction_QR/Code/Empirical/Results/Nonparametric/Translog/Plots/Elasticities/K_AQM
-E.png>
+ction_QR/Code/Empirical/Investment/Plots/Elasticities/KLMAQME.png>
 Package pdftex.def Info: /Users/justindoty/Documents/Research/Dissertation/Nonl
-inear_Production_Function_QR/Code/Empirical/Results/Nonparametric/Translog/Plot
-s/Elasticities/K_AQME.png used on input line 343.
-(pdftex.def)             Requested size: 256.06956pt x 256.07692pt.
+inear_Production_Function_QR/Code/Empirical/Investment/Plots/Elasticities/KLMAQ
+ME.png used on input line 343.
+(pdftex.def)             Requested size: 426.76425pt x 142.25475pt.
 
 </Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Functio
-n_QR/Code/Empirical/Results/Nonparametric/Translog/Plots/Elasticities/L_AQME.pn
-g, id=58, 1324.95pt x 1204.5pt>
+n_QR/Code/Empirical/Investment/Plots/Elasticities/KLMIQME.png, id=58, 4516.875p
+t x 1505.625pt>
 File: /Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Fu
-nction_QR/Code/Empirical/Results/Nonparametric/Translog/Plots/Elasticities/L_AQ
-ME.png Graphic file (type png)
+nction_QR/Code/Empirical/Investment/Plots/Elasticities/KLMIQME.png Graphic file
+ (type png)
 
 <use /Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Fun
-ction_QR/Code/Empirical/Results/Nonparametric/Translog/Plots/Elasticities/L_AQM
-E.png>
+ction_QR/Code/Empirical/Investment/Plots/Elasticities/KLMIQME.png>
 Package pdftex.def Info: /Users/justindoty/Documents/Research/Dissertation/Nonl
-inear_Production_Function_QR/Code/Empirical/Results/Nonparametric/Translog/Plot
-s/Elasticities/L_AQME.png used on input line 350.
-(pdftex.def)             Requested size: 256.06956pt x 256.07692pt.
+inear_Production_Function_QR/Code/Empirical/Investment/Plots/Elasticities/KLMIQ
+ME.png used on input line 350.
+(pdftex.def)             Requested size: 426.76425pt x 142.25475pt.
+
+</Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Functio
+n_QR/Code/Empirical/Investment/Plots/Elasticities/HKLMAQME.png, id=59, 4516.875
+pt x 1505.625pt>
+File: /Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Fu
+nction_QR/Code/Empirical/Investment/Plots/Elasticities/HKLMAQME.png Graphic fil
+e (type png)
+
+<use /Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Fun
+ction_QR/Code/Empirical/Investment/Plots/Elasticities/HKLMAQME.png>
+Package pdftex.def Info: /Users/justindoty/Documents/Research/Dissertation/Nonl
+inear_Production_Function_QR/Code/Empirical/Investment/Plots/Elasticities/HKLMA
+QME.png used on input line 357.
+(pdftex.def)             Requested size: 426.76425pt x 142.25475pt.
 [10 </Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Fun
-ction_QR/Code/Empirical/Results/Nonparametric/Translog/Plots/Elasticities/K_AQM
-E.png>]
+ction_QR/Code/Empirical/Investment/Plots/Elasticities/KLMAQME.png> </Users/just
+indoty/Documents/Research/Dissertation/Nonlinear_Production_Function_QR/Code/Em
+pirical/Investment/Plots/Elasticities/KLMIQME.png>]
 </Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Functio
-n_QR/Code/Empirical/Results/Nonparametric/Translog/Plots/Elasticities/M_AQME.pn
-g, id=63, 1324.95pt x 1204.5pt>
+n_QR/Code/Empirical/Investment/Plots/Elasticities/HKLMIQME.png, id=65, 4516.875
+pt x 1505.625pt>
 File: /Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Fu
-nction_QR/Code/Empirical/Results/Nonparametric/Translog/Plots/Elasticities/M_AQ
-ME.png Graphic file (type png)
+nction_QR/Code/Empirical/Investment/Plots/Elasticities/HKLMIQME.png Graphic fil
+e (type png)
 
 <use /Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Fun
-ction_QR/Code/Empirical/Results/Nonparametric/Translog/Plots/Elasticities/M_AQM
-E.png>
+ction_QR/Code/Empirical/Investment/Plots/Elasticities/HKLMIQME.png>
 Package pdftex.def Info: /Users/justindoty/Documents/Research/Dissertation/Nonl
-inear_Production_Function_QR/Code/Empirical/Results/Nonparametric/Translog/Plot
-s/Elasticities/M_AQME.png used on input line 357.
-(pdftex.def)             Requested size: 256.06956pt x 256.07692pt.
+inear_Production_Function_QR/Code/Empirical/Investment/Plots/Elasticities/HKLMI
+QME.png used on input line 364.
+(pdftex.def)             Requested size: 426.76425pt x 142.25475pt.
 
 </Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Functio
-n_QR/Code/Empirical/Results/Nonparametric/Translog/Plots/Hicks/HICKS_K_AQME.png
-, id=64, 1324.95pt x 1204.5pt>
+n_QR/Code/Empirical/Investment/Plots/TFP/3dpers.png, id=66, 481.8pt x 481.8pt>
 File: /Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Fu
-nction_QR/Code/Empirical/Results/Nonparametric/Translog/Plots/Hicks/HICKS_K_AQM
-E.png Graphic file (type png)
+nction_QR/Code/Empirical/Investment/Plots/TFP/3dpers.png Graphic file (type png
+)
 
 <use /Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Fun
-ction_QR/Code/Empirical/Results/Nonparametric/Translog/Plots/Hicks/HICKS_K_AQME
-.png>
+ction_QR/Code/Empirical/Investment/Plots/TFP/3dpers.png>
 Package pdftex.def Info: /Users/justindoty/Documents/Research/Dissertation/Nonl
-inear_Production_Function_QR/Code/Empirical/Results/Nonparametric/Translog/Plot
-s/Hicks/HICKS_K_AQME.png used on input line 365.
-(pdftex.def)             Requested size: 256.06956pt x 256.07692pt.
+inear_Production_Function_QR/Code/Empirical/Investment/Plots/TFP/3dpers.png use
+d on input line 371.
+(pdftex.def)             Requested size: 256.0806pt x 256.0806pt.
 [11 </Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Fun
-ction_QR/Code/Empirical/Results/Nonparametric/Translog/Plots/Elasticities/L_AQM
-E.png> </Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_
-Function_QR/Code/Empirical/Results/Nonparametric/Translog/Plots/Elasticities/M_
-AQME.png>]
+ction_QR/Code/Empirical/Investment/Plots/Elasticities/HKLMAQME.png> </Users/jus
+tindoty/Documents/Research/Dissertation/Nonlinear_Production_Function_QR/Code/E
+mpirical/Investment/Plots/Elasticities/HKLMIQME.png>]
 </Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Functio
-n_QR/Code/Empirical/Results/Nonparametric/Translog/Plots/Hicks/HICKS_L_AQME.png
-, id=70, 1324.95pt x 1204.5pt>
+n_QR/Code/Empirical/Investment/Plots/Inputs/LMWPlot.png, id=72, 3011.25pt x 150
+5.625pt>
 File: /Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Fu
-nction_QR/Code/Empirical/Results/Nonparametric/Translog/Plots/Hicks/HICKS_L_AQM
-E.png Graphic file (type png)
+nction_QR/Code/Empirical/Investment/Plots/Inputs/LMWPlot.png Graphic file (type
+ png)
 
 <use /Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Fun
-ction_QR/Code/Empirical/Results/Nonparametric/Translog/Plots/Hicks/HICKS_L_AQME
-.png>
+ction_QR/Code/Empirical/Investment/Plots/Inputs/LMWPlot.png>
 Package pdftex.def Info: /Users/justindoty/Documents/Research/Dissertation/Nonl
-inear_Production_Function_QR/Code/Empirical/Results/Nonparametric/Translog/Plot
-s/Hicks/HICKS_L_AQME.png used on input line 372.
-(pdftex.def)             Requested size: 256.06956pt x 256.07692pt.
+inear_Production_Function_QR/Code/Empirical/Investment/Plots/Inputs/LMWPlot.png
+ used on input line 378.
+(pdftex.def)             Requested size: 341.39302pt x 142.25475pt.
 
 </Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Functio
-n_QR/Code/Empirical/Results/Nonparametric/Translog/Plots/Hicks/HICKS_M_AQME.png
-, id=71, 1324.95pt x 1204.5pt>
+n_QR/Code/Empirical/Investment/Plots/Inputs/IKWPlot.png, id=73, 3011.25pt x 150
+5.625pt>
 File: /Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Fu
-nction_QR/Code/Empirical/Results/Nonparametric/Translog/Plots/Hicks/HICKS_M_AQM
-E.png Graphic file (type png)
+nction_QR/Code/Empirical/Investment/Plots/Inputs/IKWPlot.png Graphic file (type
+ png)
 
 <use /Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Fun
-ction_QR/Code/Empirical/Results/Nonparametric/Translog/Plots/Hicks/HICKS_M_AQME
-.png>
+ction_QR/Code/Empirical/Investment/Plots/Inputs/IKWPlot.png>
 Package pdftex.def Info: /Users/justindoty/Documents/Research/Dissertation/Nonl
-inear_Production_Function_QR/Code/Empirical/Results/Nonparametric/Translog/Plot
-s/Hicks/HICKS_M_AQME.png used on input line 379.
-(pdftex.def)             Requested size: 256.06956pt x 256.07692pt.
+inear_Production_Function_QR/Code/Empirical/Investment/Plots/Inputs/IKWPlot.png
+ used on input line 385.
+(pdftex.def)             Requested size: 341.39302pt x 142.25475pt.
 [12 </Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Fun
-ction_QR/Code/Empirical/Results/Nonparametric/Translog/Plots/Hicks/HICKS_K_AQME
-.png> </Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_F
-unction_QR/Code/Empirical/Results/Nonparametric/Translog/Plots/Hicks/HICKS_L_AQ
-ME.png>]
+ction_QR/Code/Empirical/Investment/Plots/TFP/3dpers.png> </Users/justindoty/Doc
+uments/Research/Dissertation/Nonlinear_Production_Function_QR/Code/Empirical/In
+vestment/Plots/Inputs/LMWPlot.png>]
 </Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Functio
-n_QR/Code/Empirical/Results/Nonparametric/Translog/Plots/TFP/OMG_AQME.png, id=7
-7, 1324.95pt x 1204.5pt>
+n_QR/Code/Empirical/Investment/Plots/Inputs/impulseL.png, id=79, 3011.25pt x 39
+14.625pt>
 File: /Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Fu
-nction_QR/Code/Empirical/Results/Nonparametric/Translog/Plots/TFP/OMG_AQME.png 
-Graphic file (type png)
+nction_QR/Code/Empirical/Investment/Plots/Inputs/impulseL.png Graphic file (typ
+e png)
 
 <use /Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Fun
-ction_QR/Code/Empirical/Results/Nonparametric/Translog/Plots/TFP/OMG_AQME.png>
+ction_QR/Code/Empirical/Investment/Plots/Inputs/impulseL.png>
 Package pdftex.def Info: /Users/justindoty/Documents/Research/Dissertation/Nonl
-inear_Production_Function_QR/Code/Empirical/Results/Nonparametric/Translog/Plot
-s/TFP/OMG_AQME.png used on input line 386.
-(pdftex.def)             Requested size: 256.06956pt x 256.07692pt.
-
-</Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Functio
-n_QR/Code/Empirical/Results/Nonparametric/Translog/Plots/TFP/OMG_DENS.png, id=7
-8, 1324.95pt x 1204.5pt>
-File: /Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Fu
-nction_QR/Code/Empirical/Results/Nonparametric/Translog/Plots/TFP/OMG_DENS.png 
-Graphic file (type png)
-
-<use /Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Fun
-ction_QR/Code/Empirical/Results/Nonparametric/Translog/Plots/TFP/OMG_DENS.png>
-Package pdftex.def Info: /Users/justindoty/Documents/Research/Dissertation/Nonl
-inear_Production_Function_QR/Code/Empirical/Results/Nonparametric/Translog/Plot
-s/TFP/OMG_DENS.png used on input line 393.
-(pdftex.def)             Requested size: 256.06956pt x 256.07692pt.
+inear_Production_Function_QR/Code/Empirical/Investment/Plots/Inputs/impulseL.pn
+g used on input line 392.
+(pdftex.def)             Requested size: 312.95125pt x 426.78722pt.
 [13 </Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Fun
-ction_QR/Code/Empirical/Results/Nonparametric/Translog/Plots/Hicks/HICKS_M_AQME
-.png> </Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_F
-unction_QR/Code/Empirical/Results/Nonparametric/Translog/Plots/TFP/OMG_AQME.png
->] [14 </Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_
-Function_QR/Code/Empirical/Results/Nonparametric/Translog/Plots/TFP/OMG_DENS.pn
-g>]
+ction_QR/Code/Empirical/Investment/Plots/Inputs/IKWPlot.png>]
+</Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Functio
+n_QR/Code/Empirical/Investment/Plots/Inputs/impulseM.png, id=85, 3011.25pt x 39
+14.625pt>
+File: /Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Fu
+nction_QR/Code/Empirical/Investment/Plots/Inputs/impulseM.png Graphic file (typ
+e png)
+
+<use /Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Fun
+ction_QR/Code/Empirical/Investment/Plots/Inputs/impulseM.png>
+Package pdftex.def Info: /Users/justindoty/Documents/Research/Dissertation/Nonl
+inear_Production_Function_QR/Code/Empirical/Investment/Plots/Inputs/impulseM.pn
+g used on input line 399.
+(pdftex.def)             Requested size: 312.95125pt x 426.78722pt.
+[14 </Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Fun
+ction_QR/Code/Empirical/Investment/Plots/Inputs/impulseL.png>]
+</Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Functio
+n_QR/Code/Empirical/Investment/Plots/Inputs/impulseK.png, id=90, 3011.25pt x 15
+05.625pt>
+File: /Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Fu
+nction_QR/Code/Empirical/Investment/Plots/Inputs/impulseK.png Graphic file (typ
+e png)
+
+<use /Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Fun
+ction_QR/Code/Empirical/Investment/Plots/Inputs/impulseK.png>
+Package pdftex.def Info: /Users/justindoty/Documents/Research/Dissertation/Nonl
+inear_Production_Function_QR/Code/Empirical/Investment/Plots/Inputs/impulseK.pn
+g used on input line 406.
+(pdftex.def)             Requested size: 341.39302pt x 142.25475pt.
+[15 </Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Fun
+ction_QR/Code/Empirical/Investment/Plots/Inputs/impulseM.png>] [16 </Users/just
+indoty/Documents/Research/Dissertation/Nonlinear_Production_Function_QR/Code/Em
+pirical/Investment/Plots/Inputs/impulseK.png>]
 (/Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Functio
-n_QR/Code/Text/Nonlinear_Quantile_Production.bbl) [15]
+n_QR/Code/Text/Nonlinear_Quantile_Production.bbl) [17]
 (/Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Functio
 n_QR/Code/Text/Nonlinear_Quantile_Production.aux)
 
@@ -824,10 +843,10 @@ LaTeX Warning: There were multiply-defined labels.
 
  ) 
 Here is how much of TeX's memory you used:
- 16755 strings out of 492995
- 337748 string characters out of 6132704
+ 16769 strings out of 492995
+ 338227 string characters out of 6132704
  374129 words of memory out of 5000000
- 20133 multiletter control sequences out of 15000+600000
+ 20145 multiletter control sequences out of 15000+600000
  18686 words of font info for 74 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  39i,21n,39p,10494b,537s stack positions out of 5000i,500n,10000p,200000b,80000s
@@ -858,11 +877,11 @@ ve/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy6.pfb></usr/local/texlive
 7/texmf-dist/fonts/type1/public/amsfonts/cm/cmti10.pfb></usr/local/texlive/2017
 /texmf-dist/fonts/type1/public/amsfonts/cm/cmtt8.pfb>
 Output written on /Users/justindoty/Documents/Research/Dissertation/Nonlinear_P
-roduction_Function_QR/Code/Text/Nonlinear_Quantile_Production.pdf (15 pages, 70
-5823 bytes).
+roduction_Function_QR/Code/Text/Nonlinear_Quantile_Production.pdf (17 pages, 29
+22981 bytes).
 PDF statistics:
- 177 PDF objects out of 1000 (max. 8388607)
- 115 compressed objects within 2 object streams
+ 187 PDF objects out of 1000 (max. 8388607)
+ 119 compressed objects within 2 object streams
  0 named destinations out of 1000 (max. 500000)
- 41 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 51 words of extra memory for PDF output out of 10000 (max. 10000000)
 

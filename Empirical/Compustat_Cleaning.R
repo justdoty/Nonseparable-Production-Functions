@@ -29,7 +29,7 @@ compstat <- read.csv('/Users/justindoty/Documents/Research/Dissertation/Nonlinea
 	mutate(id=id, year=year, Y=(sale/USGDP)*100, K=(ppegt/USGDP)*100, K2=(ppent/USGDP)*100, M=(mexp/USGDP)*100, I=(capx/USGDP)*100, L=employ) %>% 
 	mutate(VA=((sale-mexp)/USGDP)*100, S=mexp/sale) %>% 
 	group_by(id) %>% na.omit() %>% filter(Y>0, K>0, K2>0, M>0, I>0, L>0, VA>0)
-compstat <- compstat %>% select(id, year, Y, K, K2, M, I, L, VA, S, ipoyear, age, naics3) %>% filter(year>=1990, year<=2016) %>% group_by(id) %>% filter(n()>=4)
+compstat <- compstat %>% select(id, year, Y, K, K2, M, I, L, VA, S, ipoyear, age, naics3, drate) %>% filter(year>=1990, year<=2016) %>% group_by(id) %>% filter(n()>=4)
 ####################################################################################################
 #Summary statistics for the cleaned data set
 print(summary(compstat))
