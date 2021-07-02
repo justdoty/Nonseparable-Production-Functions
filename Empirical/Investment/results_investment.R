@@ -12,10 +12,10 @@ source('/Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_F
 source('/Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Function_QR/Code/Functions/omega.R')
 #Load US Dataset
 US <- read.csv('/Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Function_QR/Data/USdata.csv') %>% 
-select(id, year, Y, K, K2, L, M, I, age) %>% transmute(id=id, year=year, Y=log(Y), K=log(K), L=log(L), M=log(M), I=log(I), A=age)
+select(id, year, Y, K, K2, L, M, I, age, drate) %>% transmute(id=id, year=year, Y=log(Y), K=log(K), L=log(L), M=log(M), I=log(I), A=age, dp=drate)
 #Productivity from LP
-omegainit <- omega_est(idvar=US$id, timevar=US$year, Y=US$Y, A=US$A, K=US$K, L=US$L, M=US$M)
-
+omegainit <- omega_est(idvar=US$id, timevar=US$year, Y=US$Y, A=US$A, K=US$K, L=US$L, M=US$M)$omega
+US <- US %>% mutate(omega=omegainit)
 ########################################################################################################
 ##########################################Summary Statistics############################################
 ########################################################################################################
@@ -63,6 +63,8 @@ parMb <- results$resmb1bLmat
 parWTb <- results$reswtb1bLmat
 parIb <- results$resib1bLmat
 WTminmax <- results$maxminwtmat
+wmin <- WTminmax[2]
+wmax <- WTminmax[1]
 #Load the method used (e.g. Cobb, Translog, Hermite)
 method <- results$method
 resY <- results$resY
@@ -153,12 +155,14 @@ for (t in 2:T){
 	adata[,t] <- adata[,t-1]+1
 	#Capital
 	lnkdata[,t] <- rnorm(N, mean=KT(Klag=lnkdata[,t-1], Ilag=lnidata[,t-1])%*%as.matrix(ktcoef), sd=ktsd)
+	#Alternatively, use the standard capital accumulation rule
+	# lnkdata[,t] <- log(0.92*exp(lnkdata[,t-1])+exp(lnidata[,t-1]))
 	#Restrict the Support of Capital 
 	lnkdata[,t] <- (lnkdata[,t]>max(ttdata$K))*max(ttdata$K)+(lnkdata[,t]<min(ttdata$K))*min(ttdata$K)+(lnkdata[,t]<=max(ttdata$K))*(lnkdata[,t]>=min(ttdata$K))*lnkdata[,t]
 	#Productivity
 	omgdata[,t] <- rowSums(WX(A=adata[,t], omega=omgdata[,t-1])*lspline(vectau=vectau, bvec=parWT, b1=parWTb[1], bL=parWTb[2], u=xidata[,t]))
 	#Restrict the Support of Productivity
-	omgdata[,t] <- (omgdata[,t]>WTminmax[1])*WTminmax[1]+(omgdata[,t]<WTminmax[2])*WTminmax[2]+(omgdata[,t]<=WTminmax[1])*(omgdata[,t]>=WTminmax[2])*omgdata[,t]
+	omgdata[,t] <- (omgdata[,t]>wmax)*wmax+(omgdata[,t]<wmin)*wmin+(omgdata[,t]<=wmax)*(omgdata[,t]>=wmin)*omgdata[,t]
 	#Investment
 	lnidata[,t] <- rowSums(IX(A=adata[,t], K=lnkdata[,t], omega=omgdata[,t])*lspline(vectau=vectau, bvec=parI, b1=parIb[1], bL=parIb[2], u=iotadata[,t]))
 	#Restrict the Support of Investment
@@ -212,19 +216,16 @@ kpost <- c(3,6,8,9,12,15,17,18)+1
 kdat <- cbind(1, lab, mat, 2*cap, omg, omg*lab, omg*mat, 2*cap*omg)
 kaqme_data <- data.frame(tau=vectau, kaqme=colMeans(apply(parY[kpost,], 2, function(x) kdat%*%x)))
 kaqme_plot <- ggplot(kaqme_data, aes(x=tau, y=kaqme)) + xlab(expression('percentile-'*tau)) + ylab("Capital") + geom_line(aes(y=kaqme))
-# save_plot("/Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Function_QR/Code/Empirical/Investment/Plots/Elasticities/K_AQME.png", kaqme_plot)
 #Labor
 lpost <- c(4,6,7,10,13,15,16,19)+1
 ldat <- cbind(1, cap, mat, 2*lab, omg, omg*cap, omg*mat, 2*lab*omg)
 laqme_data <- data.frame(tau=vectau, laqme=colMeans(apply(parY[lpost,], 2, function(x) ldat%*%x)))
 laqme_plot <- ggplot(laqme_data, aes(x=tau, y=laqme)) + xlab(expression('percentile-'*tau)) + ylab("Labor") + geom_line(aes(y=laqme))
-# save_plot("/Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Function_QR/Code/Empirical/Investment/Plots/Elasticities/L_AQME.png", laqme_plot)
 #Materials
 mpost <- c(5,7,8,11,14,16,17,20)+1
 mdat <- cbind(1, lab, cap, 2*mat, omg, omg*lab, omg*cap, 2*mat*omg)
 maqme_data <- data.frame(tau=vectau, maqme=colMeans(apply(parY[mpost,], 2, function(x) mdat%*%x)))
 maqme_plot <- ggplot(maqme_data, aes(x=tau, y=maqme)) + xlab(expression('percentile-'*tau)) + ylab("Materials") + geom_line(aes(y=maqme))
-# save_plot("/Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Function_QR/Code/Empirical/Investment/Plots/Elasticities/M_AQME.png", maqme_plot)
 #Combine into grid plot
 klmaqme <- plot_grid(kaqme_plot, laqme_plot, maqme_plot, ncol=3)
 save_plot("/Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Function_QR/Code/Empirical/Investment/Plots/Elasticities/KLMAQME.png", klmaqme, base_height =5, base_width = 15)
@@ -233,28 +234,20 @@ hkpost <- c(12,16,17,18)+1
 hkdat <- cbind(1, lab, mat, 2*cap)
 hkaqme_data <- data.frame(tau=vectau, hkaqme=colMeans(apply(parY[hkpost,], 2, function(x) hkdat%*%x)))
 hkaqme_plot <- ggplot(hkaqme_data, aes(x=tau, y=hkaqme)) + xlab(expression('percentile-'*tau)) + ylab("Capital-Productivity") + geom_line(aes(y=hkaqme))
-# save_plot("/Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Function_QR/Code/Empirical/Investment/Plots/Elasticities/HICKS_K_AQME.png", hkaqme_plot)
 #Hicks-Labor
 hlpost <- c(13,15,16,19)+1
 hldat <- cbind(1, cap, mat, 2*lab)
 hlaqme_data <- data.frame(tau=vectau, hlaqme=colMeans(apply(parY[hlpost,], 2, function(x) hldat%*%x)))
 hlaqme_plot <- ggplot(hlaqme_data, aes(x=tau)) + xlab(expression('percentile-'*tau)) + ylab("Labor-Productivity") + geom_line(aes(y=hlaqme))
-# save_plot("/Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Function_QR/Code/Empirical/Investment/Plots/Elasticities/HICKS_L_AQME.png", hlaqme_plot)
 #Hicks-Materials
 hmpost <- c(14,16,17,20)+1
 hmdat <- cbind(1, lab, cap, 2*mat)
 hmaqme_data <- data.frame(tau=vectau, hmaqme=colMeans(apply(parY[hmpost,], 2, function(x) hmdat%*%x)))
 hmaqme_plot <- ggplot(hmaqme_data, aes(x=tau)) + xlab(expression('percentile-'*tau)) + ylab("Materials-Productivity") + geom_line(aes(y=hmaqme))
-# save_plot("/Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Function_QR/Code/Empirical/Investment/Plots/Elasticities/HICKS_M_AQME.png", hmaqme_plot)
+#Combine into Grip Plot
 hklmaqme <- plot_grid(hkaqme_plot, hlaqme_plot, hmaqme_plot, ncol=3)
 save_plot("/Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Function_QR/Code/Empirical/Investment/Plots/Elasticities/HKLMAQME.png", hklmaqme, base_height =5, base_width = 15)
-#Hicks-Productivity
-hwpost <- c(2,12:20)+1
-hwdat <- cbind(1, cap, lab, mat, cap*lab, lab*mat, cap*mat, cap^2, lab^2, mat^2)
-hwaqme_data <- data.frame(tau=vectau, hwaqme=colMeans(apply(parY[hwpost,], 2, function(x) hwdat%*%x)))
-hwaqme_plot <- ggplot(hwaqme_data, aes(x=tau)) + xlab(expression('percentile-'*tau)) + ylab("Productivity") + geom_line(aes(y=hwaqme))
-# save_plot("/Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Function_QR/Code/Empirical/Investment/Plots/Elasticities/HICKS_W_AQME.png", hwaqme_plot)
-#3D Plots#########################################################################################
+#Individual Quantile Marginal Effects####################################################
 #Commands for Colors
 nrz <- length(vectau)
 ncz <- length(vectau)
@@ -262,13 +255,33 @@ jet.colors <-  colorRampPalette(c("midnightblue", "blue", "cyan","green", "yello
 nbcol <- 64
 color <- jet.colors(nbcol)
 #Capital##############################################################################################
-k3d <- function(x){
-	return(colMeans(cbind(1, lab, mat, 2*x, omg, omg*lab, omg*mat, 2*x*omg)))
+#Here I evaluate labor and materials at fixed quantiles of capital
+capkq <- matrix(rep(quantile(cap, probs=vectau), each=N), ncol=ntau)
+labkq <- array(0, c(N, T, ntau))
+matkq <- array(0, c(N, T, ntau))
+for (t in 1:T){
+	ttdata <- US %>% group_by(id) %>% slice(t)
+	for (q in 1:ntau){
+		labkq[,,q][,t] <- rowSums(LX(A=adata[,t], K=capkq[,q], omega=omgdata[,t])*lspline(vectau=vectau, bvec=parL, b1=parLb[1], bL=parLb[2], u=epsdata[,t]))
+		#Restrict Support of Labor
+		labkq[,,q][,t] <- (labkq[,,q][,t]>max(ttdata$L))*max(ttdata$L)+(labkq[,,q][,t]<min(ttdata$L))*min(ttdata$L)+(labkq[,,q][,t]<=max(ttdata$L))*(labkq[,,q][,t]>=min(ttdata$L))*labkq[,,q][,t]
+		#Materials
+		matkq[,,q][,t] <- rowSums(MX(A=adata[,t], K=capkq[,q], omega=omgdata[,t])*lspline(vectau=vectau, bvec=parM, b1=parMb[1], bL=parMb[2], u=varepsdata[,t]))
+		#Restrict Support of Materials
+		matkq[,,q][,t] <- (matkq[,,q][,t]>max(ttdata$M))*max(ttdata$M)+(matkq[,,q][,t]<min(ttdata$M))*min(ttdata$M)+(matkq[,,q][,t]<=max(ttdata$M))*(matkq[,,q][,t]>=min(ttdata$M))*matkq[,,q][,t]
+	}
 }
-k3dq <- t(sapply(vectau, function(q) k3d(quantile(cap, probs=q))))%*%parY[kpost,]
+
+k3d <- array(0, c(8, ntau))
+hk3d <- array(0, c(4, ntau))
+for (q in 1:ntau){
+	k3d[,q] <- cbind(1, mean(labkq[,,q]), mean(matkq[,,q]), mean(2*capkq[,q]), mean(omg), mean(omg*labkq[,,q]), mean(omg*matkq[,,q]), mean(2*capkq[,q]*omg))
+	hk3d[,q] <- cbind(1, mean(labkq[,,q]), mean(matkq[,,q]), mean(2*capkq[,q]))
+}
+
+k3dq <- t(k3d)%*%parY[kpost,]
 kfacet <- k3dq[-1,-1]+k3dq[-1,-ncz]+k3dq[-nrz,-1]+k3dq[-nrz,-ncz]
 facetcol <- cut(kfacet, nbcol)
-# png("/Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Function_QR/Code/Empirical/Investment/Plots/Elasticities/3dK.png")
 persp(x=vectau, y=vectau, z=k3dq, xlab="percentile-capital", ylab="percentile-output", zlab="Capital", col=color[facetcol], ticktype="detailed", phi=20,theta=-60)
 k3dplot <- recordPlot()
 dev.off()
@@ -279,7 +292,6 @@ l3d <- function(x){
 l3dq <- t(sapply(vectau, function(q) l3d(quantile(lab, probs=q))))%*%parY[lpost,]
 lfacet <- l3dq[-1,-1]+l3dq[-1,-ncz]+l3dq[-nrz,-1]+l3dq[-nrz,-ncz]
 facetcol <- cut(lfacet, nbcol)
-# png("/Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Function_QR/Code/Empirical/Investment/Plots/Elasticities/3dL.png")
 persp(x=vectau, y=vectau, z=l3dq, xlab="percentile-labor", ylab="percentile-output", zlab="Labor", col=color[facetcol], ticktype="detailed", phi=20,theta=-60)
 l3dplot <- recordPlot()
 dev.off()
@@ -290,17 +302,13 @@ m3d <- function(x){
 m3dq <- t(sapply(vectau, function(q) m3d(quantile(mat, probs=q))))%*%parY[mpost,]
 mfacet <- m3dq[-1,-1]+m3dq[-1,-ncz]+m3dq[-nrz,-1]+m3dq[-nrz,-ncz]
 facetcol <- cut(mfacet, nbcol)
-# png("/Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Function_QR/Code/Empirical/Investment/Plots/Elasticities/3dM.png")
 persp(x=vectau, y=vectau, z=m3dq, xlab="percentile-materials", ylab="percentile-output", zlab="Materials", col=color[facetcol], ticktype="detailed", phi=20,theta=-60)
 m3dplot <- recordPlot()
 dev.off()
 klm3dplots <- plot_grid(k3dplot, l3dplot, m3dplot, ncol=3)
 save_plot("/Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Function_QR/Code/Empirical/Investment/Plots/Elasticities/KLMIQME.png", klm3dplots, base_height =5, base_width = 15)
 #Hicks-Capital###########################################################################################
-hk3d <- function(x){
-	return(colMeans(cbind(1, lab, mat, 2*x)))
-}
-hk3dq <- t(sapply(vectau, function(q) hk3d(quantile(cap, probs=q))))%*%parY[hkpost,]
+hk3dq <- t(hk3d)%*%parY[hkpost,]
 hkfacet <- hk3dq[-1,-1]+hk3dq[-1,-ncz]+hk3dq[-nrz,-1]+hk3dq[-nrz,-ncz]
 facetcol <- cut(hkfacet, nbcol)
 # png("/Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Function_QR/Code/Empirical/Investment/Plots/Elasticities/3dhk.png")
@@ -353,65 +361,64 @@ omgdat <- data.frame(omg)
 omgdens_plot <- ggplot(omgdat, aes(x=omg)) + geom_density() + xlab("Productivity") + ylab("")
 save_plot("/Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Function_QR/Code/Empirical/Investment/Plots/TFP/OMG_DENS.png", omgdens_plot)
 #Input Decision Rules###################################################################
-#Labor###################################################################################
-lwpost <- c(4,5,7,8,9,10,12)
-lw3d <- function(x){
-	return(colMeans(cbind(1, cap, 2*x, cap^2, 2*x*cap, 2*x*cap^2, 3*x^2)))
+#Marginal Effect of Productivity on Inputs at different percentiles of productivity
+omgq <- matrix(rep(quantile(omg, probs=vectau), each=N), ncol=ntau)
+labwq <- array(0, c(N, T, ntau))
+matwq <- array(0, c(N, T, ntau))
+capwq <- array(0, c(N, T, ntau))
+invwq <- array(0, c(N, T, ntau))
+#Initial Investment
+for (q in 1:ntau){
+	invwq[,,q][,1] <- rowSums(IX(A=adata[,1], K=lnkdata[,1], omega=omgq[,q])*lspline(vectau=vectau, bvec=parI, b1=parIb[1], bL=parIb[2], u=iotadata[,1]))
+	capwq[,,q][,1] <- lnkdata[,1]
 }
-lw3dq <- t(sapply(vectau, function(q) lw3d(quantile(omg, probs=q))))%*%parL[lwpost,]
+for (t in 2:T){
+	ttdata <- US %>% group_by(id) %>% slice(t)
+	for (q in 1:ntau){
+		#Capital
+		capwq[,,q][,t] <- log(mean(ttdata$dp)*exp(capwq[,,q][,t-1])+exp(invwq[,,q][,t-1]))
+		#Investment
+		invwq[,,q][,t] <- rowSums(IX(A=adata[,t], K=capwq[,,q][,t], omega=omgq[,q])*lspline(vectau=vectau, bvec=parI, b1=parIb[1], bL=parIb[2], u=iotadata[,t]))
+		#Restrict the Support of Investment
+		invwq[,,q][,t] <- (invwq[,,q][,t]>max(ttdata$I))*max(ttdata$I)+(invwq[,,q][,t]<min(ttdata$I))*min(ttdata$I)+(invwq[,,q][,t]<=max(ttdata$I))*(invwq[,,q][,t]>=min(ttdata$I))*invwq[,,q][,t]
+		#Labor
+		labwq[,,q][,t] <- rowSums(LX(A=adata[,t], K=capwq[,,q][,t], omega=omgdata[,t])*lspline(vectau=vectau, bvec=parL, b1=parLb[1], bL=parLb[2], u=epsdata[,t]))
+		#Restrict Support of Labor
+		labwq[,,q][,t] <- (labwq[,,q][,t]>max(ttdata$L))*max(ttdata$L)+(labwq[,,q][,t]<min(ttdata$L))*min(ttdata$L)+(labwq[,,q][,t]<=max(ttdata$L))*(labwq[,,q][,t]>=min(ttdata$L))*labwq[,,q][,t]
+		#Materials
+		matwq[,,q][,t] <- rowSums(MX(A=adata[,t], K=capwq[,,q][,t], omega=omgdata[,t])*lspline(vectau=vectau, bvec=parM, b1=parMb[1], bL=parMb[2], u=varepsdata[,t]))
+		#Restrict Support of Materials
+		matwq[,,q][,t] <- (matwq[,,q][,t]>max(ttdata$M))*max(ttdata$M)+(matwq[,,q][,t]<min(ttdata$M))*min(ttdata$M)+(matwq[,,q][,t]<=max(ttdata$M))*(matwq[,,q][,t]>=min(ttdata$M))*matwq[,,q][,t]
+	}
+}
+wpost <- c(4,5,7,8,9,10,12)
+w3d <- array(0, c(length(wpost), ntau))
+for (q in 1:ntau){
+	w3d[,q] <- colMeans(cbind(1, c(capwq[,,q]), c(2*omgq[,q]), c(capwq[,,q]^2), c(2*omgq[,q]*capwq[,,q]), c(2*omgq[,q]*capwq[,,q]^2), c(3*omgq[,q]^2)))
+}
+#Labor
+lw3dq <- t(w3d)%*%parL[wpost,]
 lwfacet <- lw3dq[-1,-1]+lw3dq[-1,-ncz]+lw3dq[-nrz,-1]+lw3dq[-nrz,-ncz]
 facetcol <- cut(lwfacet, nbcol)
-# png("/Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Function_QR/Code/Empirical/Investment/Plots/Inputs/LW3D.png")
 persp(x=vectau, y=vectau, z=lw3dq, xlab="percentile-productivity", ylab="percentile-labor", zlab="Labor-Productivity", col=color[facetcol], ticktype="detailed", phi=20,theta=-60)
 lw3dplot <- recordPlot()
 dev.off()
-#Materials###############################################################################
-mwpost <- c(4,5,7,8,9,10,12)
-mw3d <- function(x){
-	return(colMeans(cbind(1, cap, 2*x, cap^2, 2*x*cap, 2*x*cap^2, 3*x^2)))
-}
-mw3dq <- t(sapply(vectau, function(q) mw3d(quantile(omg, probs=q))))%*%parM[mwpost,]
+#Materials
+mw3dq <- t(w3d)%*%parM[wpost,]
 mwfacet <- mw3dq[-1,-1]+mw3dq[-1,-ncz]+mw3dq[-nrz,-1]+mw3dq[-nrz,-ncz]
 facetcol <- cut(mwfacet, nbcol)
-# png("/Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Function_QR/Code/Empirical/Investment/Plots/Inputs/MW3D.png")
 persp(x=vectau, y=vectau, z=mw3dq, xlab="percentile-productivity", ylab="percentile-materials", zlab="Materials-Productivity", col=color[facetcol], ticktype="detailed", phi=20,theta=-60)
 mw3dplot <- recordPlot()
 dev.off()
-lmwplot <- plot_grid(lw3dplot, mw3dplot, ncol=2)
-save_plot("/Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Function_QR/Code/Empirical/Investment/Plots/Inputs/LMWPlot.png", lmwplot, base_height =5, base_width = 10)
-#Investment##############################################################################
-iwpost <- c(4,5,7,8,9,10,12)
-iw3d <- function(x){
-	return(colMeans(cbind(1, cap, 2*x, cap^2, 2*x*cap, 2*x*cap^2, 3*x^2)))
-}
-iw3dq <- t(sapply(vectau, function(q) iw3d(quantile(omg, probs=q))))%*%parI[iwpost,]
+#Investment
+iw3dq <- t(w3d)%*%parI[wpost,]
 iwfacet <- iw3dq[-1,-1]+iw3dq[-1,-ncz]+iw3dq[-nrz,-1]+iw3dq[-nrz,-ncz]
 facetcol <- cut(iwfacet, nbcol)
-# png("/Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Function_QR/Code/Empirical/Investment/Plots/Inputs/IW3D.png")
 persp(x=vectau, y=vectau, z=iw3dq, xlab="percentile-productivity", ylab="percentile-investment", zlab="Investment-Productivity", col=color[facetcol], ticktype="detailed", phi=20,theta=-60)
 iw3dplot <- recordPlot()
 dev.off()
-#Capital (Here is examine the effect of lagged productivity on current capital though investment, i.e. chain rule)
-#Calculated at the quantiles or lagged productivity and investment
-kw3d <- function(x){
-	#Investment Rule
-	I <- IX(A=agecon, K=caplag, omega=rep(x, length(caplag)))%*%parI
-	#Derivative of Investment Rule w.r.t productivity
-	IW <- cbind(1, caplag, 2*x, caplag^2, 2*caplag*x, 2*x*caplag^2, 3*x^2)%*%parI[iwpost,]
-	#Derivative of Capital Accumulation Rule w.r.t investment
-	KW <- sapply(1:ntau, function(tau)  mean((cbind(1, caplag, 2*I[,tau])%*%as.matrix(ktcoef[c(3,4,6)]))*IW[,tau]))
-	return(KW)
-}
-kw3dq <- sapply(vectau, function(q) kw3d(quantile(omglag, probs=q)))
-kwfacet <- kw3dq[-1,-1]+kw3dq[-1,-ncz]+kw3dq[-nrz,-1]+kw3dq[-nrz,-ncz]
-facetcol <- cut(kwfacet, nbcol)
-persp(x=vectau, y=vectau, z=kw3dq, xlab="percentile-productivity", ylab="percentile-capital", zlab="Capital-Productivity", col=color[facetcol], ticktype="detailed", phi=20,theta=-60)
-kw3dplot <- recordPlot()
-dev.off()
-ikwplot <- plot_grid(iw3dplot, kw3dplot, ncol=2)
-save_plot("/Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Function_QR/Code/Empirical/Investment/Plots/Inputs/IKWPlot.png", ikwplot, base_height =5, base_width = 10)
-
-
+lmiwplot <- plot_grid(lw3dplot, mw3dplot, iw3dplot, ncol=3)
+save_plot("/Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Function_QR/Code/Empirical/Investment/Plots/Inputs/LMIWPlot.png", lmiwplot, base_height =5, base_width = 15)
 
 
 

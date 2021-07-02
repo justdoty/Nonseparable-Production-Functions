@@ -35,7 +35,7 @@
   publisher = {Elsevier {BV}},
 }
 
-@Article{Kim2016,
+@Article{song,
   author    = {Kyoo il Kim and Amil Petrin and Suyong Song},
   title     = {Estimating production functions with control functions when capital is measured with error},
   journal   = {Journal of Econometrics},
@@ -85,13 +85,6 @@
   month     = {jan},
   doi       = {10.1111/j.0012-9682.2008.00823.x},
   publisher = {The Econometric Society},
-}
-
-@Unpublished{Song2017,
-  author = {Kyoo il Kim and Amil Petrin and Suyong Song},
-  title  = {Identification of Production Functions with Multi-dimensional Unobservables},
-  note   = {Working Paper},
-  year   = {2017},
 }
 
 @Article{Manski1988,
@@ -373,6 +366,77 @@
   pages     = {1--28},
   doi       = {10.3982/ecta14030},
   publisher = {The Econometric Society},
+}
+
+@Unpublished{Li2017,
+  author        = {Tong Li and Yuya Sasaki},
+  title         = {Constructive Identification of Heterogeneous Elasticities in the Cobb-Douglas Production Function},
+  note          = {{Working paper}},
+  year          = {2017},
+  __markedentry = {[justindoty:6]},
+  abstract      = {This paper presents the identification of heterogeneous elasticities in the Cobb-Douglas production function. The identification is constructive with closed-form formulas for the elasticity with respect to each input for each firm. We propose that the flexible input cost ratio plays the role of a control function under "non-collinear heterogeneity" between elasticities with respect to two flexible inputs. The ex ante flexible input cost share can be used to identify the elasticities with respect to flexible inputs for each firm. The elasticities with respect to labor and capital can be subsequently identified for each firm under the timing assumption admitting the functional independence.},
+  date          = {2017-11-27},
+  eprint        = {http://arxiv.org/abs/1711.10031v1},
+  eprintclass   = {econ.EM},
+  eprinttype    = {arXiv},
+  file          = {:http\://arxiv.org/pdf/1711.10031v1:PDF},
+  keywords      = {econ.EM},
+}
+
+@Article{Gandhi2020,
+  author    = {Amit Gandhi and Salvador Navarro and David A. Rivers},
+  title     = {On the Identification of Gross Output Production Functions},
+  journal   = {Journal of Political Economy},
+  year      = {2020},
+  pages     = {000--000},
+  month     = {jun},
+  doi       = {10.1086/707736},
+  publisher = {University of Chicago Press},
+}
+
+@Unpublished{balat,
+  author   = {Jorge Balat and Irene Brambilla and Yuya Sasaki},
+  title    = {{Heterogeneous firms: skilled-labor productivity and the destination of exports}},
+  note     = {{Working paper}},
+  year     = {2018},
+  abstract = {This paper studies a systematic link between the choice of export destinations and technology differences across firms. Our premise is that firms differ in the relative efficiency with which they can utilize skilled labor. In a context in which quality provision is skill-intensive and consumers in high-income countries are more willing to pay for quality, exporting firms that are more efficient in the use of skilled labor export relatively more to high-income destinations.
+The contribution of the paper is twofold. First, we propose a new estimation method of production functions that allows for heterogeneity in the production function coefficients across firms and addresses the aggregation problem when firms are multiproduct. The estimation strategy is based on an extension of the structural control variable approach (Olley and Pakes (1996); Levinsohn and Petrin (2003)) to multi-dimensional heterogeneous parameters. Second, we provide an empirical measure of capability of quality production and show that it is a determinant of the choice of exports, export destinations, and quality using firm-level data from Chile.},
+}
+
+@Unpublished{Kasahara2015,
+  author       = {Hiroyuki Kasahara and Paul Schrimpf, and Michio Suzuki},
+  title        = {Identification and Estimation of Production Function with Unobserved Heterogeneity},
+  note         = {{Working paper}},
+  year         = {2017},
+  abstract     = {This paper examines non-parametric identifiability of production function when production functions are heterogenous across firms beyond Hicks-neutral technology terms. Using a finite mixture specification to capture unobserved heterogeneity in production technology, we shows that production function for each unobserved type is non-parametrically identified under regularity conditions. We estimate a random coefficients production function using the panel data of Japanese publicly-traded manufacturing firms and compare it with the estimate of production function with fixed coefficients estimated by the method of Gandhi, Navarro, and Rivers (2013). Our estimates for random coefficients production function suggest that there exists substantial heterogeneity in production function coefficients beyond Hicks neutral term across firms within narrowly defined industry.},
+  howpublished = {Working Paper},
+}
+
+@Article{Aragon2005,
+  author    = {Y. Aragon and A. Daouia and C. Thomas-Agnan},
+  title     = {Nonparametric Frontier Estimation: A Conditional Quantile Based Approach},
+  journal   = {Econometric Theory},
+  year      = {2005},
+  volume    = {21},
+  number    = {02},
+  month     = {mar},
+  doi       = {10.1017/s0266466605050206},
+  publisher = {Cambridge University Press ({CUP})},
+}
+
+@Unpublished{DS2021,
+  author = {Justin Doty and Suyong Song},
+  title  = {Estimating Quantile Production Functions: A Control Function Approach},
+  year   = {2021},
+}
+
+@Article{sem,
+  author  = {Celeux , G. and Diebolt, J.},
+  title   = {The SEM Algorithm: a probabilistic teacher algorithm derived from the EM algorithm for the mixture problem},
+  journal = {Computational Satistics Quarterly},
+  year    = {1985},
+  number  = {2},
+  pages   = {7},
 }
 
 @Comment{jabref-meta: databaseType:bibtex;}
