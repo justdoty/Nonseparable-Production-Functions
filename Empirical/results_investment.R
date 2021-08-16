@@ -46,7 +46,7 @@ US <- US %>% mutate(omega=omegainit) %>% filter(year>=1997) %>% group_by(id) %>%
 ##########################################Load Results############################################
 ########################################################################################################
 set.seed(123456)
-load("/Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Function_QR/Code/Empirical_trans.RData")
+load("/Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Function_QR/Code/Empirical/investment_trans.RData")
 vectau <- results$vectau
 ntau <- length(vectau)
 dims <- results$dims
@@ -68,26 +68,6 @@ wmax <- WTminmax[1]
 #Load the method used (e.g. Cobb, Translog, Hermite)
 method <- results$method
 resY <- results$resY
-##############################################################################
-#EM Chain Diagnostics
-##############################################################################
-#Plot Parameters for K, L, and M over EM iterations for each tau
-EMcolour <- brewer.pal(n=length(vectau), "Spectral")
-#Capital
-K_EM_dat <- melt(resY[,2,])
-K_EM_dat$Var2 <- as.factor(K_EM_dat$Var2)
-K_EM <- ggplot(K_EM_dat, aes(x=Var1, y=value, group=Var2)) + geom_line(aes(colour=Var2)) + xlab("Iteration") + ylab("Capital") + scale_colour_manual(name="", labels=round(vectau, digits=2), values=EMcolour)
-save_plot("/Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Function_QR/Code/Empirical/Plots/Diagnostics/K_EM.png", K_EM) 
-#Labor
-L_EM_dat <- melt(resY[,3,])
-L_EM_dat$Var2 <- as.factor(L_EM_dat$Var2)
-L_EM <- ggplot(L_EM_dat, aes(x=Var1, y=value, group=Var2)) + geom_line(aes(colour=Var2)) + xlab("Iteration") + ylab("Labor") + scale_colour_manual(name="", labels=round(vectau, digits=2), values=EMcolour)
-save_plot("/Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Function_QR/Code/Empirical/Plots/Diagnostics/L_EM.png", L_EM) 
-#Materials
-M_EM_dat <- melt(resY[,4,])
-M_EM_dat$Var2 <- as.factor(M_EM_dat$Var2)
-M_EM <- ggplot(M_EM_dat, aes(x=Var1, y=value, group=Var2)) + geom_line(aes(colour=Var2)) + xlab("Iteration") + ylab("Materials") + scale_colour_manual(name="", labels=round(vectau, digits=2), values=EMcolour)
-save_plot("/Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Function_QR/Code/Empirical/Plots/Diagnostics/M_EM.png", M_EM) 
 ###############################################################################
 #Simulate Productivity and Capital Evolution Given Model Parameters
 ##############################################################################
@@ -127,7 +107,7 @@ xidata <- matrix(runif(N*T), nrow=N, ncol=T)
 t1data <- US %>% group_by(id) %>% slice(1)
 adata[,1] <- kronecker(array(1, c(Nsim,1)), t1data$A)
 #Initial Productivity
-omgdata[,1] <- rtruncnorm(N, mean=parW1[1], sd=sqrt(parW1[2]))
+omgdata[,1] <- rnorm(N, mean=parW1[1], sd=sqrt(parW1[2]))
 #########################################################################################################
 #Capital is not estimated in the main model, but needs to be estimated for simulation purposes
 #Or use standard capital accumulation rule + iid noise
@@ -181,20 +161,6 @@ for (t in 1:T){
 	#Restrict Support of Output
 	lnydata[,t] <- (lnydata[,t]>max(ttdata$Y))*max(ttdata$Y)+(lnydata[,t]<min(ttdata$Y))*min(ttdata$Y)+(lnydata[,t]<=max(ttdata$Y))*(lnydata[,t]>=min(ttdata$Y))*lnydata[,t]
 }
-#Construct productivity estimates from data
-# omglist <- list()
-# for (t in 1:T){
-# 	ttdata <- US %>% group_by(id) %>% slice(t)
-# 	etadraw <- runif(length(ttdata$id))
-# 	ycoef <- lspline(vectau=vectau, bvec=parY, b1=parYb[1], bL=parYb[2], u=etadraw)
-# 	ydat <- cbind(1, ttdata$K, ttdata$L , ttdata$M, ttdata$K*ttdata$L, ttdata$L*ttdata$M, ttdata$K*ttdata$M,
-# 		ttdata$K^2, ttdata$L^2, ttdata$M^2)
-# 	omglist[[t]] <- (ttdata$Y-rowSums(ydat*ycoef[,1:10]))/rowSums(ydat*cbind(1, ycoef[,c(11:19)]))
-# 	print(summary(omglist[[t]]))
-# 	#Restrict the Support
-# 	omglist[[t]] <- (omglist[[t]]>wmax)*wmax+(omglist[[t]]<wmin)*wmin+(omglist[[t]]<=wmax)*(omglist[[t]]>=wmin)*omglist[[t]]
-# }
-# omgY <- do.call(c, omglist)
 #Vectorize
 #Output
 out <- c(t(lnydata))

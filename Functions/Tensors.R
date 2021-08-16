@@ -39,7 +39,7 @@ PF <- function(A, K, L, M, omega, method){
 		# prod <- cbind(omega, K, L, M, K*L, L*M, K*M, K^2, L^2, M^2)
 		# prodf <- cbind(1, prod, sweep(prod[,-c(1)], 1, omega, `*`))
 		prod <- cbind(K, L, M, K*L, L*M, K*M, K^2, L^2, M^2)
-		prodf <- cbind(1, omega, prod, sweep(prod, 1, omega, `*`))
+		prodf <- cbind(1, prod, sweep(prod, 1, omega, `*`))
 	} else if (method=="hermite"){
 		prodf <- cbind(1, tensor.prod(c(1,2,2,1), cbind(K, L, M, omega), norm=TRUE)[,-1])
 	}
