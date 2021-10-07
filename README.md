@@ -11,11 +11,11 @@ The following folders contain replication files for the tables and figures in th
 1. [Environments](/Environments): A folder containing all R environments used in the analysis
 2. [Figures](/Figures): A folder containing all the figures produced by the replication files
 3. [Functions](/Functions): A folder containing all of the replication files which contains the following
-	-[Labor Dynamics](/Functions/Labor_Dynamics): Contains replication files for producing impulse response functions for labor in the Appendix
-	-[Main](/Functions/Main): Contains replication files for producing the results in the main paper
-	-[RnD](/Functions/RnD): Contains replication files for producing R&D comparison estimates in the Appendix 
-	-[Selection_Bias](/Functions/Selection_Bias): Reproduces the estimates in the main paper correcting for selection bias in the Appendix
-	-[Data Cleaning](/Functions/Compustat_Cleaning.R): Procedure for cleaning the data from Compustat
+	- [Labor Dynamics](/Functions/Labor_Dynamics): Contains replication files for producing impulse response functions for labor in the Appendix
+	-[ Main](/Functions/Main): Contains replication files for producing the results in the main paper
+	- [RnD](/Functions/RnD): Contains replication files for producing R&D comparison estimates in the Appendix 
+	- [Selection_Bias](/Functions/Selection_Bias): Reproduces the estimates in the main paper correcting for selection bias in the Appendix
+	- [Data Cleaning](/Functions/Compustat_Cleaning.R): Procedure for cleaning the data from Compustat
 In addition, each of the folders contain variations of the same files used in estimation
 - Production_EM.R: Main estimation file. Uses functions below as dependencies.
 - Posterior.R: Function used to compute to posterior density
