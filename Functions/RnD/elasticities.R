@@ -200,19 +200,10 @@ for (q in 1:ntau){
 }
 #Persistence for Non-R&D Firms
 omg3d <- plot_ly(x=vectau, y=vectau, z=omg3dq, colorscale="Jet", type="surface", showscale=FALSE, scene="scene1") %>% layout(scene1=list(camera=list(eye=list(x=-1.5, y=-1.5, z=0.5)), aspectratio=list(x=1, y=1, z=1), xaxis=list(title="𝛕-innovation"), yaxis=list(title="𝛕-productivity"), zaxis=list(title="Persistence (No R&D)"))) 
-# omg3d
-# omg3d    <- plotly_json(omg3d, FALSE)
-# write(omg3dq, "/Users/justindoty/Documents/Home/My_Website/static/jmp/rnd/omg3d.json")
 #Persistence for R&D Firms (fixed percentiles of productivity)
 romg3d <- plot_ly(x=vectau, y=vectau, z=romg3dq, colorscale="Jet", type="surface", showscale=FALSE, scene="scene2") %>% layout(scene2=list(camera=list(eye=list(x=-1.5, y=-1.5, z=0.5)), aspectratio=list(x=1, y=1, z=1), xaxis=list(title="𝛕-innovation"), yaxis=list(title="𝛕-productivity"), zaxis=list(title="Persistence (R&D)"))) 
-# romg3d
-# romg3d    <- plotly_json(romg3d, FALSE)
-# write(romg3d, "/Users/justindoty/Documents/Home/My_Website/static/jmp/rnd/romg3d.json")
 #Persistence for R&D Firms (fixed percentiles of R&D)
 omgr3d <- plot_ly(x=vectau, y=vectau, z=omgr3dq, colorscale="Jet", type="surface", showscale=FALSE, scene="scene3") %>% layout(scene3=list(camera=list(eye=list(x=-1.5, y=-1.5, z=0.5)), aspectratio=list(x=1, y=1, z=1), xaxis=list(title="𝛕-innovation"), yaxis=list(title="𝛕-R&D"), zaxis=list(title="Persistence (R&D)"))) 
-# omgr3d
-# omgr3d   <- plotly_json(omgr3d, FALSE)
-# write(omgr3d, "/Users/justindoty/Documents/Home/My_Website/static/jmp/rnd/omgr3d.json")
 #Combined Plots
 persplotly <- subplot(omg3d, romg3d, omgr3d) %>% layout(scene=list(aspectratio=list(x=0.6, y=0.6, z=0.6), xaxis=list(title="𝛕-innovation"), yaxis=list(title="𝛕-productivity"), zaxis=list(title="Persistence")), 
 	scene2=list(aspectratio=list(x=0.6, y=0.6, z=0.6), xaxis=list(title="𝛕-innovation"), yaxis=list(title="𝛕-productivity"), zaxis=list(title="Persistence")),
@@ -228,34 +219,13 @@ persplotly <- plotly_json(persplotly, FALSE)
 write(persplotly, "/Users/justindoty/Documents/Home/My_Website/static/jmp/rnd/persplotly.json")
 #Returns to R&D (fixed percentiles of productivity)
 rdwq <- plot_ly(x=vectau, y=vectau, z=rdw, colorscale="Jet", type="surface", showscale=FALSE, scene="scene1") %>% layout(scene1=list(camera=list(eye=list(x=-1.5, y=-1.5, z=0.5)), aspectratio=list(x=1, y=1, z=1), xaxis=list(title="𝛕-innovation"), yaxis=list(title="𝛕-productivity"), zaxis=list(title="Returns to R&D"))) 
-rdwq
-# rdw    <- plotly_json(rdw, FALSE)
-# write(rdw, "/Users/justindoty/Documents/Home/My_Website/static/jmp/rnd/rdw.json")
 #Returns to R&D (fixed percentiles of R&D)
 rdrq <- plot_ly(x=vectau, y=vectau, z=rdr, colorscale="Jet", type="surface", showscale=FALSE, scene="scene2") %>% layout(scene2=list(camera=list(eye=list(x=-1.5, y=-1.5, z=0.5)), aspectratio=list(x=1, y=1, z=1), xaxis=list(title="𝛕-innovation"), yaxis=list(title="𝛕-R&D"), zaxis=list(title="Returns to R&D"))) 
-rdrq
-# rdr    <- plotly_json(rdr, FALSE)
-# write(rdr, "/Users/justindoty/Documents/Home/My_Website/static/jmp/rnd/rdr.json")
-rdplot <- subplot(rdwq, rdrq) %>% layout(scene1=list(aspectratio=list(x=0.5, y=0.5, z=0.5), xaxis=list(title="𝛕-innovation"), yaxis=list(title="𝛕-productivity"), zaxis=list(title="Returns")), 
-	scene1=list(aspectratio=list(x=0.5, y=0.5, z=0.5), xaxis=list(title="𝛕-innovation"), yaxis=list(title="𝛕-R&D"), zaxis=list(title="Returns")))
-#Annotations
-annotations <- list(list(x=0.5, y=0.85, text="Returns to R&D", font=list(size=16), xref="paper", yref="paper", xanchor="center,", yanchor="bottom", showarrow=FALSE))
-#Add
-rdplot <- rdplot %>% layout(annotations=annotations)
-
+rdplot <- subplot(rdwq, rdrq) %>% layout(scene=list(aspectratio=list(x=0.9, y=0.9, z=0.9), xaxis=list(title="𝛕-innovation"), yaxis=list(title="𝛕-productivity"), zaxis=list(title="Returns")), 
+	scene2=list(aspectratio=list(x=0.9, y=0.9, z=0.9), xaxis=list(title="𝛕-innovation"), yaxis=list(title="𝛕-R&D"), zaxis=list(title="Returns")))
 rdplot
 rdplot    <- plotly_json(rdplot, FALSE)
 write(rdplot, "/Users/justindoty/Documents/Home/My_Website/static/jmp/rnd/rdplot.json")
-#Density Plots
-vec <- c(rep("No R&D", length(omgnr)), rep("R&D", length(omgr)))
-omgdat <- data.frame(Firm=vec, productivity=c(omgnr, omgr))
-omgdat$Firm <- as.character(omgdat$Firm)
-omgdens_plot <- ggplot() + geom_density(data=omgdat, aes(x=productivity, colour=Firm)) + xlab("Productivity") + ylab("") 
-omgdens_plot <- ggplotly(omgdens_plot) %>% layout(annotations=list(list(x=0.48, y=1, text="Productivity Densities", font=list(size=16), xref="paper", yref="paper", xanchor="center,", yanchor="bottom", showarrow=FALSE)))
-omgdens_plot
-omgdens_plot    <- plotly_json(omgdens_plot, FALSE)
-write(omgdens_plot, "/Users/justindoty/Documents/Home/My_Website/static/jmp/rnd/omgdens_plot.json")
-
 
 
 

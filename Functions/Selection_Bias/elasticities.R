@@ -325,10 +325,6 @@ for (q in 1:ntau){
 }
 #Productivity Persistence
 omgplotly <- plot_ly(x=vectau, y=vectau, z=omg3dq, colorscale="Jet", type="surface", showscale=FALSE, scene="scene1") %>% layout(scene1=list(camera=list(eye=list(x=-1.5, y=-1.5, z=0.5)), aspectratio=list(x=1, y=1, z=1), xaxis=list(title="𝛕-innovation"), yaxis=list(title="𝛕-productivity"), zaxis=list(title="Persistence"))) 
-#Annotations
-annotations <- list(list(x=0.5, y=0.85, text="Productivity Persistence", font=list(size=16), xref="paper", yref="paper", xanchor="center,", yanchor="bottom", showarrow=FALSE))
-#Add
-omgplotly <- omgplotly %>% layout(annotations=annotations)
 omgplotly
 omgplotly <- plotly_json(omgplotly, FALSE)
 write(omgplotly, "/Users/justindoty/Documents/Home/My_Website/static/jmp/selection/omgplotly.json")

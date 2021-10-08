@@ -6,6 +6,7 @@ require(stringr)
 require(truncnorm)
 require(RColorBrewer)
 require(reshape2)
+require(plotly)
 source('/Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Function_QR/Code/Functions/RnD/Auxfuns.R')
 source('/Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Function_QR/Code/Functions/RnD/Tensors.R')
 source('/Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Function_QR/Code/Functions/RnD/omega.R')
@@ -202,7 +203,7 @@ for (q1 in 1:length(tauxi)){
 
 	}
 }
-#This Loop is Pretty Slow
+#Generate Productivity
 for (t in 2:T){
 	ttdata <- US %>% group_by(id) %>% slice(t)
 	for (q1 in 1:length(tauxi)){
@@ -219,59 +220,49 @@ for (t in 2:T){
 		#Restricting Supports
 		lnidata[,,q1][,t] <- (lni>max(ttdata$I))*max(ttdata$I)+(lni<min(ttdata$I))*min(ttdata$I)+(lni<=max(ttdata$I))*(lni>=min(ttdata$I))*lni
 		#R&D
-		lnr <- rowSums(RX(K=lnkdata[,,q1][pos,t], omega=omgdata[,,q1][pos,t])*lspline(vectau=vectau, bvec=parR, b1=parRb[1], bL=parRb[2], u=rhodata[pos,t]))
+		lnr <- rowSums(RX(K=mean(lnkdata[,,q1][pos,t]), omega=omgdata[,,q1][pos,t])*lspline(vectau=vectau, bvec=parR, b1=parRb[1], bL=parRb[2], u=rhodata[pos,t]))
 		#Restricting Supports
 		rdata[,,q1][pos,t] <- (lnr>max(ttdata$R))*max(ttdata$R)+(lnr<min(ttdata$R[ttdata$RB==1]))*min(ttdata$R[ttdata$RB==1])+(lnr<=max(ttdata$R))*(lnr>=min(ttdata$R[ttdata$RB==1]))*lnr
 		#Generate Optimal Input Decisions Following Innovation Shocks for Various Ranks of Demand Functions
 		for (q2 in 1:length(tauinp)){
 			rindq <- rqdata[,,,q2][,,q1][,t-1]!=0
+			#Productivity
 			omgq <- rowSums(WX(omega=omgqdata[,,,q2][,,q1][,t-1], R=rqdata[,,,q2][,,q1][,t-1], Rind=rindq)*lspline(vectau=vectau, bvec=parWT, b1=parWTb[1], bL=parWTb[2], u=xidata[,,q1][,t]))
-			omgrqs <- rowSums(WX(omega=omgrsize[,,,q2][,,q1][,t-1], R=rsizedata[,,,q2][,,q1][,t-1], Rind=rindq)*lspline(vectau=vectau, bvec=parWT, b1=parWTb[1], bL=parWTb[2], u=xidata[,,q1][,t]))
-			# lab <- rowSums(LX(K=lnkdata[,,q1][,t], omega=omgdata[,,q1][,t])*lspline(vectau=vectau, bvec=parL, b1=parLb[1], bL=parLb[2], u=epsl[,,q2][,t]))
-			# mat <- rowSums(MX(K=lnkdata[,,q1][,t], L=lnldata[,,,q2][,,q1][,t], omega=omgdata[,,q1][,t])*lspline(vectau=vectau, bvec=parM, b1=parMb[1], bL=parMb[2], u=epsm[,,q2][,t]))
-			# lnrq <- rowSums(RX(K=lnkdata[,,q1][pos,t], omega=omgqdata[,,,q2][,,q1][pos,t])*lspline(vectau=vectau, bvec=parR, b1=parRb[1], bL=parRb[2], u=rhodata[pos,t]))
-			# lnrqs <- rowSums(RX(K=lnkdata[,,q1][pos,t], omega=omgrsize[,,,q2][,,q1][pos,t])*lspline(vectau=vectau, bvec=parR, b1=parRb[1], bL=parRb[2], u=rhoq[,,q2][pos,t]))
+			omgrqs <- rowSums(WX(omega=omgrsize[,,,q2][,,q1][,t-1], R=mean(rsizedata[,,,q2][,,q1][,t-1]), Rind=rindq)*lspline(vectau=vectau, bvec=parWT, b1=parWTb[1], bL=parWTb[2], u=xidata[,,q1][,t]))
+			#R&D
+			lnrq <- rowSums(RX(K=mean(lnkdata[,,q1][pos,t]), omega=omgqdata[,,,q2][,,q1][pos,t])*lspline(vectau=vectau, bvec=parR, b1=parRb[1], bL=parRb[2], u=rhodata[pos,t]))
+			lnrqs <- rowSums(RX(K=mean(lnkdata[,,q1][pos,t]), omega=omgrsize[,,,q2][,,q1][pos,t])*lspline(vectau=vectau, bvec=parR, b1=parRb[1], bL=parRb[2], u=rhoq[,,q2][pos,t]))
 			#Restricting the Supports
 			omgqdata[,,,q2][,,q1][,t] <- (omgq>wmax)*wmax+(omgq<wmin)*wmin+(omgq<=wmax)*(omgq>=wmin)*omgq
 			omgrsize[,,,q2][,,q1][,t] <- (omgrqs>wmax)*wmax+(omgrqs<wmin)*wmin+(omgrqs<=wmax)*(omgrqs>=wmin)*omgrqs
-			# rqdata[,,,q2][,,q1][pos,t] <- (lnrq>max(ttdata$R))*max(ttdata$R)+(lnrq<min(ttdata$R[ttdata$RB==1]))*min(ttdata$R[ttdata$RB==1])+(lnrq<=max(ttdata$R))*(lnrq>=min(ttdata$R[ttdata$RB==1]))*lnrq
-			# rsizedata[,,,q2][,,q1][pos,t] <- (lnrqs>max(ttdata$R))*max(ttdata$R)+(lnrqs<min(ttdata$R[ttdata$RB==1]))*min(ttdata$R[ttdata$RB==1])+(lnrqs<=max(ttdata$R))*(lnrqs>=min(ttdata$R[ttdata$RB==1]))*lnrqs
-			# lnldata[,,,q2][,,q1][,t] <- (lab>max(ttdata$L))*max(ttdata$L)+(lab<min(ttdata$L))*min(ttdata$L)+(lab<=max(ttdata$L))*(lab>=min(ttdata$L))*lab
-			# lnmdata[,,,q2][,,q1][,t] <- (mat>max(ttdata$M))*max(ttdata$M)+(mat<min(ttdata$M))*min(ttdata$M)+(mat<=max(ttdata$M))*(mat>=min(ttdata$M))*mat
+			rqdata[,,,q2][,,q1][pos,t] <- (lnrq>max(ttdata$R[ttdata$RB==1]))*max(ttdata$R[ttdata$RB==1])+(lnrq<min(ttdata$R[ttdata$RB==1]))*min(ttdata$R[ttdata$RB==1])+(lnrq<=max(ttdata$R[ttdata$RB==1]))*(lnrq>=min(ttdata$R[ttdata$RB==1]))*lnrq
+			rsizedata[,,,q2][,,q1][pos,t] <- (lnrqs>max(ttdata$R[ttdata$RB==1]))*max(ttdata$R[ttdata$RB==1])+(lnrqs<min(ttdata$R[ttdata$RB==1]))*min(ttdata$R[ttdata$RB==1])+(lnrqs<=max(ttdata$R[ttdata$RB==1]))*(lnrqs>=min(ttdata$R[ttdata$RB==1]))*lnrqs
 		}
 	}
 }
+#Generate Labor and R&D at average levels of capital
 for (q1 in 1:length(tauxi)){
 	for (q2 in 1:length(tauinp)){
 		for (t in 2:T){
 			ttdata <- US %>% group_by(id) %>% slice(t)
-				lab  <- rowSums(LX(K=mean(lnkdata[,,q1]), omega=omgdata[,,q1][,t])*lspline(vectau=vectau, bvec=parL, b1=parLb[1], bL=parLb[2], u=epsl[,,q2][,t]))
-				lnrq <- rowSums(RX(K=mean(lnkdata[,,q1][pos,]), omega=omgqdata[,,,q2][,,q1][pos,t])*lspline(vectau=vectau, bvec=parR, b1=parRb[1], bL=parRb[2], u=rhodata[pos,t]))
-				lnrqs <- rowSums(RX(K=mean(lnkdata[,,q1][pos,]), omega=omgrsize[,,,q2][,,q1][pos,t])*lspline(vectau=vectau, bvec=parR, b1=parRb[1], bL=parRb[2], u=rhoq[,,q2][pos,t]))
-				# mat <- rowSums(MX(K=meanK, L=mean(lab), omega=omgdata[,,q1][,t])*lspline(vectau=vectau, bvec=parM, b1=parMb[1], bL=parMb[2], u=epsm[,,q2][,t]))
-				#Restricting the Supports
-				# omgqdata[,,,q2][,,q1][,t] <- (omgq>wmax)*wmax+(omgq<wmin)*wmin+(omgq<=wmax)*(omgq>=wmin)*omgq
-				lnldata[,,,q2][,,q1][,t] <- (lab>max(ttdata$L))*max(ttdata$L)+(lab<min(ttdata$L))*min(ttdata$L)+(lab<=max(ttdata$L))*(lab>=min(ttdata$L))*lab
-				rqdata[,,,q2][,,q1][pos,t] <- (lnrq>max(ttdata$R))*max(ttdata$R)+(lnrq<min(ttdata$R[ttdata$RB==1]))*min(ttdata$R[ttdata$RB==1])+(lnrq<=max(ttdata$R))*(lnrq>=min(ttdata$R[ttdata$RB==1]))*lnrq
-				rsizedata[,,,q2][,,q1][pos,t] <- (lnrqs>max(ttdata$R))*max(ttdata$R)+(lnrqs<min(ttdata$R[ttdata$RB==1]))*min(ttdata$R[ttdata$RB==1])+(lnrqs<=max(ttdata$R))*(lnrqs>=min(ttdata$R[ttdata$RB==1]))*lnrqs
-				# lnmdata[,,,q2][,,q1][,t] <- (mat>max(ttdata$M))*max(ttdata$M)+(mat<min(ttdata$M))*min(ttdata$M)+(mat<=max(ttdata$M))*(mat>=min(ttdata$M))*mat
+			lab  <- rowSums(LX(K=mean(lnkdata[,,q1]), omega=omgdata[,,q1][,t])*lspline(vectau=vectau, bvec=parL, b1=parLb[1], bL=parLb[2], u=epsl[,,q2][,t]))
+			#Restricting the Supports
+			lnldata[,,,q2][,,q1][,t] <- (lab>max(ttdata$L))*max(ttdata$L)+(lab<min(ttdata$L))*min(ttdata$L)+(lab<=max(ttdata$L))*(lab>=min(ttdata$L))*lab
 		}
 	}
 }
+#Generate Materials at average levels of capital and labor
 for (q1 in 1:length(tauxi)){
 	for (q2 in 1:length(tauinp)){
 		for (t in 2:T){
 			ttdata <- US %>% group_by(id) %>% slice(t)
-			# lab <- rowSums(LX(K=mean(lnkdata[,,q1]), omega=omgdata[,,q1][,t])*lspline(vectau=vectau, bvec=parL, b1=parLb[1], bL=parLb[2], u=epsl[,,q2][,t]))
 			mat <- rowSums(MX(K=mean(lnkdata[,,q1]), L=mean(lnldata[,,,q2][,,q1]), omega=omgdata[,,q1][,t])*lspline(vectau=vectau, bvec=parM, b1=parMb[1], bL=parMb[2], u=epsm[,,q2][,t]))
 			#Restricting the Supports
-			# omgqdata[,,,q2][,,q1][,t] <- (omgq>wmax)*wmax+(omgq<wmin)*wmin+(omgq<=wmax)*(omgq>=wmin)*omgq
-			# lnldata[,,,q2][,,q1][,t] <- (lab>max(ttdata$L))*max(ttdata$L)+(lab<min(ttdata$L))*min(ttdata$L)+(lab<=max(ttdata$L))*(lab>=min(ttdata$L))*lab
 			lnmdata[,,,q2][,,q1][,t] <- (mat>max(ttdata$M))*max(ttdata$M)+(mat<min(ttdata$M))*min(ttdata$M)+(mat<=max(ttdata$M))*(mat>=min(ttdata$M))*mat
 		}
 	}
 }
-#take the median across firms
+#Take the median across firms
 for (q1 in 1:length(tauxi)){
 	for (q2 in 1:length(tauinp)){
 		#For Non R&D Firms
@@ -323,18 +314,18 @@ Rplot <- list(); Rplotly <- list()
 RWplot <- list(); RWplotly <- list()
 for (i in 1:6){
 	wdat <- data.frame(Time=omegapath$Time, Y=omegapath[,i+1], Z=omgrpath[,i+1])
-	Wplot[[i]] <- ggplot(wdat, aes(x=Time)) + geom_line(aes(y=Y)) + geom_line(aes(y=Z), color="green", linetype="dashed") + xlab("Time") + ylab("Productivity") + coord_cartesian(ylim=c(min(min(omegapath[,-1]), min(omgrpath[,-1])), max(max(omegapath[,-1]), max(omgrpath[,-1])))) +  geom_hline(yintercept=0, linetype='dashed', color='red') + labs(title=taualp[i], subtitle=wtitles[[i]]) + theme(plot.title = element_text(size = 20), plot.subtitle=element_text(size = 20, hjust=0.5))
+	Wplot[[i]] <- ggplot(wdat, aes(x=Time)) + geom_line(aes(y=Y)) + geom_line(aes(y=Z), color="green", linetype="dashed") + xlab("Years") + ylab("Productivity") + coord_cartesian(ylim=c(min(min(omegapath[,-1]), min(omgrpath[,-1])), max(max(omegapath[,-1]), max(omgrpath[,-1])))) +  geom_hline(yintercept=0, linetype='dashed', color='red') + labs(title=taualp[i], subtitle=wtitles[[i]]) + theme(plot.title = element_text(size = 20), plot.subtitle=element_text(size = 20, hjust=0.5))
 	Wplotly[[i]] <- plot_ly(wdat, x=~Time, y=~Y, type = 'scatter', mode = 'lines', showlegend=F, line=list(color="black")) %>% add_trace(y = ~Z, mode = 'lines', showlegend=F,line=list(color="green", dash="dash")) %>% add_trace(y = 0, mode = 'lines', showlegend=F,line=list(color="red", dash="dash")) %>% layout(xaxis=list(title="Years"), yaxis=list(title="Productivity", range=list(min(min(omegapath[,-1]), min(omgrpath[,-1])), max(max(omegapath[,-1]), max(omgrpath[,-1])))))
 	ldat <- data.frame(Time=labpath$Time, Y=labpath[,i+1], Z=rlabpath[,i+1])
-	Lplot[[i]] <- ggplot(ldat, aes(x=Time)) + geom_line(aes(y=Y)) + geom_line(aes(y=Z), color="green", linetype="dashed") + xlab("Time") + ylab("Labor") + coord_cartesian(ylim=c(min(min(labpath[,-1]), min(rlabpath[,-1])), max(max(labpath[,-1]), max(rlabpath[,-1])))) + geom_hline(yintercept=0, linetype='dashed', color='red')+ labs(title=taualp[i], subtitle=ltitles[[i]]) + theme(plot.title = element_text(size = 20), plot.subtitle=element_text(size = 20, hjust=0.5))
+	Lplot[[i]] <- ggplot(ldat, aes(x=Time)) + geom_line(aes(y=Y)) + geom_line(aes(y=Z), color="green", linetype="dashed") + xlab("Years") + ylab("Labor") + coord_cartesian(ylim=c(min(min(labpath[,-1]), min(rlabpath[,-1])), max(max(labpath[,-1]), max(rlabpath[,-1])))) + geom_hline(yintercept=0, linetype='dashed', color='red')+ labs(title=taualp[i], subtitle=ltitles[[i]]) + theme(plot.title = element_text(size = 20), plot.subtitle=element_text(size = 20, hjust=0.5))
 	Lplotly[[i]] <- plot_ly(ldat, x=~Time, y=~Y, type = 'scatter', mode = 'lines', showlegend=F, line=list(color="black")) %>% add_trace(y = ~Z, mode = 'lines', showlegend=F,line=list(color="green", dash="dash")) %>% add_trace(y = 0, mode = 'lines', showlegend=F,line=list(color="red", dash="dash")) %>% layout(xaxis=list(title="Years"), yaxis=list(title="Labor", range=list(min(min(labpath[,-1]), min(rlabpath[,-1])), max(max(labpath[,-1]), max(rlabpath[,-1])))))
 	mdat <- data.frame(Time=matpath$Time, Y=matpath[,i+1], Z=rmatpath[,i+1])
-	Mplot[[i]] <- ggplot(mdat, aes(x=Time)) + geom_line(aes(y=Y)) + geom_line(aes(y=Z), color="green", linetype="dashed") + xlab("Time") + ylab("Materials") + coord_cartesian(ylim=c(min(min(matpath[,-1]), min(rmatpath[,-1])), max(max(matpath[,-1]), max(rmatpath[,-1])))) + geom_hline(yintercept=0, linetype='dashed', color='red')+ labs(title=taualp[i], subtitle=mtitles[[i]]) + theme(plot.title = element_text(size = 20), plot.subtitle=element_text(size = 20, hjust=0.5))
+	Mplot[[i]] <- ggplot(mdat, aes(x=Time)) + geom_line(aes(y=Y)) + geom_line(aes(y=Z), color="green", linetype="dashed") + xlab("Years") + ylab("Materials") + coord_cartesian(ylim=c(min(min(matpath[,-1]), min(rmatpath[,-1])), max(max(matpath[,-1]), max(rmatpath[,-1])))) + geom_hline(yintercept=0, linetype='dashed', color='red')+ labs(title=taualp[i], subtitle=mtitles[[i]]) + theme(plot.title = element_text(size = 20), plot.subtitle=element_text(size = 20, hjust=0.5))
 	Mplotly[[i]] <- plot_ly(mdat, x=~Time, y=~Y, type = 'scatter', mode = 'lines', showlegend=F, line=list(color="black")) %>% add_trace(y = ~Z, mode = 'lines', showlegend=F,line=list(color="green", dash="dash")) %>% add_trace(y = 0, mode = 'lines', showlegend=F,line=list(color="red", dash="dash")) %>% layout(xaxis=list(title="Years"), yaxis=list(title="Materials", range=list(min(min(matpath[,-1]), min(rmatpath[,-1])), max(max(matpath[,-1]), max(rmatpath[,-1])))))
 	rdat <- data.frame(Time=omegapath$Time, Y=omgrpath[,i+1], Z=rsizepath[,i+1])
-	RWplot[[i]] <- ggplot(rdat, aes(x=Time, y=Y)) + geom_line() + xlab("Time") + ylab("Productivity") + coord_cartesian(ylim=c(min(omgrpath[,-1]), max(omgrpath[,-1]))) +  geom_hline(yintercept=0, linetype='dashed', color='red') + labs(title=taualp[i], subtitle=rtitles[[i]]) + theme(plot.title = element_text(size = 20), plot.subtitle=element_text(size = 20, hjust=0.5))
+	RWplot[[i]] <- ggplot(rdat, aes(x=Time, y=Y)) + geom_line() + xlab("Years") + ylab("Productivity") + coord_cartesian(ylim=c(min(omgrpath[,-1]), max(omgrpath[,-1]))) +  geom_hline(yintercept=0, linetype='dashed', color='red') + labs(title=taualp[i], subtitle=rtitles[[i]]) + theme(plot.title = element_text(size = 20), plot.subtitle=element_text(size = 20, hjust=0.5))
 	RWplotly[[i]] <- plot_ly(rdat, x=~Time, y=~Y, type = 'scatter', mode = 'lines', showlegend=F, line=list(color="black")) %>% add_trace(y = 0, mode = 'lines', showlegend=F,line=list(color="red", dash="dash")) %>% layout(xaxis=list(title="Years"), yaxis=list(title="Productivity", range=list(min(omgrpath[,-1]), max(omgrpath[,-1]))))
-	Rplot[[i]] <- ggplot(rdat, aes(x=Time, y=Z)) + geom_line() + xlab("Time") + ylab("R&D") + coord_cartesian(ylim=c(min(rsizepath[,-1]), max(rsizepath[,-1]))) +  geom_hline(yintercept=0, linetype='dashed', color='red') + labs(title=taualp[i], subtitle=rtitles[[i]]) + theme(plot.title = element_text(size = 20), plot.subtitle=element_text(size = 20, hjust=0.5))
+	Rplot[[i]] <- ggplot(rdat, aes(x=Time, y=Z)) + geom_line() + xlab("Years") + ylab("R&D") + coord_cartesian(ylim=c(min(rsizepath[,-1]), max(rsizepath[,-1]))) +  geom_hline(yintercept=0, linetype='dashed', color='red') + labs(title=taualp[i], subtitle=rtitles[[i]]) + theme(plot.title = element_text(size = 20), plot.subtitle=element_text(size = 20, hjust=0.5))
 	Rplotly[[i]] <- plot_ly(rdat, x=~Time, y=~Z, type = 'scatter', mode = 'lines', showlegend=F, line=list(color="black")) %>% add_trace(y = 0, mode = 'lines', showlegend=F,line=list(color="red", dash="dash")) %>% layout(xaxis=list(title="Years"), yaxis=list(title="R&D", range=list(min(rsizepath[,-1]), max(rsizepath[,-1]))))
 	
 }
@@ -386,7 +377,7 @@ for (q1 in 1:length(tauxi)){
 		qlnkdata[,,,q2][,,q1][,1] <- k1
 		qlnkmed[,,q2][1,q1] <- median(qlnkdata[,,,q2][,,q1][,1])
 		qi1 <- rowSums(IX(K=k1, omega=omg1)*lspline(vectau=vectau, bvec=parI, b1=parIb[1], bL=parIb[2], u=qiota[,,q2][,1]))
-		rq <- rowSums(RX(K=qlnkdata[,,,q2][,,q1][pos,1], omega=omg1[pos])*lspline(vectau=vectau, bvec=parR, b1=parRb[1], bL=parRb[2], u=rhodata[pos,1])) 
+		rq <- rowSums(RX(K=k1[pos], omega=omg1[pos])*lspline(vectau=vectau, bvec=parR, b1=parRb[1], bL=parRb[2], u=rhodata[pos,1])) 
 		#Restrict the Support
 		qi1 <- (qi1>max(t1data$I))*max(t1data$I)+(qi1<min(t1data$I))*min(t1data$I)+(qi1<=max(t1data$I))*(qi1>=min(t1data$I))*qi1
 		rq <- (rq>max(t1data$R))*max(t1data$R)+(rq<min(t1data$R[t1data$RB==1]))*min(t1data$R[t1data$RB==1])+(rq<=max(t1data$R))*(rq>=min(t1data$R[t1data$RB==1]))*rq
@@ -433,7 +424,7 @@ Iplot <- list()
 Iplotly <- list()
 for (i in 1:6){
 	idat <- data.frame(Time=ipath$Time, Y=ipath[,i+1], Z=ripath[,i+1])
-	Iplot[[i]] <- ggplot(idat, aes(x=Time)) + geom_line(aes(y=Y)) + geom_line(aes(y=Z), color="darkgreen", linetype="dashed") + xlab("Time") + ylab("Investment") + coord_cartesian(ylim=c(min(min(ipath[,-1]), min(ripath[,-1])), max(max(ipath[,-1]), max(ripath[,-1])))) +  geom_hline(yintercept=0, linetype='dashed', color='red') + labs(title=taualp[i], subtitle=ititles[[i]]) + theme(plot.title = element_text(size = 20), plot.subtitle=element_text(size = 20, hjust=0.5))
+	Iplot[[i]] <- ggplot(idat, aes(x=Time)) + geom_line(aes(y=Y)) + geom_line(aes(y=Z), color="darkgreen", linetype="dashed") + xlab("Years") + ylab("Investment") + coord_cartesian(ylim=c(min(min(ipath[,-1]), min(ripath[,-1])), max(max(ipath[,-1]), max(ripath[,-1])))) +  geom_hline(yintercept=0, linetype='dashed', color='red') + labs(title=taualp[i], subtitle=ititles[[i]]) + theme(plot.title = element_text(size = 20), plot.subtitle=element_text(size = 20, hjust=0.5))
 	Iplotly[[i]] <- plot_ly(idat, x=~Time, y=~Y, type = 'scatter', mode = 'lines', showlegend=F, line=list(color="black")) %>% add_trace(y = ~Z, mode = 'lines', showlegend=F,line=list(color="green", dash="dash")) %>% add_trace(y = 0, mode = 'lines', showlegend=F,line=list(color="red", dash="dash")) %>% layout(xaxis=list(title="Years"), yaxis=list(title="Investment", range=list(min(min(ipath[,-1]), min(ripath[,-1])), max(max(ipath[,-1]), max(ripath[,-1])))))
 }
 names(Iplot) <- c("LowLow", "LowMed", "LowHigh", "HighLow", "HighMed", "HighHigh")
@@ -455,7 +446,7 @@ Kplot <- list()
 Kplotly <- list()
 for (i in 1:6){
 	kdat <- data.frame(Time=kpath$Time, Y=kpath[,i+1], Z=rkpath[,i+1])
-	Kplot[[i]] <- ggplot(kdat, aes(x=Time)) + geom_line(aes(y=Y)) + geom_line(aes(y=Z), color="darkgreen", linetype="dashed") + xlab("Time") + ylab("Capital") + coord_cartesian(ylim=c(min(min(kpath[,-1]), min(rkpath[,-1])), max(max(kpath[,-1]), max(rkpath[,-1])))) +  geom_hline(yintercept=0, linetype='dashed', color='red') + labs(title=taualp[i], subtitle=Ktitles[[i]]) + theme(plot.title = element_text(size = 20), plot.subtitle=element_text(size = 20, hjust=0.5))
+	Kplot[[i]] <- ggplot(kdat, aes(x=Time)) + geom_line(aes(y=Y)) + geom_line(aes(y=Z), color="darkgreen", linetype="dashed") + xlab("Years") + ylab("Capital") + coord_cartesian(ylim=c(min(min(kpath[,-1]), min(rkpath[,-1])), max(max(kpath[,-1]), max(rkpath[,-1])))) +  geom_hline(yintercept=0, linetype='dashed', color='red') + labs(title=taualp[i], subtitle=Ktitles[[i]]) + theme(plot.title = element_text(size = 20), plot.subtitle=element_text(size = 20, hjust=0.5))
 	Kplotly[[i]] <- plot_ly(kdat, x=~Time, y=~Y, type = 'scatter', mode = 'lines', showlegend=F, line=list(color="black")) %>% add_trace(y = ~Z, mode = 'lines', showlegend=F,line=list(color="green", dash="dash")) %>% add_trace(y = 0, mode = 'lines', showlegend=F,line=list(color="red", dash="dash")) %>% layout(xaxis=list(title="Years"), yaxis=list(title="Capital", range=list(min(min(kpath[,-1]), min(rkpath[,-1])), max(max(kpath[,-1]), max(rkpath[,-1])))))
 }
 names(Kplot) <- c("LowLow", "LowMed", "LowHigh", "HighLow", "HighMed", "HighHigh")
@@ -469,72 +460,65 @@ save_plot("/Users/justindoty/Documents/Research/Dissertation/Nonlinear_Productio
 #For Plot.ly
 ###############################################################
 #Productivity
-annotationsW <- list(list(x=0.11, y=0.9, text=TeX("\\tau_{\\xi}=0.1, \\tau_{\\omega_{1}}=0.1"), font=list(size=16), xref="paper", yref="paper", xanchor="center,", yanchor="bottom", showarrow=FALSE),
-	list(x=0.495, y=0.9, text=TeX("\\tau_{\\xi}=0.1, \\tau_{\\omega_{1}}=0.5"), font=list(size=16), xref="paper", yref="paper", xanchor="center,", yanchor="bottom", showarrow=FALSE),
-		list(x=0.88, y=0.9, text=TeX("\\tau_{\\xi}=0.1, \\tau_{\\omega_{1}}=0.9"), font=list(size=16), xref="paper", yref="paper", xanchor="center,", yanchor="bottom", showarrow=FALSE),
-		list(x=0.11, y=0.45, text=TeX("\\tau_{\\xi}=0.9, \\tau_{\\omega_{1}}=0.1"), font=list(size=16), xref="paper", yref="paper", xanchor="center,", yanchor="bottom", showarrow=FALSE),
-		list(x=0.495, y=0.45, text=TeX("\\tau_{\\xi}=0.9, \\tau_{\\omega_{1}}=0.5"), font=list(size=16), xref="paper", yref="paper", xanchor="center,", yanchor="bottom", showarrow=FALSE),
-		list(x=0.88, y=0.45, text=TeX("\\tau_{\\xi}=0.9, \\tau_{\\omega_{1}}=0.9"), font=list(size=16), xref="paper", yref="paper", xanchor="center,", yanchor="bottom", showarrow=FALSE))
+annotationsW <- list(list(x=0.11, y=0.9, text=TeX("(a)\\,\\tau_{\\xi}=0.1, \\tau_{\\omega_{1}}=0.1"), font=list(size=22), xref="paper", yref="paper", xanchor="center,", yanchor="bottom", showarrow=FALSE),
+	list(x=0.495, y=0.9, text=TeX("(b)\\,\\tau_{\\xi}=0.1, \\tau_{\\omega_{1}}=0.5"), font=list(size=22), xref="paper", yref="paper", xanchor="center,", yanchor="bottom", showarrow=FALSE),
+		list(x=0.88, y=0.9, text=TeX("(c)\\,\\tau_{\\xi}=0.1, \\tau_{\\omega_{1}}=0.9"), font=list(size=22), xref="paper", yref="paper", xanchor="center,", yanchor="bottom", showarrow=FALSE),
+		list(x=0.11, y=0.45, text=TeX("(d)\\,\\tau_{\\xi}=0.9, \\tau_{\\omega_{1}}=0.1"), font=list(size=22), xref="paper", yref="paper", xanchor="center,", yanchor="bottom", showarrow=FALSE),
+		list(x=0.495, y=0.45, text=TeX("(e)\\,\\tau_{\\xi}=0.9, \\tau_{\\omega_{1}}=0.5"), font=list(size=22), xref="paper", yref="paper", xanchor="center,", yanchor="bottom", showarrow=FALSE),
+		list(x=0.88, y=0.45, text=TeX("(f)\\,\\tau_{\\xi}=0.9, \\tau_{\\omega_{1}}=0.9"), font=list(size=22), xref="paper", yref="paper", xanchor="center,", yanchor="bottom", showarrow=FALSE))
 W <- subplot(Wplotly[[1]], Wplotly[[2]], Wplotly[[3]], Wplotly[[4]], Wplotly[[5]], Wplotly[[6]], shareX=TRUE, shareY=TRUE, nrows=2)
 W <- W %>% layout(annotations=annotationsW) %>% config(mathjax = 'cdn')
 W
 W <- plotly_json(W, FALSE)
 write(W, "/Users/justindoty/Documents/Home/My_Website/static/jmp/rnd/impulseW.json")
 #Labor 
-annotationsL <- list(list(x=0.11, y=0.9, text=TeX("\\tau_{\\xi}=0.1, \\tau_{l}=0.1"), font=list(size=16), xref="paper", yref="paper", xanchor="center,", yanchor="bottom", showarrow=FALSE),
-	list(x=0.495, y=0.9, text=TeX("\\tau_{\\xi}=0.1, \\tau_{l}=0.5"), font=list(size=16), xref="paper", yref="paper", xanchor="center,", yanchor="bottom", showarrow=FALSE),
-		list(x=0.88, y=0.9, text=TeX("\\tau_{\\xi}=0.1, \\tau_{l}=0.9"), font=list(size=16), xref="paper", yref="paper", xanchor="center,", yanchor="bottom", showarrow=FALSE),
-		list(x=0.11, y=0.45, text=TeX("\\tau_{\\xi}=0.9, \\tau_{l}=0.1"), font=list(size=16), xref="paper", yref="paper", xanchor="center,", yanchor="bottom", showarrow=FALSE),
-		list(x=0.495, y=0.45, text=TeX("\\tau_{\\xi}=0.9, \\tau_{l}=0.5"), font=list(size=16), xref="paper", yref="paper", xanchor="center,", yanchor="bottom", showarrow=FALSE),
-		list(x=0.88, y=0.45, text=TeX("\\tau_{\\xi}=0.9, \\tau_{l}=0.9"), font=list(size=16), xref="paper", yref="paper", xanchor="center,", yanchor="bottom", showarrow=FALSE))
+annotationsL <- list(list(x=0.11, y=0.9, text=TeX("(a)\\,\\tau_{\\xi}=0.1, \\tau_{l}=0.1"), font=list(size=22), xref="paper", yref="paper", xanchor="center,", yanchor="bottom", showarrow=FALSE),
+	list(x=0.495, y=0.9, text=TeX("(b)\\,\\tau_{\\xi}=0.1, \\tau_{l}=0.5"), font=list(size=22), xref="paper", yref="paper", xanchor="center,", yanchor="bottom", showarrow=FALSE),
+		list(x=0.88, y=0.9, text=TeX("(c)\\,\\tau_{\\xi}=0.1, \\tau_{l}=0.9"), font=list(size=22), xref="paper", yref="paper", xanchor="center,", yanchor="bottom", showarrow=FALSE),
+		list(x=0.11, y=0.45, text=TeX("(d)\\,\\tau_{\\xi}=0.9, \\tau_{l}=0.1"), font=list(size=22), xref="paper", yref="paper", xanchor="center,", yanchor="bottom", showarrow=FALSE),
+		list(x=0.495, y=0.45, text=TeX("(e)\\,\\tau_{\\xi}=0.9, \\tau_{l}=0.5"), font=list(size=22), xref="paper", yref="paper", xanchor="center,", yanchor="bottom", showarrow=FALSE),
+		list(x=0.88, y=0.45, text=TeX("(f)\\,\\tau_{\\xi}=0.9, \\tau_{l}=0.9"), font=list(size=22), xref="paper", yref="paper", xanchor="center,", yanchor="bottom", showarrow=FALSE))
 L <- subplot(Lplotly[[1]], Lplotly[[2]], Lplotly[[3]], Lplotly[[4]], Lplotly[[5]], Lplotly[[6]], shareX=TRUE, shareY=TRUE, nrows=2)
 L <- L %>% layout(annotations=annotationsL) %>% config(mathjax = 'cdn')
 L
 L <- plotly_json(L, FALSE)
 write(L, "/Users/justindoty/Documents/Home/My_Website/static/jmp/rnd/impulseL.json")
 #Materials
-annotationsM <- list(list(x=0.11, y=0.9, text=TeX("\\tau_{\\xi}=0.1, \\tau_{m}=0.1"), font=list(size=16), xref="paper", yref="paper", xanchor="center,", yanchor="bottom", showarrow=FALSE),
-	list(x=0.495, y=0.9, text=TeX("\\tau_{\\xi}=0.1, \\tau_{m}=0.5"), font=list(size=16), xref="paper", yref="paper", xanchor="center,", yanchor="bottom", showarrow=FALSE),
-		list(x=0.88, y=0.9, text=TeX("\\tau_{\\xi}=0.1, \\tau_{m}=0.9"), font=list(size=16), xref="paper", yref="paper", xanchor="center,", yanchor="bottom", showarrow=FALSE),
-		list(x=0.11, y=0.45, text=TeX("\\tau_{\\xi}=0.9, \\tau_{m}=0.1"), font=list(size=16), xref="paper", yref="paper", xanchor="center,", yanchor="bottom", showarrow=FALSE),
-		list(x=0.495, y=0.45, text=TeX("\\tau_{\\xi}=0.9, \\tau_{m}=0.5"), font=list(size=16), xref="paper", yref="paper", xanchor="center,", yanchor="bottom", showarrow=FALSE),
-		list(x=0.88, y=0.45, text=TeX("\\tau_{\\xi}=0.9, \\tau_{m}=0.9"), font=list(size=16), xref="paper", yref="paper", xanchor="center,", yanchor="bottom", showarrow=FALSE))
+annotationsM <- list(list(x=0.11, y=0.9, text=TeX("(a)\\,\\tau_{\\xi}=0.1, \\tau_{m}=0.1"), font=list(size=22), xref="paper", yref="paper", xanchor="center,", yanchor="bottom", showarrow=FALSE),
+	list(x=0.495, y=0.9, text=TeX("(b)\\,\\tau_{\\xi}=0.1, \\tau_{m}=0.5"), font=list(size=22), xref="paper", yref="paper", xanchor="center,", yanchor="bottom", showarrow=FALSE),
+		list(x=0.88, y=0.9, text=TeX("(c)\\,\\tau_{\\xi}=0.1, \\tau_{m}=0.9"), font=list(size=22), xref="paper", yref="paper", xanchor="center,", yanchor="bottom", showarrow=FALSE),
+		list(x=0.11, y=0.45, text=TeX("(d)\\,\\tau_{\\xi}=0.9, \\tau_{m}=0.1"), font=list(size=22), xref="paper", yref="paper", xanchor="center,", yanchor="bottom", showarrow=FALSE),
+		list(x=0.495, y=0.45, text=TeX("(e)\\,\\tau_{\\xi}=0.9, \\tau_{m}=0.5"), font=list(size=22), xref="paper", yref="paper", xanchor="center,", yanchor="bottom", showarrow=FALSE),
+		list(x=0.88, y=0.45, text=TeX("(f)\\,\\tau_{\\xi}=0.9, \\tau_{m}=0.9"), font=list(size=22), xref="paper", yref="paper", xanchor="center,", yanchor="bottom", showarrow=FALSE))
 M <- subplot(Mplotly[[1]], Mplotly[[2]], Mplotly[[3]], Mplotly[[4]], Mplotly[[5]], Mplotly[[6]], shareX=TRUE, shareY=TRUE, nrows=2)
 M <- M %>% layout(annotations=annotationsM) %>% config(mathjax = 'cdn')
 M
 M <- plotly_json(M, FALSE)
 write(M, "/Users/justindoty/Documents/Home/My_Website/static/jmp/rnd/impulseM.json")
 #Investment
-annotationsI <- list(list(x=0.11, y=0.9, text=TeX("\\tau_{\\xi}=0.1, \\tau_{i}=0.1"), font=list(size=16), xref="paper", yref="paper", xanchor="center,", yanchor="bottom", showarrow=FALSE),
-	list(x=0.495, y=0.9, text=TeX("\\tau_{\\xi}=0.1, \\tau_{i}=0.5"), font=list(size=16), xref="paper", yref="paper", xanchor="center,", yanchor="bottom", showarrow=FALSE),
-		list(x=0.88, y=0.9, text=TeX("\\tau_{\\xi}=0.1, \\tau_{i}=0.9"), font=list(size=16), xref="paper", yref="paper", xanchor="center,", yanchor="bottom", showarrow=FALSE),
-		list(x=0.11, y=0.45, text=TeX("\\tau_{\\xi}=0.9, \\tau_{i}=0.1"), font=list(size=16), xref="paper", yref="paper", xanchor="center,", yanchor="bottom", showarrow=FALSE),
-		list(x=0.495, y=0.45, text=TeX("\\tau_{\\xi}=0.9, \\tau_{i}=0.5"), font=list(size=16), xref="paper", yref="paper", xanchor="center,", yanchor="bottom", showarrow=FALSE),
-		list(x=0.88, y=0.45, text=TeX("\\tau_{\\xi}=0.9, \\tau_{i}=0.9"), font=list(size=16), xref="paper", yref="paper", xanchor="center,", yanchor="bottom", showarrow=FALSE))
+annotationsI <- list(list(x=0.11, y=0.9, text=TeX("(a)\\,\\tau_{\\xi}=0.1, \\tau_{i}=0.1"), font=list(size=22), xref="paper", yref="paper", xanchor="center,", yanchor="bottom", showarrow=FALSE),
+	list(x=0.495, y=0.9, text=TeX("(b)\\,\\tau_{\\xi}=0.1, \\tau_{i}=0.5"), font=list(size=22), xref="paper", yref="paper", xanchor="center,", yanchor="bottom", showarrow=FALSE),
+		list(x=0.88, y=0.9, text=TeX("(c)\\,\\tau_{\\xi}=0.1, \\tau_{i}=0.9"), font=list(size=22), xref="paper", yref="paper", xanchor="center,", yanchor="bottom", showarrow=FALSE),
+		list(x=0.11, y=0.45, text=TeX("(d)\\,\\tau_{\\xi}=0.9, \\tau_{i}=0.1"), font=list(size=22), xref="paper", yref="paper", xanchor="center,", yanchor="bottom", showarrow=FALSE),
+		list(x=0.495, y=0.45, text=TeX("(e)\\,\\tau_{\\xi}=0.9, \\tau_{i}=0.5"), font=list(size=22), xref="paper", yref="paper", xanchor="center,", yanchor="bottom", showarrow=FALSE),
+		list(x=0.88, y=0.45, text=TeX("(f)\\,\\tau_{\\xi}=0.9, \\tau_{i}=0.9"), font=list(size=22), xref="paper", yref="paper", xanchor="center,", yanchor="bottom", showarrow=FALSE))
 I <- subplot(Iplotly[[1]], Iplotly[[2]], Iplotly[[3]], Iplotly[[4]], Iplotly[[5]], Iplotly[[6]], shareX=TRUE, shareY=TRUE, nrows=2)
 I <- I %>% layout(annotations=annotationsI) %>% config(mathjax = 'cdn')
 I
 I <- plotly_json(I, FALSE)
 write(I, "/Users/justindoty/Documents/Home/My_Website/static/jmp/rnd/impulseI.json")
-#Capital
-annotationsK <- list(list(x=0.11, y=0.9, text=TeX("\\tau_{\\xi}=0.1, \\tau_{i}=0.1"), font=list(size=16), xref="paper", yref="paper", xanchor="center,", yanchor="bottom", showarrow=FALSE),
-	list(x=0.495, y=0.9, text=TeX("\\tau_{\\xi}=0.1, \\tau_{i}=0.5"), font=list(size=16), xref="paper", yref="paper", xanchor="center,", yanchor="bottom", showarrow=FALSE),
-		list(x=0.88, y=0.9, text=TeX("\\tau_{\\xi}=0.1, \\tau_{i}=0.9"), font=list(size=16), xref="paper", yref="paper", xanchor="center,", yanchor="bottom", showarrow=FALSE),
-		list(x=0.11, y=0.45, text=TeX("\\tau_{\\xi}=0.9, \\tau_{i}=0.1"), font=list(size=16), xref="paper", yref="paper", xanchor="center,", yanchor="bottom", showarrow=FALSE),
-		list(x=0.495, y=0.45, text=TeX("\\tau_{\\xi}=0.9, \\tau_{i}=0.5"), font=list(size=16), xref="paper", yref="paper", xanchor="center,", yanchor="bottom", showarrow=FALSE),
-		list(x=0.88, y=0.45, text=TeX("\\tau_{\\xi}=0.9, \\tau_{i}=0.9"), font=list(size=16), xref="paper", yref="paper", xanchor="center,", yanchor="bottom", showarrow=FALSE))
 K <- subplot(Kplotly[[1]], Kplotly[[2]], Kplotly[[3]], Kplotly[[4]], Kplotly[[5]], Kplotly[[6]], shareX=TRUE, shareY=TRUE, nrows=2)
-K <- K %>% layout(annotations=annotationsK) %>% config(mathjax = 'cdn')
+K <- K %>% layout(annotations=annotationsI) %>% config(mathjax = 'cdn')
 K
 K <- plotly_json(K, FALSE)
 write(K, "/Users/justindoty/Documents/Home/My_Website/static/jmp/selection/impulseI.json")
 #R&D
-annotationsR <- list(list(x=0.11, y=0.9, text=TeX("\\tau_{\\xi}=0.1, \\tau_{r}=0.1"), font=list(size=16), xref="paper", yref="paper", xanchor="center,", yanchor="bottom", showarrow=FALSE),
-	list(x=0.495, y=0.9, text=TeX("\\tau_{\\xi}=0.1, \\tau_{r}=0.5"), font=list(size=16), xref="paper", yref="paper", xanchor="center,", yanchor="bottom", showarrow=FALSE),
-		list(x=0.88, y=0.9, text=TeX("\\tau_{\\xi}=0.1, \\tau_{r}=0.9"), font=list(size=16), xref="paper", yref="paper", xanchor="center,", yanchor="bottom", showarrow=FALSE),
-		list(x=0.11, y=0.45, text=TeX("\\tau_{\\xi}=0.9, \\tau_{r}=0.1"), font=list(size=16), xref="paper", yref="paper", xanchor="center,", yanchor="bottom", showarrow=FALSE),
-		list(x=0.495, y=0.45, text=TeX("\\tau_{\\xi}=0.9, \\tau_{r}=0.5"), font=list(size=16), xref="paper", yref="paper", xanchor="center,", yanchor="bottom", showarrow=FALSE),
-		list(x=0.88, y=0.45, text=TeX("\\tau_{\\xi}=0.9, \\tau_{r}=0.9"), font=list(size=16), xref="paper", yref="paper", xanchor="center,", yanchor="bottom", showarrow=FALSE))
+annotationsR <- list(list(x=0.11, y=0.9, text=TeX("(a)\\,\\tau_{\\xi}=0.1, \\tau_{r}=0.1"), font=list(size=22), xref="paper", yref="paper", xanchor="center,", yanchor="bottom", showarrow=FALSE),
+	list(x=0.495, y=0.9, text=TeX("(b)\\,\\tau_{\\xi}=0.1, \\tau_{r}=0.5"), font=list(size=22), xref="paper", yref="paper", xanchor="center,", yanchor="bottom", showarrow=FALSE),
+		list(x=0.88, y=0.9, text=TeX("(c)\\,\\tau_{\\xi}=0.1, \\tau_{r}=0.9"), font=list(size=22), xref="paper", yref="paper", xanchor="center,", yanchor="bottom", showarrow=FALSE),
+		list(x=0.11, y=0.45, text=TeX("(d)\\,\\tau_{\\xi}=0.9, \\tau_{r}=0.1"), font=list(size=22), xref="paper", yref="paper", xanchor="center,", yanchor="bottom", showarrow=FALSE),
+		list(x=0.495, y=0.45, text=TeX("(e)\\,\\tau_{\\xi}=0.9, \\tau_{r}=0.5"), font=list(size=22), xref="paper", yref="paper", xanchor="center,", yanchor="bottom", showarrow=FALSE),
+		list(x=0.88, y=0.45, text=TeX("(f)\\,\\tau_{\\xi}=0.9, \\tau_{r}=0.9"), font=list(size=22), xref="paper", yref="paper", xanchor="center,", yanchor="bottom", showarrow=FALSE))
 R <- subplot(Rplotly[[1]], Rplotly[[2]], Rplotly[[3]], Rplotly[[4]], Rplotly[[5]], Rplotly[[6]], shareX=TRUE, shareY=TRUE, nrows=2)
 R <- R %>% layout(annotations=annotationsR) %>% config(mathjax = 'cdn')
 R
