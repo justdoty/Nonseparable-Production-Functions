@@ -156,8 +156,8 @@ Ltitle4 <- ggdraw() + draw_label(expression(paste(tau[l[t-1]], "=0.9")), fontfac
 Lrow4 <-  plot_grid(Ltitle4, plot_grid(Lplot$Q4Low, Lplot$Q4Med, Lplot$Q4High, nrow=1), ncol=1, rel_heights=c(0.5,1))
 
 
-impulseL <- plot_grid(Lrow1, Lrow2, Lrow3, Lrow4, nrow=4)
-save_plot("/Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Function_QR/Code/Figures/Labor_Dynamics/impulseL.png", impulseL, base_height = 20, base_width = 15)
+# impulseL <- plot_grid(Lrow1, Lrow2, Lrow3, Lrow4, nrow=4)
+# save_plot("/Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Function_QR/Code/Figures/Labor_Dynamics/impulseL.png", impulseL, base_height = 20, base_width = 15)
 
 annotationsL <- list(list(x=0.11, y=0.97, text=TeX("(a)\\,\\tau_{l_{t-1}}=0.1, \\tau_{l}=0.1"), font=list(size=22), xref="paper", yref="paper", xanchor="center,", yanchor="bottom", showarrow=FALSE),
 	list(x=0.495, y=0.97, text=TeX("(b)\\,\\tau_{l_{t-1}}=0.1, \\tau_{l}=0.5"), font=list(size=22), xref="paper", yref="paper", xanchor="center,", yanchor="bottom", showarrow=FALSE),
@@ -172,10 +172,10 @@ annotationsL <- list(list(x=0.11, y=0.97, text=TeX("(a)\\,\\tau_{l_{t-1}}=0.1, \
 		list(x=0.495, y=0.2, text=TeX("(k)\\,\\tau_{l_{t-1}}=0.9, \\tau_{l}=0.5"), font=list(size=22), xref="paper", yref="paper", xanchor="center,", yanchor="bottom", showarrow=FALSE),
 		list(x=0.88, y=0.2, text=TeX("(l)\\,\\tau_{l_{t-1}}=0.9, \\tau_{l}=0.9"), font=list(size=22), xref="paper", yref="paper", xanchor="center,", yanchor="bottom", showarrow=FALSE))
 L <- subplot(Lplotly[[1]], Lplotly[[2]], Lplotly[[3]], Lplotly[[4]], Lplotly[[5]], Lplotly[[6]], Lplotly[[7]], Lplotly[[8]], Lplotly[[9]], Lplotly[[10]], Lplotly[[11]], Lplotly[[12]], shareX=TRUE, shareY=TRUE, nrows=4)
-L <- L %>% layout(annotations=annotationsL) %>% config(mathjax = 'cdn')
-L
-L <- plotly_json(L, FALSE)
-write(L, "/Users/justindoty/Documents/Home/My_Website/static/jmp/labor/impulseL.json")
+Lplot <- L %>% layout(annotations=annotationsL) %>% config(mathjax = 'cdn')
+# Lplot
+Ljson <- plotly_json(L, FALSE)
+write(Ljson, "/Users/justindoty/Documents/Home/My_Website/static/jmp/labor/impulseL.json")
 
 
 
