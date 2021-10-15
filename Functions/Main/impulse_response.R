@@ -208,32 +208,34 @@ names(omegapath) <- c("Time", "LowLow", "LowMed", "LowHigh", "HighLow", "HighMed
 #Save to Selection_Bias Folder
 write.csv(omegapath, "/Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Function_QR/Code/Functions/Selection_Bias/omegapath.csv")
 #Plotting
-taup <- c("0.1", "0.5", "0.9", "0.1", "0.5", "0.9")
-taualp <- c("(a)", "(b)", "(c)", "(d)", "(e)", "(f)")
-ltitles <- lapply(1:6, function(i) parse(text = paste0("tau[paste(l, \"=\", ", taup[i], ")]")))
-mtitles <- lapply(1:6, function(i) parse(text = paste0("tau[paste(m, \"=\", ", taup[i], ")]")))
-wtitles <- lapply(1:6, function(i) parse(text = paste0("tau[paste(omega[1], \"=\", ", taup[i], ")]")))
-# wann <- lapply(1:6, function(i) list(text=expression(tau), xref="paper", yref="paper", yanchor="bottom", xanchor="center", align="center", x=0.5, y=1, showarrow=FALSE))
-Wplot <- list()
+hline <- function(y = 0, color = "red") {
+  list(
+    type = "line",
+    y0 = y,
+    y1 = y,
+    xref = "paper",
+    x0 = 0,
+    x1 = 1,
+    line = list(color = color, dash="dot")
+  )
+}
 Wplotly <- list()
-Lplot <- list()
 Lplotly <- list()
-Mplot <- list()
 Mplotly <- list()
+wtitles <- list("Negative Shock<br>Low Productivity", "Negative Shock<br>Medium Productivity", "Negative Shock<br>High Productivity", "Positive Shock<br>Low Productivity", "Positive Shock<br>Medium Productivity", "Positive Shock<br>High Productivity")
+ltitles <- list("Negative Shock<br>Low Labor", "Negative Shock<br>Medium Labor", "Negative Shock<br>High Labor", "Positive Shock<br>Low Labor", "Positive Shock<br>Medium Labor", "Positive Shock<br>High Labor")
+mtitles <- list("Negative Shock<br>Low Materials", "Negative Shock<br>Medium Materials", "Negative Shock<br>High Materials", "Positive Shock<br>Low Materials", "Positive Shock<br>Medium Materials", "Positive Shock<br>High Materials")
 for (i in 1:6){
 	wdat <- data.frame(Time=omegapath$Time, Y=omegapath[,i+1])
-	Wplot[[i]] <- ggplot(wdat, aes(x=Time, y=Y)) + geom_line() + xlab("Years") + ylab("Productivity") + coord_cartesian(ylim=c(min(omegapath[,-1]), max(omegapath[,-1]))) +  geom_hline(yintercept=0, linetype='dashed', color='red') + labs(title=taualp[i], subtitle=wtitles[[i]]) + theme(plot.title = element_text(size = 20), plot.subtitle=element_text(size = 20, hjust=0.5))
-	Wplotly[[i]] <- plot_ly(wdat, x=~Time, y=~Y, type = 'scatter', mode = 'lines', showlegend=F, line=list(color="black")) %>% add_trace(y = 0, mode = 'lines', showlegend=F,line=list(color="red", dash="dash")) %>% layout(xaxis=list(title="Years"), yaxis=list(title="Productivity", range=list(min(omegapath[,-1]), max(omegapath[,-1]))))
+	Wplotly[[i]] <- plot_ly(wdat, x=~Time, y=~Y, type = 'scatter', mode = 'lines', showlegend=F, line=list(color="black"), name=wtitles[[i]], hovertemplate = paste("<i>Year<i>: %{x}", "<br>Productivity Change: %{y:.2f}")) %>% layout(xaxis=list(title="Years"), yaxis=list(title="Productivity", range=list(min(omegapath[,-1]), max(omegapath[,-1]))), shapes=list(hline(y=0)))
 	ldat <- data.frame(Time=labpath$Time, Y=labpath[,i+1])
-	Lplot[[i]] <- ggplot(ldat, aes(x=Time, y=Y)) + geom_line() + xlab("Years") + ylab("Labor") + coord_cartesian(ylim=c(min(labpath[,-1]), max(labpath[,-1]))) + geom_hline(yintercept=0, linetype='dashed', color='red')+ labs(title=taualp[i], subtitle=ltitles[[i]]) + theme(plot.title = element_text(size = 20), plot.subtitle=element_text(size = 20, hjust=0.5))
-	Lplotly[[i]] <- plot_ly(ldat, x=~Time, y=~Y, type = 'scatter', mode = 'lines', showlegend=F, line=list(color="black")) %>% add_trace(y = 0, mode = 'lines', showlegend=F,line=list(color="red", dash="dash")) %>% layout(xaxis=list(title="Years"), yaxis=list(title="Labor", range=list(min(labpath[,-1]), max(labpath[,-1]))))
+	Lplotly[[i]] <- plot_ly(ldat, x=~Time, y=~Y, type = 'scatter', mode = 'lines', showlegend=F, line=list(color="black"), name=ltitles[[i]], hovertemplate = paste("<i>Year<i>: %{x}", "<br>Labor Change: %{y:.2f}")) %>% layout(xaxis=list(title="Years"), yaxis=list(title="Labor", range=list(min(labpath[,-1]), max(labpath[,-1]))), shapes=list(hline(y=0)))
 	mdat <- data.frame(Time=matpath$Time, Y=matpath[,i+1])
-	Mplot[[i]] <- ggplot(mdat, aes(x=Time, y=Y)) + geom_line() + xlab("Years") + ylab("Materials") + coord_cartesian(ylim=c(min(matpath[,-1]), max(matpath[,-1]))) + geom_hline(yintercept=0, linetype='dashed', color='red')+ labs(title=taualp[i], subtitle=mtitles[[i]]) + theme(plot.title = element_text(size = 20), plot.subtitle=element_text(size = 20, hjust=0.5))
-	Mplotly[[i]] <- plot_ly(mdat, x=~Time, y=~Y, type = 'scatter', mode = 'lines', showlegend=F, line=list(color="black")) %>% add_trace(y = 0, mode = 'lines', showlegend=F,line=list(color="red", dash="dash")) %>% layout(xaxis=list(title="Years"), yaxis=list(title="Materials", range=list(min(matpath[,-1]), max(matpath[,-1]))))
+	Mplotly[[i]] <- plot_ly(mdat, x=~Time, y=~Y, type = 'scatter', mode = 'lines', showlegend=F, line=list(color="black"), name=mtitles[[i]], hovertemplate = paste("<i>Year<i>: %{x}", "<br>Materials Change: %{y:.2f}")) %>% add_trace(y = 0, mode = 'lines', showlegend=F,line=list(color="red", dash="dash")) %>% layout(xaxis=list(title="Years"), yaxis=list(title="Materials", range=list(min(matpath[,-1]), max(matpath[,-1]))), shapes=list(hline(y=0)))
 }
 # Capital##################################################################################################
 # I do the same procedure for capital except at different levels of shock to investment
-Initial Capital and Investment
+# Initial Capital and Investment
 for (q1 in 1:length(tauxi)){
 	for (q2 in 1:length(tauinp)){
 		qlnkdata[,,,q2][,,q1][,1] <- k1
@@ -267,30 +269,16 @@ for (q1 in 1:length(tauxi)){
 	qlnkmed[,,q2][,q1] <- apply(qlnkdata[,,,q2][,,q1], 2, median)
 	}
 }
-ipath <- data.frame(1:T, qlnimed[,1,]-qlnimed[,2,], qlnimed[,3,]-qlnimed[,2,])
-names(ipath) <- c("Time", "LowLow", "LowMed", "LowHigh", "HighLow", "HighMed", "HighHigh")
-write.csv(ipath, "/Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Function_QR/Code/Functions/Selection_Bias/ipath.csv")
-ititles <- lapply(1:6, function(i) parse(text = paste0("tau[paste(zeta, \"=\", ", taup[i], ")]")))
-#Plotting
-Iplot <- list()
-Iplotly <- list()
-for (i in 1:6){
-	idat <- data.frame(Time=ipath$Time, Y=ipath[,i+1])
-	Iplot[[i]] <- ggplot(idat, aes(x=Time, y=Y)) + geom_line() + xlab("Years") + ylab("Investment")  + coord_cartesian(ylim=c(min(ipath[,-1]), max(ipath[,-1]))) + geom_hline(yintercept=0, linetype='dashed', color='red')+ labs(title=taualp[i], subtitle=ititles[[i]]) + theme(plot.title = element_text(size = 20), plot.subtitle=element_text(size = 20, hjust=0.5))
-	Iplotly[[i]] <- plot_ly(idat, x=~Time, y=~Y, type = 'scatter', mode = 'lines', showlegend=F, line=list(color="black")) %>% add_trace(y = 0, mode = 'lines', showlegend=F,line=list(color="red", dash="dash")) %>% layout(xaxis=list(title="Years"), yaxis=list(title="Investment", range=list(min(ipath[,-1]), max(ipath[,-1]))))
-}
 # Capital
 kpath <- data.frame(1:T, qlnkmed[,1,]-qlnkmed[,2,], qlnkmed[,3,]-qlnkmed[,2,])
 names(kpath) <- c("Time", "LowLow", "LowMed", "LowHigh", "HighLow", "HighMed", "HighHigh")
 write.csv(kpath, "/Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Function_QR/Code/Functions/Selection_Bias/kpath.csv")
-Ktitles <- lapply(1:6, function(i) parse(text = paste0("tau[paste(i, \"=\", ", taup[i], ")]")))
+ktitles <- list("Negative Shock<br>Low Investment", "Negative Shock<br>Medium Investment", "Negative Shock<br>High Investment", "Positive Shock<br>Low Investment", "Positive Shock<br>Medium Investment", "Positive Shock<br>High Investment")
 #Plotting
-Kplot <- list()
 Kplotly <- list()
 for (i in 1:6){
 	kdat <- data.frame(Time=kpath$Time, Y=kpath[,i+1])
-	Kplot[[i]] <- ggplot(kdat, aes(x=Time, y=Y)) + geom_line() + xlab("Years") + ylab("Capital")  + coord_cartesian(ylim=c(min(kpath[,-1]), max(kpath[,-1]))) + geom_hline(yintercept=0, linetype='dashed', color='red')+ labs(title=taualp[i], subtitle=Ktitles[[i]]) + theme(plot.title = element_text(size = 20), plot.subtitle=element_text(size = 20, hjust=0.5))
-	Kplotly[[i]] <- plot_ly(kdat, x=~Time, y=~Y, type = 'scatter', mode = 'lines', showlegend=F, line=list(color="black")) %>% add_trace(y = 0, mode = 'lines', showlegend=F,line=list(color="red", dash="dash")) %>% layout(xaxis=list(title="Years"), yaxis=list(title="Capital", range=list(min(kpath[,-1]), max(kpath[,-1]))))
+	Kplotly[[i]] <- plot_ly(kdat, x=~Time, y=~Y, type = 'scatter', mode = 'lines', showlegend=F, line=list(color="black"), name=ktitles[[i]], hovertemplate = paste("<i>Year<i>: %{x}", "<br>Capital Change: %{y:.2f}")) %>% layout(xaxis=list(title="Years"), yaxis=list(title="Capital", range=list(min(kpath[,-1]), max(kpath[,-1]))), shapes=list(hline(y=0)))
 }
 ##############################################################
 #For Plot.ly
@@ -338,11 +326,6 @@ annotationsI <- list(list(x=0.11, y=0.9, text=TeX("(a) \\, \\tau_{\\xi}=0.1, \\t
 		list(x=0.11, y=0.47, text=TeX("(d)\\,\\tau_{\\xi}=0.9, \\tau_{i}=0.1"), font=list(size=22), xref="paper", yref="paper", xanchor="center,", yanchor="bottom", showarrow=FALSE),
 		list(x=0.495, y=0.47, text=TeX("(e)\\,\\tau_{\\xi}=0.9, \\tau_{i}=0.5"), font=list(size=22), xref="paper", yref="paper", xanchor="center,", yanchor="bottom", showarrow=FALSE),
 		list(x=0.88, y=0.47, text=TeX("(f)\\,\\tau_{\\xi}=0.9, \\tau_{i}=0.9"), font=list(size=22), xref="paper", yref="paper", xanchor="center,", yanchor="bottom", showarrow=FALSE))
-I <- subplot(Iplotly[[1]], Iplotly[[2]], Iplotly[[3]], Iplotly[[4]], Iplotly[[5]], Iplotly[[6]], shareX=TRUE, shareY=TRUE, nrows=2)
-Iplot <- I %>% layout(annotations=annotationsI) %>% config(mathjax = 'cdn')
-# Iplot
-Ijson <- plotly_json(I, FALSE)
-write(Ijson, "/Users/justindoty/Documents/Home/My_Website/static/jmp/main/impulseI.json")
 #Capital
 K <- subplot(Kplotly[[1]], Kplotly[[2]], Kplotly[[3]], Kplotly[[4]], Kplotly[[5]], Kplotly[[6]], shareX=TRUE, shareY=TRUE, nrows=2)
 Kplot <- K %>% layout(annotations=annotationsI) %>% config(mathjax = 'cdn')

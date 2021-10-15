@@ -301,75 +301,42 @@ names(omgrpath) <- c("Time", "LowLow", "LowMed", "LowHigh", "HighLow", "HighMed"
 rsizepath <- data.frame(1:T, rsizemed[,1,]-rsizemed[,2,], rsizemed[,3,]-rsizemed[,2,])
 names(rsizepath) <- c("Time", "LowLow", "LowMed", "LowHigh", "HighLow", "HighMed", "HighHigh")
 #Plotting
-taup <- c("0.1", "0.5", "0.9", "0.1", "0.5", "0.9")
-taualp <- c("(a)", "(b)", "(c)", "(d)", "(e)", "(f)")
-ltitles <- lapply(1:6, function(i) parse(text = paste0("tau[paste(l, \"=\", ", taup[i], ")]")))
-mtitles <- lapply(1:6, function(i) parse(text = paste0("tau[paste(m, \"=\", ", taup[i], ")]")))
-rtitles <- lapply(1:6, function(i) parse(text = paste0("tau[paste(r, \"=\", ", taup[i], ")]")))
-wtitles <- lapply(1:6, function(i) parse(text = paste0("tau[paste(omega[1], \"=\", ", taup[i], ")]")))
-Wplot <- list(); Wplotly <- list()
-Lplot <- list(); Lplotly <- list()
-Mplot <- list(); Mplotly <- list()
-Rplot <- list(); Rplotly <- list()
-RWplot <- list(); RWplotly <- list()
+hline <- function(y = 0, color = "red") {
+  list(
+    type = "line",
+    y0 = y,
+    y1 = y,
+    xref = "paper",
+    x0 = 0,
+    x1 = 1,
+    line = list(color = color, dash="dot")
+  )
+}
+ltitlesNOR <- list("No R&D<br>Negative Shock<br>Low Labor", "No R&D<br>Negative Shock<br>Medium Labor", "No R&D<br>Negative Shock<br>High Labor", "No R&D<br>Positive Shock<br>Low Labor", "No R&D<br>Positive Shock<br>Medium Labor", "No R&D<br>Positive Shock<br>High Labor")
+mtitlesNOR <- list("No R&D<br>Negative Shock<br>Low Materials", "No R&D<br>Negative Shock<br>Medium Materials", "No R&D<br>Negative Shock<br>High Materials", "No R&D<br>Positive Shock<br>Low Materials", "No R&D<br>Positive Shock<br>Medium Materials", "No R&D<br>Positive Shock<br>High Materials")
+wtitlesNOR <- list("No R&D<br>Negative Shock<br>Low Productivity", "No R&D<br>Negative Shock<br>Medium Productivity", "No R&D<br>Negative Shock<br>High Productivity", "No R&D<br>Positive Shock<br>Low Productivity", "No R&D<br>Positive Shock<br>Medium Productivity", "No R&D<br>Positive Shock<br>High Productivity")
+ltitlesR <- list("R&D<br>Negative Shock<br>Low Labor", "R&D<br>Negative Shock<br>Medium Labor", "R&D<br>Negative Shock<br>High Labor", "R&D<br>Positive Shock<br>Low Labor", "R&D<br>Positive Shock<br>Medium Labor", "R&D<br>Positive Shock<br>High Labor")
+mtitlesR <- list("R&D<br>Negative Shock<br>Low Materials", "R&D<br>Negative Shock<br>Medium Materials", "R&D<br>Negative Shock<br>High Materials", "R&D<br>Positive Shock<br>Low Materials", "R&D<br>Positive Shock<br>Medium Materials", "R&D<br>Positive Shock<br>High Materials")
+wtitlesR <- list("R&D<br>Negative Shock<br>Low Productivity", "R&D<br>Negative Shock<br>Medium Productivity", "R&D<br>Negative Shock<br>High Productivity", "R&D<br>Positive Shock<br>Low Productivity", "R&D<br>Positive Shock<br>Medium Productivity", "R&D<br>Positive Shock<br>High Productivity")
+rtitles <- list("Negative Shock<br>Low R&D", "Negative Shock<br>Medium R&D", "Negative Shock<br>High R&D", "Positive Shock<br>Low R&D", "Positive Shock<br>Medium R&D", "Positive Shock<br>High R&D")
+Wplotly <- list()
+Lplotly <- list()
+Mplotly <- list()
+Rplotly <- list()
+RWplotly <- list()
 for (i in 1:6){
 	wdat <- data.frame(Time=omegapath$Time, Y=omegapath[,i+1], Z=omgrpath[,i+1])
-	Wplot[[i]] <- ggplot(wdat, aes(x=Time)) + geom_line(aes(y=Y)) + geom_line(aes(y=Z), color="green", linetype="dashed") + xlab("Years") + ylab("Productivity") + coord_cartesian(ylim=c(min(min(omegapath[,-1]), min(omgrpath[,-1])), max(max(omegapath[,-1]), max(omgrpath[,-1])))) +  geom_hline(yintercept=0, linetype='dashed', color='red') + labs(title=taualp[i], subtitle=wtitles[[i]]) + theme(plot.title = element_text(size = 20), plot.subtitle=element_text(size = 20, hjust=0.5))
-	Wplotly[[i]] <- plot_ly(wdat, x=~Time, y=~Y, type = 'scatter', mode = 'lines', showlegend=F, line=list(color="black")) %>% add_trace(y = ~Z, mode = 'lines', showlegend=F,line=list(color="green", dash="dash")) %>% add_trace(y = 0, mode = 'lines', showlegend=F,line=list(color="red", dash="dash")) %>% layout(xaxis=list(title="Years"), yaxis=list(title="Productivity", range=list(min(min(omegapath[,-1]), min(omgrpath[,-1])), max(max(omegapath[,-1]), max(omgrpath[,-1])))))
+	Wplotly[[i]] <- plot_ly(wdat, x=~Time, y=~Y, type = 'scatter', mode = 'lines', showlegend=F, line=list(color="black"), name=wtitlesNOR[[i]], hovertemplate = paste("<i>Year<i>: %{x}", "<br>Productivity Change: %{y:.2f}")) %>% add_trace(y = ~Z, mode = 'lines', showlegend=F, line=list(color="green", dash="dash"), name=wtitlesR[[i]], hovertemplate = paste("<i>Year<i>: %{x}", "<br>Productivity Change: %{y:.2f}")) %>% layout(xaxis=list(title="Years"), yaxis=list(title="Productivity", range=list(min(min(omegapath[,-1]), min(omgrpath[,-1])), max(max(omegapath[,-1]), max(omgrpath[,-1])))), shapes=list(hline(y=0)))
 	ldat <- data.frame(Time=labpath$Time, Y=labpath[,i+1], Z=rlabpath[,i+1])
-	Lplot[[i]] <- ggplot(ldat, aes(x=Time)) + geom_line(aes(y=Y)) + geom_line(aes(y=Z), color="green", linetype="dashed") + xlab("Years") + ylab("Labor") + coord_cartesian(ylim=c(min(min(labpath[,-1]), min(rlabpath[,-1])), max(max(labpath[,-1]), max(rlabpath[,-1])))) + geom_hline(yintercept=0, linetype='dashed', color='red')+ labs(title=taualp[i], subtitle=ltitles[[i]]) + theme(plot.title = element_text(size = 20), plot.subtitle=element_text(size = 20, hjust=0.5))
-	Lplotly[[i]] <- plot_ly(ldat, x=~Time, y=~Y, type = 'scatter', mode = 'lines', showlegend=F, line=list(color="black")) %>% add_trace(y = ~Z, mode = 'lines', showlegend=F,line=list(color="green", dash="dash")) %>% add_trace(y = 0, mode = 'lines', showlegend=F,line=list(color="red", dash="dash")) %>% layout(xaxis=list(title="Years"), yaxis=list(title="Labor", range=list(min(min(labpath[,-1]), min(rlabpath[,-1])), max(max(labpath[,-1]), max(rlabpath[,-1])))))
+	Lplotly[[i]] <- plot_ly(ldat, x=~Time, y=~Y, type = 'scatter', mode = 'lines', showlegend=F, line=list(color="black"), name=ltitlesNOR[[i]], hovertemplate = paste("<i>Year<i>: %{x}", "<br>Labor Change: %{y:.2f}")) %>% add_trace(y = ~Z, mode = 'lines', showlegend=F,line=list(color="green", dash="dash"), name=ltitlesR[[i]], hovertemplate = paste("<i>Year<i>: %{x}", "<br>Labor Change: %{y:.2f}")) %>% layout(xaxis=list(title="Years"), yaxis=list(title="Labor", range=list(min(min(labpath[,-1]), min(rlabpath[,-1])), max(max(labpath[,-1]), max(rlabpath[,-1])))), shapes=list(hline(y=0)))
 	mdat <- data.frame(Time=matpath$Time, Y=matpath[,i+1], Z=rmatpath[,i+1])
-	Mplot[[i]] <- ggplot(mdat, aes(x=Time)) + geom_line(aes(y=Y)) + geom_line(aes(y=Z), color="green", linetype="dashed") + xlab("Years") + ylab("Materials") + coord_cartesian(ylim=c(min(min(matpath[,-1]), min(rmatpath[,-1])), max(max(matpath[,-1]), max(rmatpath[,-1])))) + geom_hline(yintercept=0, linetype='dashed', color='red')+ labs(title=taualp[i], subtitle=mtitles[[i]]) + theme(plot.title = element_text(size = 20), plot.subtitle=element_text(size = 20, hjust=0.5))
-	Mplotly[[i]] <- plot_ly(mdat, x=~Time, y=~Y, type = 'scatter', mode = 'lines', showlegend=F, line=list(color="black")) %>% add_trace(y = ~Z, mode = 'lines', showlegend=F,line=list(color="green", dash="dash")) %>% add_trace(y = 0, mode = 'lines', showlegend=F,line=list(color="red", dash="dash")) %>% layout(xaxis=list(title="Years"), yaxis=list(title="Materials", range=list(min(min(matpath[,-1]), min(rmatpath[,-1])), max(max(matpath[,-1]), max(rmatpath[,-1])))))
+	Mplotly[[i]] <- plot_ly(mdat, x=~Time, y=~Y, type = 'scatter', mode = 'lines', showlegend=F, line=list(color="black"), name=mtitlesNOR[[i]], hovertemplate = paste("<i>Year<i>: %{x}", "<br>Materials Change: %{y:.2f}")) %>% add_trace(y = ~Z, mode = 'lines', showlegend=F,line=list(color="green", dash="dash"), name=mtitlesR[[i]], hovertemplate = paste("<i>Year<i>: %{x}", "<br>Materials Change: %{y:.2f}")) %>% layout(xaxis=list(title="Years"), yaxis=list(title="Materials", range=list(min(min(matpath[,-1]), min(rmatpath[,-1])), max(max(matpath[,-1]), max(rmatpath[,-1])))), shapes=list(hline(y=0)))
 	rdat <- data.frame(Time=omegapath$Time, Y=omgrpath[,i+1], Z=rsizepath[,i+1])
-	RWplot[[i]] <- ggplot(rdat, aes(x=Time, y=Y)) + geom_line() + xlab("Years") + ylab("Productivity") + coord_cartesian(ylim=c(min(omgrpath[,-1]), max(omgrpath[,-1]))) +  geom_hline(yintercept=0, linetype='dashed', color='red') + labs(title=taualp[i], subtitle=rtitles[[i]]) + theme(plot.title = element_text(size = 20), plot.subtitle=element_text(size = 20, hjust=0.5))
-	RWplotly[[i]] <- plot_ly(rdat, x=~Time, y=~Y, type = 'scatter', mode = 'lines', showlegend=F, line=list(color="black")) %>% add_trace(y = 0, mode = 'lines', showlegend=F,line=list(color="red", dash="dash")) %>% layout(xaxis=list(title="Years"), yaxis=list(title="Productivity", range=list(min(omgrpath[,-1]), max(omgrpath[,-1]))))
-	Rplot[[i]] <- ggplot(rdat, aes(x=Time, y=Z)) + geom_line() + xlab("Years") + ylab("R&D") + coord_cartesian(ylim=c(min(rsizepath[,-1]), max(rsizepath[,-1]))) +  geom_hline(yintercept=0, linetype='dashed', color='red') + labs(title=taualp[i], subtitle=rtitles[[i]]) + theme(plot.title = element_text(size = 20), plot.subtitle=element_text(size = 20, hjust=0.5))
-	Rplotly[[i]] <- plot_ly(rdat, x=~Time, y=~Z, type = 'scatter', mode = 'lines', showlegend=F, line=list(color="black")) %>% add_trace(y = 0, mode = 'lines', showlegend=F,line=list(color="red", dash="dash")) %>% layout(xaxis=list(title="Years"), yaxis=list(title="R&D", range=list(min(rsizepath[,-1]), max(rsizepath[,-1]))))
+	RWplotly[[i]] <- plot_ly(rdat, x=~Time, y=~Y, type = 'scatter', mode = 'lines', showlegend=F, line=list(color="black"), name=rtitles[[i]], hovertemplate = paste("<i>Year<i>: %{x}", "<br>Productivity Change: %{y:.2f}")) %>% layout(xaxis=list(title="Years"), yaxis=list(title="Productivity", range=list(min(omgrpath[,-1]), max(omgrpath[,-1]))), shapes=list(hline(y=0)))
+
 	
 }
-#Labor
-# names(Lplot) <- c("LowLow", "LowMed", "LowHigh", "HighLow", "HighMed", "HighHigh")
-# Ltitle1 <- ggdraw() + draw_label(expression(paste(tau[xi], "=0.1")), fontface="bold", x=0.53, size=22)
-# Lrow1 <-  plot_grid(Ltitle1, plot_grid(Lplot$LowLow, Lplot$LowMed, Lplot$LowHigh, nrow=1), ncol=1, rel_heights=c(0.5,1))
-# Ltitle2 <- ggdraw() + draw_label(expression(paste(tau[xi], "=0.9")), fontface="bold", x=0.53, size=22)
-# Lrow2 <- plot_grid(Ltitle2, plot_grid(Lplot$HighLow, Lplot$HighMed, Lplot$HighHigh, nrow=1), ncol=1, rel_heights=c(0.5, 1))
-# impulseL <- plot_grid(Lrow1, Lrow2, nrow=2)
-# save_plot("/Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Function_QR/Code/Figures/RnD/impulseL.png", impulseL, base_height = 10, base_width = 13)
-# #Materials
-# names(Mplot) <- c("LowLow", "LowMed", "LowHigh", "HighLow", "HighMed", "HighHigh")
-# Mtitle1 <- ggdraw() + draw_label(expression(paste(tau[xi], "=0.1")), fontface="bold", x=0.53, size=22)
-# Mrow1 <-  plot_grid(Mtitle1, plot_grid(Mplot$LowLow, Mplot$LowMed, Mplot$LowHigh, nrow=1), ncol=1, rel_heights=c(0.5,1))
-# Mtitle2 <- ggdraw() + draw_label(expression(paste(tau[xi], "=0.9")), fontface="bold", x=0.53, size=22)
-# Mrow2 <- plot_grid(Mtitle2, plot_grid(Mplot$HighLow, Mplot$HighMed, Mplot$HighHigh, nrow=1), ncol=1, rel_heights=c(0.5, 1))
-# impulseM <- plot_grid(Mrow1, Mrow2, nrow=2)
-# save_plot("/Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Function_QR/Code/Figures/RnD/impulseM.png", impulseM, base_height = 10, base_width = 13)
-# #Productivity
-# names(Wplot) <- c("LowLow", "LowMed", "LowHigh", "HighLow", "HighMed", "HighHigh")
-# Wtitle1 <- ggdraw() + draw_label(expression(paste(tau[xi], "=0.1")), fontface="bold", x=0.53, size=22)
-# Wrow1 <-  plot_grid(Wtitle1, plot_grid(Wplot$LowLow, Wplot$LowMed, Wplot$LowHigh, nrow=1), ncol=1, rel_heights=c(0.5,1))
-# Wtitle2 <- ggdraw() + draw_label(expression(paste(tau[xi], "=0.9")), fontface="bold", x=0.53, size=22)
-# Wrow2 <- plot_grid(Wtitle2, plot_grid(Wplot$HighLow, Wplot$HighMed, Wplot$HighHigh, nrow=1), ncol=1, rel_heights=c(0.5, 1))
-# impulseW <- plot_grid(Wrow1, Wrow2, nrow=2)
-# save_plot("/Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Function_QR/Code/Figures/RnD/impulseW.png", impulseW, base_height = 10, base_width = 13)
-# #R&D
-# names(Rplot) <- c("LowLow", "LowMed", "LowHigh", "HighLow", "HighMed", "HighHigh")
-# Rtitle1 <- ggdraw() + draw_label(expression(paste(tau[xi], "=0.1")), fontface="bold", x=0.53, size=22)
-# Rrow1 <-  plot_grid(Rtitle1, plot_grid(Rplot$LowLow, Rplot$LowMed, Rplot$LowHigh, nrow=1), ncol=1, rel_heights=c(0.5,1))
-# Rtitle2 <- ggdraw() + draw_label(expression(paste(tau[xi], "=0.9")), fontface="bold", x=0.53, size=22)
-# Rrow2 <- plot_grid(Rtitle2, plot_grid(Rplot$HighLow, Rplot$HighMed, Rplot$HighHigh, nrow=1), ncol=1, rel_heights=c(0.5, 1))
-# impulseR <- plot_grid(Rrow1, Rrow2, nrow=2)
-# save_plot("/Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Function_QR/Code/Figures/RnD/impulseR.png", impulseR, base_height = 10, base_width = 13)
-# #R&D Productivity
-# names(RWplot) <- c("LowLow", "LowMed", "LowHigh", "HighLow", "HighMed", "HighHigh")
-# RWtitle1 <- ggdraw() + draw_label(expression(paste(tau[xi], "=0.1")), fontface="bold", x=0.53, size=22)
-# RWrow1 <-  plot_grid(RWtitle1, plot_grid(RWplot$LowLow, RWplot$LowMed, RWplot$LowHigh, nrow=1), ncol=1, rel_heights=c(0.5,1))
-# RWtitle2 <- ggdraw() + draw_label(expression(paste(tau[xi], "=0.9")), fontface="bold", x=0.53, size=22)
-# RWrow2 <- plot_grid(RWtitle2, plot_grid(RWplot$HighLow, RWplot$HighMed, RWplot$HighHigh, nrow=1), ncol=1, rel_heights=c(0.5, 1))
-# impulseRW <- plot_grid(RWrow1, RWrow2, nrow=2)
-# save_plot("/Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Function_QR/Code/Figures/RnD/impulseRW.png", impulseRW, base_height = 10, base_width = 13)
-# # Capital##################################################################################################
+# Capital##################################################################################################
 # I do the same procedure for capital except at different levels of shock to investment
 #Initial Capital and Investment
 for (q1 in 1:length(tauxi)){
@@ -412,50 +379,20 @@ for (t in 2:T){
 		}
 	}
 }
-#Investment Path for Non R&D Firms
-ipath <- data.frame(1:T, qlnimed[,1,]-qlnimed[,2,], qlnimed[,3,]-qlnimed[,2,])
-names(ipath) <- c("Time", "LowLow", "LowMed", "LowHigh", "HighLow", "HighMed", "HighHigh")
-#Investment Path for R&D Firms
-ripath <- data.frame(1:T, rqlnimed[,1,]-rqlnimed[,2,], rqlnimed[,3,]-rqlnimed[,2,])
-names(ripath) <- c("Time", "LowLow", "LowMed", "LowHigh", "HighLow", "HighMed", "HighHigh")
-ititles <- lapply(1:6, function(i) parse(text = paste0("tau[paste(i, \"=\", ", taup[i], ")]")))
-#Plotting
-Iplot <- list()
-Iplotly <- list()
-for (i in 1:6){
-	idat <- data.frame(Time=ipath$Time, Y=ipath[,i+1], Z=ripath[,i+1])
-	Iplot[[i]] <- ggplot(idat, aes(x=Time)) + geom_line(aes(y=Y)) + geom_line(aes(y=Z), color="darkgreen", linetype="dashed") + xlab("Years") + ylab("Investment") + coord_cartesian(ylim=c(min(min(ipath[,-1]), min(ripath[,-1])), max(max(ipath[,-1]), max(ripath[,-1])))) +  geom_hline(yintercept=0, linetype='dashed', color='red') + labs(title=taualp[i], subtitle=ititles[[i]]) + theme(plot.title = element_text(size = 20), plot.subtitle=element_text(size = 20, hjust=0.5))
-	Iplotly[[i]] <- plot_ly(idat, x=~Time, y=~Y, type = 'scatter', mode = 'lines', showlegend=F, line=list(color="black")) %>% add_trace(y = ~Z, mode = 'lines', showlegend=F,line=list(color="green", dash="dash")) %>% add_trace(y = 0, mode = 'lines', showlegend=F,line=list(color="red", dash="dash")) %>% layout(xaxis=list(title="Years"), yaxis=list(title="Investment", range=list(min(min(ipath[,-1]), min(ripath[,-1])), max(max(ipath[,-1]), max(ripath[,-1])))))
-}
-# names(Iplot) <- c("LowLow", "LowMed", "LowHigh", "HighLow", "HighMed", "HighHigh")
-# Ititle1 <- ggdraw() + draw_label(expression(paste(tau[xi], "=0.1")), fontface="bold", x=0.53, size=22)
-# Irow1 <-  plot_grid(Ititle1, plot_grid(Iplot$LowLow, Iplot$LowMed, Iplot$LowHigh, nrow=1), ncol=1, rel_heights=c(0.5,1))
-# Ititle2 <- ggdraw() + draw_label(expression(paste(tau[xi], "=0.9")), fontface="bold", x=0.53, size=22)
-# Irow2 <- plot_grid(Ititle2, plot_grid(Iplot$HighLow, Iplot$HighMed, Iplot$HighHigh, nrow=1), ncol=1, rel_heights=c(0.5, 1))
-# impulseI <- plot_grid(Irow1, Irow2, nrow=2)
-# save_plot("/Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Function_QR/Code/Figures/RnD/impulseI.png", impulseI, base_height = 10, base_width = 13)
-# #Capital Path for Non R&D Firms
+##Capital Path for Non R&D Firms
 kpath <- data.frame(1:T, qlnkmed[,1,]-qlnkmed[,2,], qlnkmed[,3,]-qlnkmed[,2,])
 names(kpath) <- c("Time", "LowLow", "LowMed", "LowHigh", "HighLow", "HighMed", "HighHigh")
-# #Capital Path for R&D Firms
+#Capital Path for R&D Firms
 rkpath <- data.frame(1:T, rqlnkmed[,1,]-rqlnkmed[,2,], rqlnkmed[,3,]-rqlnkmed[,2,])
 names(rkpath) <- c("Time", "LowLow", "LowMed", "LowHigh", "HighLow", "HighMed", "HighHigh")
-Ktitles <- lapply(1:6, function(i) parse(text = paste0("tau[paste(i, \"=\", ", taup[i], ")]")))
+ktitlesNOR <- list("No R&D<br>Negative Shock<br>Low Investment", "No R&D<br>Negative Shock<br>Medium Investment", "No R&D<br>Negative Shock<br>High Investment", "No R&D<br>Positive Shock<br>Low Investment", "No R&D<br>Positive Shock<br>Medium Investment", "No R&D<br>Positive Shock<br>High Investment")
+ktitlesR <- list("R&D<br>Negative Shock<br>Low Investment", "R&D<br>Negative Shock<br>Medium Investment", "R&D<br>Negative Shock<br>High Investment", "R&D<br>Positive Shock<br>Low Investment", "R&D<br>Positive Shock<br>Medium Investment", "R&D<br>Positive Shock<br>High Investment")
 #Plotting
-Kplot <- list()
 Kplotly <- list()
 for (i in 1:6){
 	kdat <- data.frame(Time=kpath$Time, Y=kpath[,i+1], Z=rkpath[,i+1])
-	Kplot[[i]] <- ggplot(kdat, aes(x=Time)) + geom_line(aes(y=Y)) + geom_line(aes(y=Z), color="darkgreen", linetype="dashed") + xlab("Years") + ylab("Capital") + coord_cartesian(ylim=c(min(min(kpath[,-1]), min(rkpath[,-1])), max(max(kpath[,-1]), max(rkpath[,-1])))) +  geom_hline(yintercept=0, linetype='dashed', color='red') + labs(title=taualp[i], subtitle=Ktitles[[i]]) + theme(plot.title = element_text(size = 20), plot.subtitle=element_text(size = 20, hjust=0.5))
-	Kplotly[[i]] <- plot_ly(kdat, x=~Time, y=~Y, type = 'scatter', mode = 'lines', showlegend=F, line=list(color="black")) %>% add_trace(y = ~Z, mode = 'lines', showlegend=F,line=list(color="green", dash="dash")) %>% add_trace(y = 0, mode = 'lines', showlegend=F,line=list(color="red", dash="dash")) %>% layout(xaxis=list(title="Years"), yaxis=list(title="Capital", range=list(min(min(kpath[,-1]), min(rkpath[,-1])), max(max(kpath[,-1]), max(rkpath[,-1])))))
+	Kplotly[[i]] <- plot_ly(kdat, x=~Time, y=~Y, type = 'scatter', mode = 'lines', showlegend=F, line=list(color="black"), name=ktitlesNOR[[i]], hovertemplate = paste("<i>Year<i>: %{x}", "<br>Capital Change: %{y:.2f}")) %>% add_trace(y = ~Z, mode = 'lines', showlegend=F,line=list(color="green", dash="dash"), name=ktitlesR[[i]], hovertemplate = paste("<i>Year<i>: %{x}", "<br>Capital Change: %{y:.2f}")) %>% layout(xaxis=list(title="Years"), yaxis=list(title="Capital", range=list(min(min(kpath[,-1]), min(rkpath[,-1])), max(max(kpath[,-1]), max(rkpath[,-1])))), shapes=list(hline(y=0)))
 }
-# names(Kplot) <- c("LowLow", "LowMed", "LowHigh", "HighLow", "HighMed", "HighHigh")
-# Ktitle1 <- ggdraw() + draw_label(expression(paste(tau[xi], "=0.1")), fontface="bold", x=0.53, size=22)
-# Krow1 <-  plot_grid(Ktitle1, plot_grid(Kplot$LowLow, Kplot$LowMed, Kplot$LowHigh, nrow=1), ncol=1, rel_heights=c(0.5,1))
-# Ktitle2 <- ggdraw() + draw_label(expression(paste(tau[xi], "=0.9")), fontface="bold", x=0.53, size=22)
-# Krow2 <- plot_grid(Ktitle2, plot_grid(Kplot$HighLow, Kplot$HighMed, Kplot$HighHigh, nrow=1), ncol=1, rel_heights=c(0.5, 1))
-# impulseK <- plot_grid(Krow1, Krow2, nrow=2)
-# save_plot("/Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Function_QR/Code/Figures/RnD/impulseK.png", impulseK, base_height = 10, base_width = 13)
 # ##############################################################
 #For Plot.ly
 ###############################################################
@@ -495,37 +432,25 @@ Mplot <- M %>% layout(annotations=annotationsM) %>% config(mathjax = 'cdn')
 # Mplot
 Mjson <- plotly_json(M, FALSE)
 write(Mjson, "/Users/justindoty/Documents/Home/My_Website/static/jmp/rnd/impulseM.json")
-#Investment
-annotationsI <- list(list(x=0.11, y=0.9, text=TeX("(a) \\, \\tau_{\\xi}=0.1, \\tau_{i}=0.1"), font=list(size=22), xref="paper", yref="paper", xanchor="center,", yanchor="bottom", showarrow=FALSE),
-	list(x=0.495, y=0.9, text=TeX("(b)\\,\\tau_{\\xi}=0.1, \\tau_{i}=0.5"), font=list(size=22), xref="paper", yref="paper", xanchor="center,", yanchor="bottom", showarrow=FALSE),
-		list(x=0.88, y=0.9, text=TeX("(c)\\,\\tau_{\\xi}=0.1, \\tau_{i}=0.9"), font=list(size=22), xref="paper", yref="paper", xanchor="center,", yanchor="bottom", showarrow=FALSE),
-		list(x=0.11, y=0.47, text=TeX("(d)\\,\\tau_{\\xi}=0.9, \\tau_{i}=0.1"), font=list(size=22), xref="paper", yref="paper", xanchor="center,", yanchor="bottom", showarrow=FALSE),
-		list(x=0.495, y=0.47, text=TeX("(e)\\,\\tau_{\\xi}=0.9, \\tau_{i}=0.5"), font=list(size=22), xref="paper", yref="paper", xanchor="center,", yanchor="bottom", showarrow=FALSE),
-		list(x=0.88, y=0.47, text=TeX("(f)\\,\\tau_{\\xi}=0.9, \\tau_{i}=0.9"), font=list(size=22), xref="paper", yref="paper", xanchor="center,", yanchor="bottom", showarrow=FALSE))
-I <- subplot(Iplotly[[1]], Iplotly[[2]], Iplotly[[3]], Iplotly[[4]], Iplotly[[5]], Iplotly[[6]], shareX=TRUE, shareY=TRUE, nrows=2)
-Iplot <- I %>% layout(annotations=annotationsI) %>% config(mathjax = 'cdn')
-# Iplot
-Ijson <- plotly_json(I, FALSE)
-write(Ijson, "/Users/justindoty/Documents/Home/My_Website/static/jmp/rnd/impulseI.json")
 #Capital
+annotationsI <- list(list(x=0.11, y=0.9, text=TeX("(a) \\, \\tau_{\\xi}=0.1, \\tau_=0.1"), font=list(size=22), xref="paper", yref="paper", xanchor="center,", yanchor="bottom", showarrow=FALSE),
+	list(x=0.495, y=0.9, text=TeX("(b)\\,\\tau_{\\xi}=0.1, \\tau_=0.5"), font=list(size=22), xref="paper", yref="paper", xanchor="center,", yanchor="bottom", showarrow=FALSE),
+		list(x=0.88, y=0.9, text=TeX("(c)\\,\\tau_{\\xi}=0.1, \\tau_=0.9"), font=list(size=22), xref="paper", yref="paper", xanchor="center,", yanchor="bottom", showarrow=FALSE),
+		list(x=0.11, y=0.45, text=TeX("(d)\\,\\tau_{\\xi}=0.9, \\tau_=0.1"), font=list(size=22), xref="paper", yref="paper", xanchor="center,", yanchor="bottom", showarrow=FALSE),
+		list(x=0.495, y=0.45, text=TeX("(e)\\,\\tau_{\\xi}=0.9, \\tau_=0.5"), font=list(size=22), xref="paper", yref="paper", xanchor="center,", yanchor="bottom", showarrow=FALSE),
+		list(x=0.88, y=0.45, text=TeX("(f)\\,\\tau_{\\xi}=0.9, \\tau_=0.9"), font=list(size=22), xref="paper", yref="paper", xanchor="center,", yanchor="bottom", showarrow=FALSE))
 K <- subplot(Kplotly[[1]], Kplotly[[2]], Kplotly[[3]], Kplotly[[4]], Kplotly[[5]], Kplotly[[6]], shareX=TRUE, shareY=TRUE, nrows=2)
 Kplot <- K %>% layout(annotations=annotationsI) %>% config(mathjax = 'cdn')
 # Kplot
 Kjson <- plotly_json(K, FALSE)
 write(Kjson, "/Users/justindoty/Documents/Home/My_Website/static/jmp/rnd/impulseK.json")
-#R&D
-annotationsR <- list(list(x=0.11, y=0.9, text=TeX("(a)\\,\\tau_{\\xi}=0.1, \\tau_{r}=0.1"), font=list(size=22), xref="paper", yref="paper", xanchor="center,", yanchor="bottom", showarrow=FALSE),
+#R&D Productivity
+annotationsR <- list(list(x=0.11, y=0.9, text=TeX("(a) \\, \\tau_{\\xi}=0.1, \\tau_{r}=0.1"), font=list(size=22), xref="paper", yref="paper", xanchor="center,", yanchor="bottom", showarrow=FALSE),
 	list(x=0.495, y=0.9, text=TeX("(b)\\,\\tau_{\\xi}=0.1, \\tau_{r}=0.5"), font=list(size=22), xref="paper", yref="paper", xanchor="center,", yanchor="bottom", showarrow=FALSE),
 		list(x=0.88, y=0.9, text=TeX("(c)\\,\\tau_{\\xi}=0.1, \\tau_{r}=0.9"), font=list(size=22), xref="paper", yref="paper", xanchor="center,", yanchor="bottom", showarrow=FALSE),
 		list(x=0.11, y=0.45, text=TeX("(d)\\,\\tau_{\\xi}=0.9, \\tau_{r}=0.1"), font=list(size=22), xref="paper", yref="paper", xanchor="center,", yanchor="bottom", showarrow=FALSE),
 		list(x=0.495, y=0.45, text=TeX("(e)\\,\\tau_{\\xi}=0.9, \\tau_{r}=0.5"), font=list(size=22), xref="paper", yref="paper", xanchor="center,", yanchor="bottom", showarrow=FALSE),
 		list(x=0.88, y=0.45, text=TeX("(f)\\,\\tau_{\\xi}=0.9, \\tau_{r}=0.9"), font=list(size=22), xref="paper", yref="paper", xanchor="center,", yanchor="bottom", showarrow=FALSE))
-R <- subplot(Rplotly[[1]], Rplotly[[2]], Rplotly[[3]], Rplotly[[4]], Rplotly[[5]], Rplotly[[6]], shareX=TRUE, shareY=TRUE, nrows=2)
-Rplot <- R %>% layout(annotations=annotationsR) %>% config(mathjax = 'cdn')
-# Rplot
-Rjson <- plotly_json(R, FALSE)
-write(Rjson, "/Users/justindoty/Documents/Home/My_Website/static/jmp/rnd/impulseR.json")
-#R&D Productivity
 RW <- subplot(RWplotly[[1]], RWplotly[[2]], RWplotly[[3]], RWplotly[[4]], RWplotly[[5]], RWplotly[[6]], shareX=TRUE, shareY=TRUE, nrows=2)
 RWplot <- RW %>% layout(annotations=annotationsR) %>% config(mathjax = 'cdn')
 # RWplot

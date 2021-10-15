@@ -204,115 +204,289 @@ jet.colors <-  colorRampPalette(c("midnightblue", "blue", "cyan","green", "yello
 nbcol <- 64
 color <- jet.colors(nbcol)
 #Plots
+#For output elasticities that vary over percentiles of inputs
 k3d <- array(0, c(ntau, ntau))
 l3d <- k3d; m3d <- k3d
+#For output elasticities that vary over productivity
+kwq3d <- k3d; lwq3d <- k3d; mwq3d <- k3d
+#For output elasticities that vary over percentiles of other inputs
+klq3d <- k3d; kmq3d <- k3d
+lkq3d <- k3d; lmq3d <- k3d
+mkq3d <- k3d; mlq3d <- k3d
+#For input demand functions varying over percentiles of productivity
 iw3d <- k3d; lw3d <- k3d; mw3d <- k3d
+#For input demand functions varying over percentiles of capital
+iwkq3d <- k3d; lwkq3d <- k3d; mwkq3d <- k3d
+#For non-Hicks neutral effects varying over percentiles of inputs
 hk3d <- array(0, c(ntau, ntau))
 hl3d <- hk3d; hm3d <- hk3d
+#For non-Hicks neutral effects that vary over percentiles of other inputs
+hklq3d <- k3d; hkmq3d <- k3d
+hlkq3d <- k3d; hlmq3d <- k3d
+hmkq3d <- k3d; hmlq3d <- k3d
 for (q in 1:ntau){
 	#For fixed quantiles of capital
 	capkq <- rep(as.numeric(quantile(cap, probs=vectau[q])), length(cap))
-	wmean <- rep(mean(omg), length(omg))
-	labk <- rowSums(LX(K=capkq, omega=wmean)*lspline(vectau=vectau, bvec=parL, b1=parLb[1], bL=parLb[2], u=epsL))
-	matk <- rowSums(MX(K=capkq, L=mean(labk), omega=wmean)*lspline(vectau=vectau, bvec=parM, b1=parMb[1], bL=parMb[2], u=epsM))
-	# #For fixed quantiles of labor
-	kmean <- rep(mean(cap), length(cap))
-	lablq <- quantile(rowSums(LX(K=kmean, omega=wmean)*lspline(vectau=vectau, bvec=parL, b1=parLb[1], bL=parLb[2], u=epsL)), probs=vectau[q])
-	matl <- rowSums(MX(K=kmean, L=lablq, omega=wmean)*lspline(vectau=vectau, bvec=parM, b1=parMb[1], bL=parMb[2], u=epsM))
-	# #For fixed quantiles of materials
-	labm <- rowSums(LX(K=kmean, omega=wmean)*lspline(vectau=vectau, bvec=parL, b1=parLb[1], bL=parLb[2], u=epsL))
-	matmq <- quantile(rowSums(MX(K=kmean, L=mean(labm), omega=wmean)*lspline(vectau=vectau, bvec=parM, b1=parMb[1], bL=parMb[2], u=epsM)), probs=vectau[q])
 	#For fixed quantiles of productivity
 	wq <- rep(as.numeric(quantile(omg, probs=vectau[q])), length(omg))
+	#Mean of Capital
+	kmean <- rep(mean(cap), length(cap))
+	#Mean of productivity
+	wmean <- rep(mean(omg), length(omg))
+	#Labor at fixed percentiles of capital
+	labk <- rowSums(LX(K=capkq, omega=wmean)*lspline(vectau=vectau, bvec=parL, b1=parLb[1], bL=parLb[2], u=epsL))
+	#Materials at fixed percentiles of capital and average labor
+	matk <- rowSums(MX(K=capkq, L=mean(labk), omega=wmean)*lspline(vectau=vectau, bvec=parM, b1=parMb[1], bL=parMb[2], u=epsM))
+	#Fixed quantiles of labor
+	lablq <- quantile(rowSums(LX(K=kmean, omega=wmean)*lspline(vectau=vectau, bvec=parL, b1=parLb[1], bL=parLb[2], u=epsL)), probs=vectau[q])
+	#Materials at Fixed Percentiles of Labor
+	matl <- rowSums(MX(K=kmean, L=lablq, omega=wmean)*lspline(vectau=vectau, bvec=parM, b1=parMb[1], bL=parMb[2], u=epsM))
+	#Labor
+	labm <- rowSums(LX(K=kmean, omega=wmean)*lspline(vectau=vectau, bvec=parL, b1=parLb[1], bL=parLb[2], u=epsL))
+	#Materials
+	matmq <- quantile(rowSums(MX(K=kmean, L=mean(labm), omega=wmean)*lspline(vectau=vectau, bvec=parM, b1=parMb[1], bL=parMb[2], u=epsM)), probs=vectau[q])
+	#For input productivity effects
 	iwq <- rowSums(IX(K=kmean, omega=wq)*lspline(vectau=vectau, bvec=parI, b1=parIb[1], bL=parIb[2], u=iota))
 	labw <- rowSums(LX(K=kmean, omega=wq)*lspline(vectau=vectau, bvec=parL, b1=parLb[1], bL=parLb[2], u=epsL))
 	matw <- rowSums(MX(K=kmean, L=mean(labw), omega=wq)*lspline(vectau=vectau, bvec=parM, b1=parMb[1], bL=parMb[2], u=epsM))
 	for (qq in 1:ntau){
-		#Production Elasticities
+		#Production Elasticities (fixed percentiles of inputs)
 		k3d[q,] <- colMeans(cbind(1, labk, matk, 2*capkq, wmean, wmean*labk, wmean*matk, 2*capkq*wmean))%*%parY[kpost,]
 		l3d[q,] <- colMeans(cbind(1, kmean, matl, 2*lablq, wmean, wmean*kmean, wmean*matl, 2*lablq*wmean))%*%parY[lpost,]
 		m3d[q,] <- colMeans(cbind(1, labm, kmean, 2*matmq, wmean, wmean*labm, wmean*kmean, 2*matmq*wmean))%*%parY[mpost,]
-		#Production Efficiencies
+		#Production Elasticities (fixed percentiles of productivity)
+		kwq3d[q,] <- colMeans(cbind(1, labw, matw, 2*kmean, wq, wq*labw, wq*matw, 2*kmean*wq))%*%parY[kpost,]
+		lwq3d[q,] <- colMeans(cbind(1, kmean, matw, 2*labw, wq, wq*kmean, wq*matw, 2*labw*wq))%*%parY[lpost,]
+		mwq3d[q,] <- colMeans(cbind(1, labw, kmean, 2*matw, wq, wq*labw, wq*kmean, 2*matw*wq))%*%parY[mpost,]
+		#Production Elasticities (fixed percentiles of other inputs)
+		#Capital
+		klq3d[q,] <- colMeans(cbind(1, lablq, matl, 2*kmean, wmean, wmean*lablq, wmean*matl, 2*kmean*wmean))%*%parY[kpost,]
+		kmq3d[q,] <- colMeans(cbind(1, labm, matmq, 2*kmean, wmean, wmean*labm, wmean*matmq, 2*kmean*wmean))%*%parY[kpost,]
+		#Labor
+		lkq3d[q,] <- colMeans(cbind(1, capkq, matk, 2*labk, wmean, wmean*capkq, wmean*matk, 2*labk*wmean))%*%parY[lpost,]
+		lmq3d[q,] <- colMeans(cbind(1, kmean, matmq, 2*labm, wmean, wmean*kmean, wmean*matmq, 2*labm*wmean))%*%parY[lpost,]
+		#Materials
+		mkq3d[q,] <- colMeans(cbind(1, labk, capkq, 2*matk, wmean, wmean*labk, wmean*capkq, 2*matk*wmean))%*%parY[mpost,]
+		mlq3d[q,] <- colMeans(cbind(1, lablq, kmean, 2*matl, wmean, wmean*matl, wmean*kmean, 2*matl*wmean))%*%parY[mpost,]
+		#Production Efficiencies (fixed percentiles of inputs)
 		hk3d[q,] <- colMeans(cbind(1, labk, matk, 2*capkq))%*%parY[hkpost,]
 		hl3d[q,] <- colMeans(cbind(1, kmean, matl, 2*lablq))%*%parY[hlpost,]
 		hm3d[q,] <- colMeans(cbind(1, labm, kmean, 2*matmq))%*%parY[hmpost,]
-		#Marginal Productivities
+		#Production Efficiencies (fixed percentiles of other inputs)
+		#Capital
+		hklq3d[q,] <- colMeans(cbind(1, lablq, matl, 2*kmean))%*%parY[hkpost,]
+		hkmq3d[q,] <- colMeans(cbind(1, labm, matmq, 2*kmean))%*%parY[hkpost,]
+		#Labor
+		hlkq3d[q,] <- colMeans(cbind(1, capkq, matk, 2*labk))%*%parY[hlpost,]
+		hlmq3d[q,] <- colMeans(cbind(1, kmean, matmq, 2*labm))%*%parY[hlpost,]
+		#Materials
+		hmkq3d[q,] <- colMeans(cbind(1, labk, capkq, 2*matk))%*%parY[hmpost,]
+		hmlq3d[q,] <- colMeans(cbind(1, lablq, kmean, 2*matl))%*%parY[hmpost,]
+		#Marginal Productivities (fixed percentiles of productivity)
 		iw3d[q,] <- colMeans(IXD(K=kmean, omega=wq, par=parI, pos=2, sdpos=1))
 		lw3d[q,] <- colMeans(LXD(K=kmean, omega=wq, par=parL, pos=2, sdpos=1))
 		mw3d[q,] <- colMeans(MXD(K=kmean, L=labw, omega=wq, par=parM, pos=3, sdpos=1))
+		#Marginal Productivities (fixed percentiles of capital)
+		iwkq3d[q,] <- colMeans(IXD(K=capkq, omega=wmean, par=parI, pos=2, sdpos=1))
+		lwkq3d[q,] <- colMeans(LXD(K=capkq, omega=wmean, par=parL, pos=2, sdpos=1))
+		mwkq3d[q,] <- colMeans(MXD(K=capkq, L=labk, omega=wmean, par=parM, pos=3, sdpos=1))
 	}
 
 }
 ###################################################
 #Capital Estimates
 ##################################################
-k3dplotly <- plot_ly(x=vectau, y=vectau, z=k3d, colorscale="Jet", type="surface", showscale=FALSE, scene="scene1") %>% layout(scene1=list(camera=list(eye=list(x=-1.5, y=-1.5, z=0.5)), aspectratio=list(x=1, y=1, z=1), xaxis=list(title="𝛕-output"), yaxis=list(title="𝛕-capital"), zaxis=list(title="Capital Elasticity")))
+#Elasticity (over capital)
+k3dplotly <- plot_ly(x=vectau, y=vectau, z=k3d, colorscale="Jet", type="surface", showscale=FALSE, scene="scene1", name=" ", hovertemplate = paste("<i>𝛕-output<i>: %{x:.2f}", "<br>𝛕-capital: %{y:.2f}<br>", "Estimate: %{z:.3f}")) %>% layout(scene1=list(camera=list(eye=list(x=-1.5, y=-1.5, z=0.5)), aspectratio=list(x=1, y=1, z=1), xaxis=list(title="𝛕-output"), yaxis=list(title="𝛕-capital"), zaxis=list(title="Capital Elasticity")))
 # k3dplotly
-hk3dplotly <- plot_ly(x=vectau, y=vectau, z=hk3d, colorscale="Jet", type="surface", showscale=FALSE, scene="scene1") %>% layout(scene1=list(camera=list(eye=list(x=-1.5, y=-1.5, z=0.5)), aspectratio=list(x=1, y=1, z=1), xaxis=list(title="𝛕-output"), yaxis=list(title="𝛕-capital"), zaxis=list(title="Capital Efficiency"))) 
+# Elasticity (over productivity)
+kwq3dplotly <- plot_ly(x=vectau, y=vectau, z=kwq3d, colorscale="Jet", type="surface", showscale=FALSE, scene="scene1", name=" ", hovertemplate = paste("<i>𝛕-output<i>: %{x:.2f}", "<br>𝛕-productivity: %{y:.2f}<br>", "Estimate: %{z:.3f}")) %>% layout(scene1=list(camera=list(eye=list(x=-1.5, y=-1.5, z=0.5)), aspectratio=list(x=1, y=1, z=1), xaxis=list(title="𝛕-output"), yaxis=list(title="𝛕-productivity"), zaxis=list(title="Capital Elasticity")))
+# kwq3dplotly
+# Elasticity (over labor)
+klq3dplotly <- plot_ly(x=vectau, y=vectau, z=klq3d, colorscale="Jet", type="surface", showscale=FALSE, scene="scene1", name=" ", hovertemplate = paste("<i>𝛕-output<i>: %{x:.2f}", "<br>𝛕-labor: %{y:.2f}<br>", "Estimate: %{z:.3f}")) %>% layout(scene1=list(camera=list(eye=list(x=-1.5, y=-1.5, z=0.5)), aspectratio=list(x=1, y=1, z=1), xaxis=list(title="𝛕-output"), yaxis=list(title="𝛕-labor"), zaxis=list(title="Capital Elasticity")))
+# klq3dplotly
+# Elasticity (over materials)
+kmq3dplotly <- plot_ly(x=vectau, y=vectau, z=kmq3d, colorscale="Jet", type="surface", showscale=FALSE, scene="scene2", name=" ", hovertemplate = paste("<i>𝛕-output<i>: %{x:.2f}", "<br>𝛕-materials: %{y:.2f}<br>", "Estimate: %{z:.3f}")) %>% layout(scene2=list(camera=list(eye=list(x=-1.5, y=-1.5, z=0.5)), aspectratio=list(x=1, y=1, z=1), xaxis=list(title="𝛕-output"), yaxis=list(title="𝛕-materials"), zaxis=list(title="Capital Elasticity")))
+# kmq3dplotly
+#Efficiency (over capital)
+hk3dplotly <- plot_ly(x=vectau, y=vectau, z=hk3d, colorscale="Jet", type="surface", showscale=FALSE, scene="scene1", name=" ", hovertemplate = paste("<i>𝛕-output<i>: %{x:.2f}", "<br>𝛕-capital: %{y:.2f}<br>", "Estimate: %{z:.3f}")) %>% layout(scene1=list(camera=list(eye=list(x=-1.5, y=-1.5, z=0.5)), aspectratio=list(x=1, y=1, z=1), xaxis=list(title="𝛕-output"), yaxis=list(title="𝛕-capital"), zaxis=list(title="Capital Efficiency"))) 
 # hk3dplotly
-iw3dplotly <- plot_ly(x=vectau, y=vectau, z=iw3d, colorscale="Jet", type="surface", showscale=FALSE, scene="scene1") %>% layout(scene1=list(camera=list(eye=list(x=-1.5, y=-1.5, z=0.5)), aspectratio=list(x=1, y=1, z=1), xaxis=list(title="𝛕-investment"), yaxis=list(title="𝛕-productivity"), zaxis=list(title="Investment Productivity"))) 
+#Efficiency (over labor)
+hklq3dplotly <- plot_ly(x=vectau, y=vectau, z=hklq3d, colorscale="Jet", type="surface", showscale=FALSE, scene="scene1", name=" ", hovertemplate = paste("<i>𝛕-output<i>: %{x:.2f}", "<br>𝛕-labor: %{y:.2f}<br>", "Estimate: %{z:.3f}")) %>% layout(scene1=list(camera=list(eye=list(x=-1.5, y=-1.5, z=0.5)), aspectratio=list(x=1, y=1, z=1), xaxis=list(title="𝛕-output"), yaxis=list(title="𝛕-labor"), zaxis=list(title="Capital Efficiency"))) 
+# hklq3dplotly
+#Efficiency (over materials)
+hkmq3dplotly <- plot_ly(x=vectau, y=vectau, z=hkmq3d, colorscale="Jet", type="surface", showscale=FALSE, scene="scene2", name=" ", hovertemplate = paste("<i>𝛕-output<i>: %{x:.2f}", "<br>𝛕-materials: %{y:.2f}<br>", "Estimate: %{z:.3f}")) %>% layout(scene2=list(camera=list(eye=list(x=-1.5, y=-1.5, z=0.5)), aspectratio=list(x=1, y=1, z=1), xaxis=list(title="𝛕-output"), yaxis=list(title="𝛕-materials"), zaxis=list(title="Capital Efficiency"))) 
+# hklq3dplotly
+#Investment Response to productivity (over productivity)
+iw3dplotly <- plot_ly(x=vectau, y=vectau, z=iw3d, colorscale="Jet", type="surface", showscale=FALSE, scene="scene1", name=" ", hovertemplate = paste("<i>𝛕-investment<i>: %{x:.2f}", "<br>𝛕-productivity: %{y:.2f}<br>", "Estimate: %{z:.3f}")) %>% layout(scene1=list(camera=list(eye=list(x=-1.5, y=-1.5, z=0.5)), aspectratio=list(x=1, y=1, z=1), xaxis=list(title="𝛕-investment"), yaxis=list(title="𝛕-productivity"), zaxis=list(title="Investment Productivity"))) 
 # iw3dplotly
+#Investment Response to productivity (over capital)
+iwkq3dplotly <- plot_ly(x=vectau, y=vectau, z=iwkq3d, colorscale="Jet", type="surface", showscale=FALSE, scene="scene1", name=" ", hovertemplate = paste("<i>𝛕-investment<i>: %{x:.2f}", "<br>𝛕-capital: %{y:.2f}<br>", "Estimate: %{z:.3f}")) %>% layout(scene1=list(camera=list(eye=list(x=-1.5, y=-1.5, z=0.5)), aspectratio=list(x=1, y=1, z=1), xaxis=list(title="𝛕-investment"), yaxis=list(title="𝛕-capital"), zaxis=list(title="Investment Productivity"))) 
+# iwkq3dplotly
 # ##########################################################
 # #Labor Estimates
 ##########################################################
-l3dplotly <- plot_ly(x=vectau, y=vectau, z=l3d, colorscale="Jet", type="surface", showscale=FALSE, scene="scene2") %>% layout(scene2=list(camera=list(eye=list(x=-1.5, y=-1.5, z=0.5)), aspectratio=list(x=1, y=1, z=1), xaxis=list(title="𝛕-output"), yaxis=list(title="𝛕-labor"), zaxis=list(title="Labor Elasticity")))  
+#Elasticity (over labor)
+l3dplotly <- plot_ly(x=vectau, y=vectau, z=l3d, colorscale="Jet", type="surface", showscale=FALSE, scene="scene2", name=" ", hovertemplate = paste("<i>𝛕-output<i>: %{x:.2f}", "<br>𝛕-labor: %{y:.2f}<br>", "Estimate: %{z:.3f}")) %>% layout(scene2=list(camera=list(eye=list(x=-1.5, y=-1.5, z=0.5)), aspectratio=list(x=1, y=1, z=1), xaxis=list(title="𝛕-output"), yaxis=list(title="𝛕-labor"), zaxis=list(title="Labor Elasticity")))  
 # l3dplotly 
-hl3dplotly <- plot_ly(x=vectau, y=vectau, z=hl3d, colorscale="Jet", type="surface", showscale=FALSE, scene="scene2") %>% layout(scene2=list(camera=list(eye=list(x=-1.5, y=-1.5, z=0.5)), aspectratio=list(x=1, y=1, z=1), xaxis=list(title="𝛕-output"), yaxis=list(title="𝛕-labor"), zaxis=list(title="Labor Efficiency"))) 
+#Elasticity (over productivity)
+lwq3dplotly <- plot_ly(x=vectau, y=vectau, z=lwq3d, colorscale="Jet", type="surface", showscale=FALSE, scene="scene2", name=" ", hovertemplate = paste("<i>𝛕-output<i>: %{x:.2f}", "<br>𝛕-productivity: %{y:.2f}<br>", "Estimate: %{z:.3f}")) %>% layout(scene2=list(camera=list(eye=list(x=-1.5, y=-1.5, z=0.5)), aspectratio=list(x=1, y=1, z=1), xaxis=list(title="𝛕-output"), yaxis=list(title="𝛕-productivity"), zaxis=list(title="Labor Elasticity")))  
+# lwq3dplotly
+#Elasticity (over capital)
+lkq3dplotly <- plot_ly(x=vectau, y=vectau, z=lkq3d, colorscale="Jet", type="surface", showscale=FALSE, scene="scene1", name=" ", hovertemplate = paste("<i>𝛕-output<i>: %{x:.2f}", "<br>𝛕-capital: %{y:.2f}<br>", "Estimate: %{z:.3f}")) %>% layout(scene1=list(camera=list(eye=list(x=-1.5, y=-1.5, z=0.5)), aspectratio=list(x=1, y=1, z=1), xaxis=list(title="𝛕-output"), yaxis=list(title="𝛕-capital"), zaxis=list(title="Labor Elasticity")))  
+# lkq3dplotly
+#Elasticity (over materials)
+lmq3dplotly <- plot_ly(x=vectau, y=vectau, z=lmq3d, colorscale="Jet", type="surface", showscale=FALSE, scene="scene2", name=" ", hovertemplate = paste("<i>𝛕-output<i>: %{x:.2f}", "<br>𝛕-materials: %{y:.2f}<br>", "Estimate: %{z:.3f}")) %>% layout(scene2=list(camera=list(eye=list(x=-1.5, y=-1.5, z=0.5)), aspectratio=list(x=1, y=1, z=1), xaxis=list(title="𝛕-output"), yaxis=list(title="𝛕-materials"), zaxis=list(title="Labor Elasticity")))  
+# lmq3dplotly
+#Efficiency (over labor)
+hl3dplotly <- plot_ly(x=vectau, y=vectau, z=hl3d, colorscale="Jet", type="surface", showscale=FALSE, scene="scene2", name=" ", hovertemplate = paste("<i>𝛕-output<i>: %{x:.2f}", "<br>𝛕-labor: %{y:.2f}<br>", "Estimate: %{z:.3f}")) %>% layout(scene2=list(camera=list(eye=list(x=-1.5, y=-1.5, z=0.5)), aspectratio=list(x=1, y=1, z=1), xaxis=list(title="𝛕-output"), yaxis=list(title="𝛕-labor"), zaxis=list(title="Labor Efficiency"))) 
 # hl3dplotly
-lw3dplotly <- plot_ly(x=vectau, y=vectau, z=lw3d, colorscale="Jet", type="surface", showscale=FALSE, scene="scene2") %>% layout(scene2=list(camera=list(eye=list(x=-1.5, y=-1.5, z=0.5)), aspectratio=list(x=1, y=1, z=1), xaxis=list(title="𝛕-labor"), yaxis=list(title="𝛕-productivity"), zaxis=list(title="Labor Productivity"))) 
+#Efficiency (over capital)
+hlkq3dplotly <- plot_ly(x=vectau, y=vectau, z=hlkq3d, colorscale="Jet", type="surface", showscale=FALSE, scene="scene1", name=" ", hovertemplate = paste("<i>𝛕-output<i>: %{x:.2f}", "<br>𝛕-capital: %{y:.2f}<br>", "Estimate: %{z:.3f}")) %>% layout(scene1=list(camera=list(eye=list(x=-1.5, y=-1.5, z=0.5)), aspectratio=list(x=1, y=1, z=1), xaxis=list(title="𝛕-output"), yaxis=list(title="𝛕-capital"), zaxis=list(title="Labor Efficiency"))) 
+# hlkq3dplotly
+#Efficiency (over materials)
+hlmq3dplotly <- plot_ly(x=vectau, y=vectau, z=hmkq3d, colorscale="Jet", type="surface", showscale=FALSE, scene="scene2", name=" ", hovertemplate = paste("<i>𝛕-output<i>: %{x:.2f}", "<br>𝛕-materials: %{y:.2f}<br>", "Estimate: %{z:.3f}")) %>% layout(scene2=list(camera=list(eye=list(x=-1.5, y=-1.5, z=0.5)), aspectratio=list(x=1, y=1, z=1), xaxis=list(title="𝛕-output"), yaxis=list(title="𝛕-materials"), zaxis=list(title="Labor Efficiency"))) 
+# hlmq3dplotly
+#Labor response to productivity (over productivity)
+lw3dplotly <- plot_ly(x=vectau, y=vectau, z=lw3d, colorscale="Jet", type="surface", showscale=FALSE, scene="scene2", name=" ", hovertemplate = paste("<i>𝛕-labor<i>: %{x:.2f}", "<br>𝛕-productivity: %{y:.2f}<br>", "Estimate: %{z:.3f}")) %>% layout(scene2=list(camera=list(eye=list(x=-1.5, y=-1.5, z=0.5)), aspectratio=list(x=1, y=1, z=1), xaxis=list(title="𝛕-labor"), yaxis=list(title="𝛕-productivity"), zaxis=list(title="Labor Productivity"))) 
 # lw3dplotly
+#Labor response to productivity (over capital)
+lwkq3dplotly <- plot_ly(x=vectau, y=vectau, z=lwkq3d, colorscale="Jet", type="surface", showscale=FALSE, scene="scene2", name=" ", hovertemplate = paste("<i>𝛕-labor<i>: %{x:.2f}", "<br>𝛕-capital: %{y:.2f}<br>", "Estimate: %{z:.3f}")) %>% layout(scene2=list(camera=list(eye=list(x=-1.5, y=-1.5, z=0.5)), aspectratio=list(x=1, y=1, z=1), xaxis=list(title="𝛕-labor"), yaxis=list(title="𝛕-capital"), zaxis=list(title="Labor Productivity"))) 
+# lwkq3dplotly
 #########################################################
 #Materials Estimates
 #########################################################
-m3dplotly <- plot_ly(x=vectau, y=vectau, z=m3d, colorscale="Jet", type="surface", showscale=FALSE, scene="scene3") %>% layout(scene3=list(camera=list(eye=list(x=-1.5, y=-1.5, z=0.5)), aspectratio=list(x=1, y=1, z=1), xaxis=list(title="𝛕-output"), yaxis=list(title="𝛕-materials"), zaxis=list(title="Materials Elasticity"))) 
-# m3dplotly    <- plotly_json(m3dplotly, FALSE)
-hm3dplotly <- plot_ly(x=vectau, y=vectau, z=hm3d, colorscale="Jet", type="surface", showscale=FALSE, scene="scene3") %>% layout(scene3=list(camera=list(eye=list(x=-1.5, y=-1.5, z=0.5)), aspectratio=list(x=1, y=1, z=1), xaxis=list(title="𝛕-output"), yaxis=list(title="𝛕-materials"), zaxis=list(title="Materials Efficiency"))) 
-# hm3dplotly    <- plotly_json(hm3dplotly, FALSE)
-mw3dplotly <- plot_ly(x=vectau, y=vectau, z=mw3d, colorscale="Jet", type="surface", showscale=FALSE, scene="scene3") %>% layout(scene3=list(camera=list(eye=list(x=-1.5, y=-1.5, z=0.5)), aspectratio=list(x=1, y=1, z=1), xaxis=list(title="𝛕-materials"), yaxis=list(title="𝛕-productivity"), zaxis=list(title="Materials Productivity"))) 
+#Elasticity (over materials)
+m3dplotly <- plot_ly(x=vectau, y=vectau, z=m3d, colorscale="Jet", type="surface", showscale=FALSE, scene="scene3", name=" ", hovertemplate = paste("<i>𝛕-output<i>: %{x:.2f}", "<br>𝛕-materials: %{y:.2f}<br>", "Estimate: %{z:.3f}")) %>% layout(scene3=list(camera=list(eye=list(x=-1.5, y=-1.5, z=0.5)), aspectratio=list(x=1, y=1, z=1), xaxis=list(title="𝛕-output"), yaxis=list(title="𝛕-materials"), zaxis=list(title="Materials Elasticity"))) 
+# m3dplotly 
+#Elasticity (over productivity)
+mwq3dplotly <- plot_ly(x=vectau, y=vectau, z=mwq3d, colorscale="Jet", type="surface", showscale=FALSE, scene="scene3", name=" ", hovertemplate = paste("<i>𝛕-output<i>: %{x:.2f}", "<br>𝛕-productivity: %{y:.2f}<br>", "Estimate: %{z:.3f}")) %>% layout(scene3=list(camera=list(eye=list(x=-1.5, y=-1.5, z=0.5)), aspectratio=list(x=1, y=1, z=1), xaxis=list(title="𝛕-output"), yaxis=list(title="𝛕-productivity"), zaxis=list(title="Materials Elasticity"))) 
+# mwq3dplotly 
+#Elasticity (over capital)
+mkq3dplotly <- plot_ly(x=vectau, y=vectau, z=mkq3d, colorscale="Jet", type="surface", showscale=FALSE, scene="scene1", name=" ", hovertemplate = paste("<i>𝛕-output<i>: %{x:.2f}", "<br>𝛕-capital: %{y:.2f}<br>", "Estimate: %{z:.3f}")) %>% layout(scene1=list(camera=list(eye=list(x=-1.5, y=-1.5, z=0.5)), aspectratio=list(x=1, y=1, z=1), xaxis=list(title="𝛕-output"), yaxis=list(title="𝛕-capital"), zaxis=list(title="Materials Elasticity"))) 
+# mkq3dplotly 
+#Elasticity (over labor)
+mlq3dplotly <- plot_ly(x=vectau, y=vectau, z=mlq3d, colorscale="Jet", type="surface", showscale=FALSE, scene="scene2", name=" ", hovertemplate = paste("<i>𝛕-output<i>: %{x:.2f}", "<br>𝛕-labor: %{y:.2f}<br>", "Estimate: %{z:.3f}")) %>% layout(scene2=list(camera=list(eye=list(x=-1.5, y=-1.5, z=0.5)), aspectratio=list(x=1, y=1, z=1), xaxis=list(title="𝛕-output"), yaxis=list(title="𝛕-labor"), zaxis=list(title="Materials Elasticity"))) 
+# mlq3dplotly 
+#Efficiency (over materials)
+hm3dplotly <- plot_ly(x=vectau, y=vectau, z=hm3d, colorscale="Jet", type="surface", showscale=FALSE, scene="scene3", name=" ", hovertemplate = paste("<i>𝛕-output<i>: %{x:.2f}", "<br>𝛕-materials: %{y:.2f}<br>", "Estimate: %{z:.3f}")) %>% layout(scene3=list(camera=list(eye=list(x=-1.5, y=-1.5, z=0.5)), aspectratio=list(x=1, y=1, z=1), xaxis=list(title="𝛕-output"), yaxis=list(title="𝛕-materials"), zaxis=list(title="Materials Efficiency"))) 
+# hm3dplotly 
+#Efficiency (over capital)
+hmkq3dplotly <- plot_ly(x=vectau, y=vectau, z=hmkq3d, colorscale="Jet", type="surface", showscale=FALSE, scene="scene1", name=" ", hovertemplate = paste("<i>𝛕-output<i>: %{x:.2f}", "<br>𝛕-capital: %{y:.2f}<br>", "Estimate: %{z:.3f}")) %>% layout(scene1=list(camera=list(eye=list(x=-1.5, y=-1.5, z=0.5)), aspectratio=list(x=1, y=1, z=1), xaxis=list(title="𝛕-output"), yaxis=list(title="𝛕-capital"), zaxis=list(title="Materials Efficiency"))) 
+# hmkq3dplotly 
+#Efficiency (over labor)
+hmlq3dplotly <- plot_ly(x=vectau, y=vectau, z=hmlq3d, colorscale="Jet", type="surface", showscale=FALSE, scene="scene2", name=" ", hovertemplate = paste("<i>𝛕-output<i>: %{x:.2f}", "<br>𝛕-labor: %{y:.2f}<br>", "Estimate: %{z:.3f}")) %>% layout(scene2=list(camera=list(eye=list(x=-1.5, y=-1.5, z=0.5)), aspectratio=list(x=1, y=1, z=1), xaxis=list(title="𝛕-output"), yaxis=list(title="𝛕-labor"), zaxis=list(title="Materials Efficiency"))) 
+# hmlq3dplotly 
+#Material response to productivity (over productivity)
+mw3dplotly <- plot_ly(x=vectau, y=vectau, z=mw3d, colorscale="Jet", type="surface", showscale=FALSE, scene="scene3", name=" ", hovertemplate = paste("<i>𝛕-materials<i>: %{x:.2f}", "<br>𝛕-productivity: %{y:.2f}<br>", "Estimate: %{z:.3f}")) %>% layout(scene3=list(camera=list(eye=list(x=-1.5, y=-1.5, z=0.5)), aspectratio=list(x=1, y=1, z=1), xaxis=list(title="𝛕-materials"), yaxis=list(title="𝛕-productivity"), zaxis=list(title="Materials Productivity"))) 
+# mw3dplotly
+#Material response to productivity (over capital)
+mwkq3dplotly <- plot_ly(x=vectau, y=vectau, z=mwkq3d, colorscale="Jet", type="surface", showscale=FALSE, scene="scene3", name=" ", hovertemplate = paste("<i>𝛕-materials<i>: %{x:.2f}", "<br>𝛕-capital: %{y:.2f}<br>", "Estimate: %{z:.3f}")) %>% layout(scene3=list(camera=list(eye=list(x=-1.5, y=-1.5, z=0.5)), aspectratio=list(x=1, y=1, z=1), xaxis=list(title="𝛕-materials"), yaxis=list(title="𝛕-capital"), zaxis=list(title="Materials Productivity"))) 
 # mw3dplotly
 #Combined Plot.ly Elasticities
+#Elasticities (over percentiles of inputs)
 klm3dplotly <- subplot(k3dplotly, l3dplotly, m3dplotly, shareX=TRUE) %>% layout(scene=list(aspectratio=list(x=.6, y=.6, z=.6), xaxis=list(title="𝛕-output"), yaxis=list(title="𝛕-capital"), zaxis=list(title="Capital")), 
 	scene2=list(aspectratio=list(x=.6, y=.6, z=.6), xaxis=list(title="𝛕-output"), yaxis=list(title="𝛕-labor"), zaxis=list(title="Labor")),
 	scene3=list(aspectratio=list(x=.6, y=.6, z=.6), xaxis=list(title="𝛕-output"), yaxis=list(title="𝛕-materials"), zaxis=list(title="Materials")))
+#Elasticities (over percentiles of productivity)
+klmwq3dplotly <- subplot(kwq3dplotly, lwq3dplotly, mwq3dplotly, shareX=TRUE) %>% layout(scene=list(aspectratio=list(x=.6, y=.6, z=.6), xaxis=list(title="𝛕-output"), yaxis=list(title="𝛕-productivity"), zaxis=list(title="Capital")), 
+	scene2=list(aspectratio=list(x=.6, y=.6, z=.6), xaxis=list(title="𝛕-output"), yaxis=list(title="𝛕-productivity"), zaxis=list(title="Labor")),
+	scene3=list(aspectratio=list(x=.6, y=.6, z=.6), xaxis=list(title="𝛕-output"), yaxis=list(title="𝛕-productivity"), zaxis=list(title="Materials")))
+#Elasticities (over percentiles of other inputs)
+#Capital
+kinpq3dplotly <- subplot(klq3dplotly, kmq3dplotly, shareX=TRUE) %>% layout(scene=list(aspectratio=list(x=.9, y=.9, z=.9), xaxis=list(title="𝛕-output"), yaxis=list(title="𝛕-labor"), zaxis=list(title="Capital")), 
+	scene2=list(aspectratio=list(x=.9, y=.9, z=.9), xaxis=list(title="𝛕-output"), yaxis=list(title="𝛕-materials"), zaxis=list(title="Capital")))
+#Labor
+linpq3dplotly <- subplot(lkq3dplotly, lmq3dplotly, shareX=TRUE) %>% layout(scene=list(aspectratio=list(x=.9, y=.9, z=.9), xaxis=list(title="𝛕-output"), yaxis=list(title="𝛕-capital"), zaxis=list(title="Labor")), 
+	scene2=list(aspectratio=list(x=.9, y=.9, z=.9), xaxis=list(title="𝛕-output"), yaxis=list(title="𝛕-materials"), zaxis=list(title="Labor")))
+#Materials
+minpq3dplotly <- subplot(mkq3dplotly, mlq3dplotly, shareX=TRUE) %>% layout(scene=list(aspectratio=list(x=.9, y=.9, z=.9), xaxis=list(title="𝛕-output"), yaxis=list(title="𝛕-capital"), zaxis=list(title="Materials")), 
+	scene2=list(aspectratio=list(x=.9, y=.9, z=.9), xaxis=list(title="𝛕-output"), yaxis=list(title="𝛕-labor"), zaxis=list(title="Materials")))
 #Annotations
-annotations <- list(list(x=0.13, y=0.75, text="(a) Capital Elasticity", font=list(size=16), xref="paper", yref="paper", xanchor="center,", yanchor="bottom", showarrow=FALSE),
-	list(x=0.5, y=0.75, text="(b) Labor Elasticity", font=list(size=16), xref="paper", yref="paper", xanchor="center,", yanchor="bottom", showarrow=FALSE),
-	list(x=0.9, y=0.75, text="(c) Materials Elasticity", font=list(size=16), xref="paper", yref="paper", xanchor="center,", yanchor="bottom", showarrow=FALSE))
-
+annotationsklm <- list(list(x=0.13, y=0.75, text="(a) Capital Elasticity", font=list(size=30), xref="paper", yref="paper", xanchor="center,", yanchor="bottom", showarrow=FALSE),
+	list(x=0.5, y=0.75, text="(b) Labor Elasticity", font=list(size=30), xref="paper", yref="paper", xanchor="center,", yanchor="bottom", showarrow=FALSE),
+	list(x=0.9, y=0.75, text="(c) Materials Elasticity", font=list(size=30), xref="paper", yref="paper", xanchor="center,", yanchor="bottom", showarrow=FALSE))
+annotationsab <- list(list(x=0.25, y=0.8, text="(a)", font=list(size=30), xref="paper", yref="paper", xanchor="center,", yanchor="bottom", showarrow=FALSE),
+	list(x=0.75, y=0.8, text="(b)", font=list(size=30), xref="paper", yref="paper", xanchor="center,", yanchor="bottom", showarrow=FALSE))
 #Add
-klm3dplotly <- klm3dplotly %>% layout(annotations=annotations)
+klm3dplotly <- klm3dplotly %>% layout(annotations=annotationsklm)
+klmwq3dplotly <- klmwq3dplotly %>% layout(annotations=annotationsklm)
+kinpq3dplotly <- kinpq3dplotly %>% layout(annotations=annotationsab)
+linpq3dplotly <- linpq3dplotly %>% layout(annotations=annotationsab)
+minpq3dplotly <- minpq3dplotly %>% layout(annotations=annotationsab)
 #Plot
 klm3dplotly
+klmwq3dplotly 
+kinpq3dplotly
+linpq3dplotly
+minpq3dplotly
 #Json
 klm3dplotly   <- plotly_json(klm3dplotly, FALSE)
+klmwq3dplotly   <- plotly_json(klmwq3dplotly, FALSE)
+kinpq3dplotly   <- plotly_json(kinpq3dplotly, FALSE)
+linpq3dplotly   <- plotly_json(linpq3dplotly, FALSE)
+minpq3dplotly   <- plotly_json(minpq3dplotly, FALSE)
 write(klm3dplotly, "/Users/justindoty/Documents/Home/My_Website/static/jmp/main/klm3dplotly.json")
+write(klmwq3dplotly, "/Users/justindoty/Documents/Home/My_Website/static/jmp/main/klmwq3dplotly.json")
+write(kinpq3dplotly, "/Users/justindoty/Documents/Home/My_Website/static/jmp/mainext/kinpq3dplotly.json")
+write(linpq3dplotly, "/Users/justindoty/Documents/Home/My_Website/static/jmp/mainext/linpq3dplotly.json")
+write(minpq3dplotly, "/Users/justindoty/Documents/Home/My_Website/static/jmp/mainext/minpq3dplotly.json")
 #Combined Plot.ly Efficiecies
 hklm3dplotly <- subplot(hk3dplotly, hl3dplotly, hm3dplotly, shareX=TRUE) %>% layout(scene=list(aspectratio=list(x=.6, y=.6, z=.6), xaxis=list(title="𝛕-output"), yaxis=list(title="𝛕-capital"), zaxis=list(title="Capital")), 
 	scene2=list(aspectratio=list(x=.6, y=.6, z=.6), xaxis=list(title="𝛕-output"), yaxis=list(title="𝛕-labor"), zaxis=list(title="Labor")),
 	scene3=list(aspectratio=list(x=.6, y=.6, z=.6), xaxis=list(title="𝛕-output"), yaxis=list(title="𝛕-materials"), zaxis=list(title="Materials")))
+#Over other inputs
+#Capital
+hkinpq3dplotly <- subplot(hklq3dplotly, hkmq3dplotly, shareX=TRUE) %>% layout(scene=list(aspectratio=list(x=.9, y=.9, z=.9), xaxis=list(title="𝛕-output"), yaxis=list(title="𝛕-labor"), zaxis=list(title="Capital")), 
+	scene2=list(aspectratio=list(x=.9, y=.9, z=.9), xaxis=list(title="𝛕-output"), yaxis=list(title="𝛕-materials"), zaxis=list(title="Capital")))
+#Labor
+hlinpq3dplotly <- subplot(hlkq3dplotly, hlmq3dplotly, shareX=TRUE) %>% layout(scene=list(aspectratio=list(x=.9, y=.9, z=.9), xaxis=list(title="𝛕-output"), yaxis=list(title="𝛕-capital"), zaxis=list(title="Labor")), 
+	scene2=list(aspectratio=list(x=.9, y=.9, z=.9), xaxis=list(title="𝛕-output"), yaxis=list(title="𝛕-materials"), zaxis=list(title="Labor")))
+#Materials
+hminpq3dplotly <- subplot(hmkq3dplotly, hmlq3dplotly, shareX=TRUE) %>% layout(scene=list(aspectratio=list(x=.9, y=.9, z=.9), xaxis=list(title="𝛕-output"), yaxis=list(title="𝛕-capital"), zaxis=list(title="Materials")), 
+	scene2=list(aspectratio=list(x=.9, y=.9, z=.9), xaxis=list(title="𝛕-output"), yaxis=list(title="𝛕-labor"), zaxis=list(title="Materials")))
 #Annotations
-annotations <- list(list(x=0.13, y=0.75, text="(a) Capital Efficiency", font=list(size=16), xref="paper", yref="paper", xanchor="center,", yanchor="bottom", showarrow=FALSE),
-	list(x=0.5, y=0.75, text="(b) Labor Efficiency", font=list(size=16), xref="paper", yref="paper", xanchor="center,", yanchor="bottom", showarrow=FALSE),
-	list(x=0.9, y=0.75, text="(c) Materials Efficiency", font=list(size=16), xref="paper", yref="paper", xanchor="center,", yanchor="bottom", showarrow=FALSE))
+annotationshklm <- list(list(x=0.13, y=0.75, text="(a) Capital Efficiency", font=list(size=30), xref="paper", yref="paper", xanchor="center,", yanchor="bottom", showarrow=FALSE),
+	list(x=0.5, y=0.75, text="(b) Labor Efficiency", font=list(size=30), xref="paper", yref="paper", xanchor="center,", yanchor="bottom", showarrow=FALSE),
+	list(x=0.9, y=0.75, text="(c) Materials Efficiency", font=list(size=30), xref="paper", yref="paper", xanchor="center,", yanchor="bottom", showarrow=FALSE))
 
 #Add
-hklm3dplotly <- hklm3dplotly %>% layout(annotations=annotations)
+hklm3dplotly <- hklm3dplotly %>% layout(annotations=annotationshklm)
+hkinpq3dplotly <- hkinpq3dplotly %>% layout(annotations=annotationsab)
+hlinpq3dplotly <- hlinpq3dplotly %>% layout(annotations=annotationsab)
+hminpq3dplotly <- hminpq3dplotly %>% layout(annotations=annotationsab)
 hklm3dplotly
+hkinpq3dplotly
+hlinpq3dplotly
+hminpq3dplotly
 hklm3dplotly   <- plotly_json(hklm3dplotly, FALSE)
+hkinpq3dplotly   <- plotly_json(hkinpq3dplotly, FALSE)
+hlinpq3dplotly   <- plotly_json(hlinpq3dplotly, FALSE)
+hminpq3dplotly   <- plotly_json(hminpq3dplotly, FALSE)
 write(hklm3dplotly, "/Users/justindoty/Documents/Home/My_Website/static/jmp/main/hklm3dplotly.json")
+write(hkinpq3dplotly, "/Users/justindoty/Documents/Home/My_Website/static/jmp/mainext/hkinpq3dplotly.json")
+write(hlinpq3dplotly, "/Users/justindoty/Documents/Home/My_Website/static/jmp/mainext/hlinpq3dplotly.json")
+write(hminpq3dplotly, "/Users/justindoty/Documents/Home/My_Website/static/jmp/mainext/hminpq3dplotly.json")
 #Combined Productivities
 lmiw3dplotly <- subplot(iw3dplotly, lw3dplotly, mw3dplotly) %>% layout(scene=list(aspectratio=list(x=0.6, y=0.6, z=0.6), xaxis=list(title="𝛕-investment"), yaxis=list(title="𝛕-productivity"), zaxis=list(title="Investment")), 
 	scene2=list(aspectratio=list(x=0.6, y=0.6, z=0.6), xaxis=list(title="𝛕-labor"), yaxis=list(title="𝛕-productivity"), zaxis=list(title="Labor")),
 	scene3=list(aspectratio=list(x=0.6, y=0.6, z=0.6), xaxis=list(title="𝛕-materials"), yaxis=list(title="𝛕-productivity"), zaxis=list(title="Materials")))
+lmiwkq3dplotly <- subplot(iwkq3dplotly, lwkq3dplotly, mwkq3dplotly) %>% layout(scene=list(aspectratio=list(x=0.6, y=0.6, z=0.6), xaxis=list(title="𝛕-investment"), yaxis=list(title="𝛕-capital"), zaxis=list(title="Investment")), 
+	scene2=list(aspectratio=list(x=0.6, y=0.6, z=0.6), xaxis=list(title="𝛕-labor"), yaxis=list(title="𝛕-capital"), zaxis=list(title="Labor")),
+	scene3=list(aspectratio=list(x=0.6, y=0.6, z=0.6), xaxis=list(title="𝛕-materials"), yaxis=list(title="𝛕-capital"), zaxis=list(title="Materials")))
 #Annotations
-annotations <- list(list(x=0.10, y=0.75, text="(a) Investment Productivity", font=list(size=16), xref="paper", yref="paper", xanchor="center,", yanchor="bottom", showarrow=FALSE),
-	list(x=0.5, y=0.75, text="(b) Labor Productivity", font=list(size=16), xref="paper", yref="paper", xanchor="center,", yanchor="bottom", showarrow=FALSE),
-	list(x=0.9, y=0.75, text="(c) Materials Productivity", font=list(size=16), xref="paper", yref="paper", xanchor="center,", yanchor="bottom", showarrow=FALSE))
+annotationsw <- list(list(x=0.10, y=0.75, text="(a) Investment Productivity", font=list(size=30), xref="paper", yref="paper", xanchor="center,", yanchor="bottom", showarrow=FALSE),
+	list(x=0.5, y=0.75, text="(b) Labor Productivity", font=list(size=30), xref="paper", yref="paper", xanchor="center,", yanchor="bottom", showarrow=FALSE),
+	list(x=0.9, y=0.75, text="(c) Materials Productivity", font=list(size=30), xref="paper", yref="paper", xanchor="center,", yanchor="bottom", showarrow=FALSE))
 #Add
-lmiw3dplotly <- lmiw3dplotly %>% layout(annotations=annotations)
+lmiw3dplotly <- lmiw3dplotly %>% layout(annotations=annotationsw)
+lmiwkq3dplotly <- lmiwkq3dplotly %>% layout(annotations=annotationsw)
 lmiw3dplotly
+lmiwkq3dplotly
 lmiw3dplotly   <- plotly_json(lmiw3dplotly, FALSE)
+lmiwkq3dplotly   <- plotly_json(lmiwkq3dplotly, FALSE)
 write(lmiw3dplotly, "/Users/justindoty/Documents/Home/My_Website/static/jmp/main/lmiw3dplotly.json")
+write(lmiwkq3dplotly, "/Users/justindoty/Documents/Home/My_Website/static/jmp/mainext/lmiwkq3dplotly.json")
 ######################################################################################################################################################################################
 #Productivity
 #####################################################################################################################################################################################
@@ -327,7 +501,7 @@ for (q in 1:ntau){
 	
 }
 #Productivity Persistence
-omgplotly <- plot_ly(x=vectau, y=vectau, z=omg3dq, colorscale="Jet", type="surface", showscale=FALSE, scene="scene1") %>% layout(scene1=list(camera=list(eye=list(x=-1.5, y=-1.5, z=0.5)), aspectratio=list(x=1, y=1, z=1), xaxis=list(title="𝛕-innovation"), yaxis=list(title="𝛕-productivity"), zaxis=list(title="Persistence"))) 
-omgplotly
+omgplotly <- plot_ly(x=vectau, y=vectau, z=omg3dq, colorscale="Jet", type="surface", showscale=FALSE, scene="scene1", name=" ", hovertemplate = paste("<i>𝛕-innovation<i>: %{x:.2f}", "<br>𝛕-productivity: %{y:.2f}<br>", "Estimate: %{z:.3f}")) %>% layout(scene1=list(camera=list(eye=list(x=-1.5, y=-1.5, z=0.5)), aspectratio=list(x=1, y=1, z=1), xaxis=list(title="𝛕-innovation"), yaxis=list(title="𝛕-productivity"), zaxis=list(title="Persistence"))) 
+# omgplotly
 omgplotly <- plotly_json(omgplotly, FALSE)
 write(omgplotly, "/Users/justindoty/Documents/Home/My_Website/static/jmp/main/omgplotly.json")

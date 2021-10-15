@@ -129,36 +129,25 @@ for (t in 2:T){
 labpath <- data.frame(1:T, lnlmed[,1,]-lnlmed[,3,], lnlmed[,2,]-lnlmed[,3,], lnlmed[,4,]-lnlmed[,3,], lnlmed[,5,]-lnlmed[,3,])
 names(labpath) <- c("Time", "Q1Low", "Q1Med", "Q1High", "Q2Low", "Q2Med", "Q2High","Q3Low", "Q3Med", "Q3High","Q4Low", "Q4Med", "Q4High")
 #Plotting
-taup <- c("0.1", "0.5", "0.9", "0.1", "0.5", "0.9", "0.1", "0.5", "0.9", "0.1", "0.5", "0.9")
-taualp <- c("(a)", "(b)", "(c)", "(d)", "(e)", "(f)", "(g)", "(h)", "(i)", "(j)", "(k)", "(l)")
-ltitles <- lapply(1:12, function(i) parse(text = paste0("tau[paste(l, \"=\", ", taup[i], ")]")))
-Lplot <- list()
+hline <- function(y = 0, color = "red") {
+  list(
+    type = "line",
+    y0 = y,
+    y1 = y,
+    xref = "paper",
+    x0 = 0,
+    x1 = 1,
+    line = list(color = color, dash="dot")
+  )
+}
+ltitles <- list("Low Labor Shock<br>High Labor", "Low Labor Shock<br>Medium Labor", "Low Labor Shock<br>High Labor", "Medium-Low Labor Shock<br>Low Labor", "Medium-Low Labor Shock<br>Medium Labor", "Medium-Low Labor Shock<br>High Labor", "Medium-High Labor Shock<br>Low Labor", "Medium-High Labor Shock<br>Medium Labor", "Medium-High Labor Shock<br>High Labor", "High Labor Shock<br>High Labor", "High Labor Shock<br>Medium Labor", "High Labor Shock<br>High Labor")
 Lplotly <- list()
 for (i in 1:12){
 	ldat <- data.frame(Time=labpath$Time, Y=labpath[,i+1])
-	Lplot[[i]] <- ggplot(ldat, aes(x=Time, y=Y)) + geom_line() + xlab("Years") + ylab("Labor") + coord_cartesian(ylim=c(min(labpath[,-1]), max(labpath[,-1]))) + geom_hline(yintercept=0, linetype='dashed', color='red')+ labs(title=taualp[i], subtitle=ltitles[[i]]) + theme(plot.title = element_text(size = 20), plot.subtitle=element_text(size = 20, hjust=0.5))
-	Lplotly[[i]] <- plot_ly(ldat, x=~Time, y=~Y, type = 'scatter', mode = 'lines', showlegend=F, line=list(color="black")) %>% add_trace(y = 0, mode = 'lines', showlegend=F,line=list(color="red", dash="dash")) %>% layout(xaxis=list(title="Years"), yaxis=list(title="Labor", range=list(min(labpath[,-1]), max(labpath[,-1]))))
+	Lplotly[[i]] <- plot_ly(ldat, x=~Time, y=~Y, type = 'scatter', mode = 'lines', showlegend=F, line=list(color="black"), name=ltitles[[i]], hovertemplate = paste("<i>Year<i>: %{x}", "<br>Labor Change: %{y:.2f}")) %>% layout(xaxis=list(title="Years"), yaxis=list(title="Labor", range=list(min(labpath[,-1]), max(labpath[,-1]))), shapes=list(hline(y=0)))
 
 
 }
-#Labor
-names(Lplot) <- names(labpath)[-1]
-Ltitle1 <- ggdraw() + draw_label(expression(paste(tau[l[t-1]], "=0.1")), fontface="bold", x=0.53, size=22)
-Lrow1 <-  plot_grid(Ltitle1, plot_grid(Lplot$Q1Low, Lplot$Q1Med, Lplot$Q1High, nrow=1), ncol=1, rel_heights=c(0.5,1))
-
-Ltitle2 <- ggdraw() + draw_label(expression(paste(tau[l[t-1]], "=0.25")), fontface="bold", x=0.53, size=22)
-Lrow2 <-  plot_grid(Ltitle2, plot_grid(Lplot$Q2Low, Lplot$Q2Med, Lplot$Q2High, nrow=1), ncol=1, rel_heights=c(0.5,1))
-
-Ltitle3 <- ggdraw() + draw_label(expression(paste(tau[l[t-1]], "=0.75")), fontface="bold", x=0.53, size=22)
-Lrow3 <-  plot_grid(Ltitle3, plot_grid(Lplot$Q3Low, Lplot$Q2Med, Lplot$Q3High, nrow=1), ncol=1, rel_heights=c(0.5,1))
-
-Ltitle4 <- ggdraw() + draw_label(expression(paste(tau[l[t-1]], "=0.9")), fontface="bold", x=0.53, size=22)
-Lrow4 <-  plot_grid(Ltitle4, plot_grid(Lplot$Q4Low, Lplot$Q4Med, Lplot$Q4High, nrow=1), ncol=1, rel_heights=c(0.5,1))
-
-
-# impulseL <- plot_grid(Lrow1, Lrow2, Lrow3, Lrow4, nrow=4)
-# save_plot("/Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Function_QR/Code/Figures/Labor_Dynamics/impulseL.png", impulseL, base_height = 20, base_width = 15)
-
 annotationsL <- list(list(x=0.11, y=0.97, text=TeX("(a)\\,\\tau_{l_{t-1}}=0.1, \\tau_{l}=0.1"), font=list(size=22), xref="paper", yref="paper", xanchor="center,", yanchor="bottom", showarrow=FALSE),
 	list(x=0.495, y=0.97, text=TeX("(b)\\,\\tau_{l_{t-1}}=0.1, \\tau_{l}=0.5"), font=list(size=22), xref="paper", yref="paper", xanchor="center,", yanchor="bottom", showarrow=FALSE),
 		list(x=0.88, y=0.97, text=TeX("(c)\\,\\tau_{l_{t-1}}=0.1, \\tau_{l}=0.9"), font=list(size=22), xref="paper", yref="paper", xanchor="center,", yanchor="bottom", showarrow=FALSE),

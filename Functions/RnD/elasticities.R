@@ -77,18 +77,19 @@ lnk1 <- kronecker(array(1, c(NNR,1)), t1data$K[t1data$RB==0])
 nnr <- length(lnk1)
 #Matrices
 N <- nr+nnr
+T <- length(unique(US$time))
 #Position in vector for RnD Firms
 pos <- c((nnr+1):N)
 #Investment
-lnidata <- matrix(0, N, T)
+lnidata <- matrix(0, nrow=N, ncol=T)
 #Unobservable Shock to Intermediate Inputs
 iotadata <- matrix(runif(N*T), nrow=N, ncol=T)
 #Capital
-lnkdata <- matrix(0, N, T)
+lnkdata <- matrix(0, nrow=N, ncol=T)
 #Productivity
-omgdata <- matrix(0, N, T)
+omgdata <- matrix(0, nrow=N, ncol=T)
 #RnD
-rdata <- matrix(0, N, T)
+rdata <- matrix(0, nrow=N, ncol=T)
 #Unobservable Shock to Productivity
 xidata <- matrix(runif(N*T), nrow=N, ncol=T)
 #Unobservable Shocks to RnD
@@ -125,7 +126,7 @@ for (t in 2:T){
 	lnidata[,t] <- (lnidata[,t]>max(ttdata$I))*max(ttdata$I)+(lnidata[,t]<min(ttdata$I))*min(ttdata$I)+(lnidata[,t]<=max(ttdata$I))*(lnidata[,t]>=min(ttdata$I))*lnidata[,t]
 	#RnD
 	rdata[pos,t] <- rowSums(RX(K=lnkdata[pos,t], omega=omgdata[pos,t])*lspline(vectau=vectau, bvec=parR, b1=parRb[1], bL=parRb[2], u=rhodata[pos,t]))
-	#Restrict the Support of Investment
+	#Restrict the Support of RnD
 	rdata[pos,t] <- (rdata[pos,t]>max(ttdata$R))*max(ttdata$R)+(rdata[pos,t]<min(ttdata$R[ttdata$RB==1]))*min(ttdata$R[ttdata$RB==1])+(rdata[pos,t]<=max(ttdata$R))*(rdata[pos,t]>=min(ttdata$R[ttdata$RB==1]))*rdata[pos,t]
 }
 #Capital
@@ -199,30 +200,33 @@ for (q in 1:ntau){
 	
 }
 #Persistence for Non-R&D Firms
-omg3d <- plot_ly(x=vectau, y=vectau, z=omg3dq, colorscale="Jet", type="surface", showscale=FALSE, scene="scene1") %>% layout(scene1=list(camera=list(eye=list(x=-1.5, y=-1.5, z=0.5)), aspectratio=list(x=1, y=1, z=1), xaxis=list(title="𝛕-innovation"), yaxis=list(title="𝛕-productivity"), zaxis=list(title="Persistence (No R&D)"))) 
+omg3d <- plot_ly(x=vectau, y=vectau, z=omg3dq, colorscale="Jet", type="surface", showscale=FALSE, scene="scene1", name=" ", hovertemplate = paste("No R&D<br><i>𝛕-innovation<i>: %{x:.2f}", "<br>𝛕-productivity: %{y:.2f}<br>", "Estimate: %{z:.3f}")) %>% layout(scene1=list(camera=list(eye=list(x=-1.5, y=-1.5, z=0.5)), aspectratio=list(x=1, y=1, z=1), xaxis=list(title="𝛕-innovation"), yaxis=list(title="𝛕-productivity"), zaxis=list(title="Persistence (No R&D)"))) 
 #Persistence for R&D Firms (fixed percentiles of productivity)
-romg3d <- plot_ly(x=vectau, y=vectau, z=romg3dq, colorscale="Jet", type="surface", showscale=FALSE, scene="scene2") %>% layout(scene2=list(camera=list(eye=list(x=-1.5, y=-1.5, z=0.5)), aspectratio=list(x=1, y=1, z=1), xaxis=list(title="𝛕-innovation"), yaxis=list(title="𝛕-productivity"), zaxis=list(title="Persistence (R&D)"))) 
+romg3d <- plot_ly(x=vectau, y=vectau, z=romg3dq, colorscale="Jet", type="surface", showscale=FALSE, scene="scene2", name=" ", hovertemplate = paste("R&D<br><i>𝛕-innovation<i>: %{x:.2f}", "<br>𝛕-productivity: %{y:.2f}<br>", "Estimate: %{z:.3f}")) %>% layout(scene2=list(camera=list(eye=list(x=-1.5, y=-1.5, z=0.5)), aspectratio=list(x=1, y=1, z=1), xaxis=list(title="𝛕-innovation"), yaxis=list(title="𝛕-productivity"), zaxis=list(title="Persistence (R&D)"))) 
 #Persistence for R&D Firms (fixed percentiles of R&D)
-omgr3d <- plot_ly(x=vectau, y=vectau, z=omgr3dq, colorscale="Jet", type="surface", showscale=FALSE, scene="scene3") %>% layout(scene3=list(camera=list(eye=list(x=-1.5, y=-1.5, z=0.5)), aspectratio=list(x=1, y=1, z=1), xaxis=list(title="𝛕-innovation"), yaxis=list(title="𝛕-R&D"), zaxis=list(title="Persistence (R&D)"))) 
+omgr3d <- plot_ly(x=vectau, y=vectau, z=omgr3dq, colorscale="Jet", type="surface", showscale=FALSE, scene="scene3", name=" ", hovertemplate = paste("R&D<br><i>𝛕-innovation<i>: %{x:.2f}", "<br>𝛕-R&D: %{y:.2f}<br>", "Estimate: %{z:.3f}")) %>% layout(scene3=list(camera=list(eye=list(x=-1.5, y=-1.5, z=0.5)), aspectratio=list(x=1, y=1, z=1), xaxis=list(title="𝛕-innovation"), yaxis=list(title="𝛕-R&D"), zaxis=list(title="Persistence (R&D)"))) 
 #Combined Plots
 persplotly <- subplot(omg3d, romg3d, omgr3d) %>% layout(scene=list(aspectratio=list(x=0.6, y=0.6, z=0.6), xaxis=list(title="𝛕-innovation"), yaxis=list(title="𝛕-productivity"), zaxis=list(title="Persistence")), 
 	scene2=list(aspectratio=list(x=0.6, y=0.6, z=0.6), xaxis=list(title="𝛕-innovation"), yaxis=list(title="𝛕-productivity"), zaxis=list(title="Persistence")),
 	scene3=list(aspectratio=list(x=0.6, y=0.6, z=0.6), xaxis=list(title="𝛕-innovation"), yaxis=list(title="𝛕-R&D"), zaxis=list(title="Persistence")))
 #Annotations
-annotations <- list(list(x=0.11, y=0.75, text="(a) Non-performers", font=list(size=16), xref="paper", yref="paper", xanchor="center,", yanchor="bottom", showarrow=FALSE),
-	list(x=0.5, y=0.75, text="(b) Performers", font=list(size=16), xref="paper", yref="paper", xanchor="center,", yanchor="bottom", showarrow=FALSE),
-	list(x=0.88, y=0.75, text="(c) Performers", font=list(size=16), xref="paper", yref="paper", xanchor="center,", yanchor="bottom", showarrow=FALSE))
+annotations <- list(list(x=0.11, y=0.75, text="(a) Non-performers", font=list(size=30), xref="paper", yref="paper", xanchor="center,", yanchor="bottom", showarrow=FALSE),
+	list(x=0.5, y=0.75, text="(b) Performers", font=list(size=30), xref="paper", yref="paper", xanchor="center,", yanchor="bottom", showarrow=FALSE),
+	list(x=0.88, y=0.75, text="(c) Performers", font=list(size=30), xref="paper", yref="paper", xanchor="center,", yanchor="bottom", showarrow=FALSE))
+annotationsab <- list(list(x=0.25, y=0.8, text="(a)", font=list(size=30), xref="paper", yref="paper", xanchor="center,", yanchor="bottom", showarrow=FALSE),
+	list(x=0.75, y=0.8, text="(b)", font=list(size=30), xref="paper", yref="paper", xanchor="center,", yanchor="bottom", showarrow=FALSE))
 #Add
 persplotly <- persplotly %>% layout(annotations=annotations)
 persplotly
 persplotly <- plotly_json(persplotly, FALSE)
 write(persplotly, "/Users/justindoty/Documents/Home/My_Website/static/jmp/rnd/persplotly.json")
 #Returns to R&D (fixed percentiles of productivity)
-rdwq <- plot_ly(x=vectau, y=vectau, z=rdw, colorscale="Jet", type="surface", showscale=FALSE, scene="scene1") %>% layout(scene1=list(camera=list(eye=list(x=-1.5, y=-1.5, z=0.5)), aspectratio=list(x=1, y=1, z=1), xaxis=list(title="𝛕-innovation"), yaxis=list(title="𝛕-productivity"), zaxis=list(title="Returns to R&D"))) 
+rdwq <- plot_ly(x=vectau, y=vectau, z=rdw, colorscale="Jet", type="surface", showscale=FALSE, scene="scene1", name=" ", hovertemplate = paste("<i>𝛕-innovation<i>: %{x:.2f}", "<br>𝛕-productivity: %{y:.2f}<br>", "Estimate: %{z:.3f}")) %>% layout(scene1=list(camera=list(eye=list(x=-1.5, y=-1.5, z=0.5)), aspectratio=list(x=1, y=1, z=1), xaxis=list(title="𝛕-innovation"), yaxis=list(title="𝛕-productivity"), zaxis=list(title="Returns to R&D"))) 
 #Returns to R&D (fixed percentiles of R&D)
-rdrq <- plot_ly(x=vectau, y=vectau, z=rdr, colorscale="Jet", type="surface", showscale=FALSE, scene="scene2") %>% layout(scene2=list(camera=list(eye=list(x=-1.5, y=-1.5, z=0.5)), aspectratio=list(x=1, y=1, z=1), xaxis=list(title="𝛕-innovation"), yaxis=list(title="𝛕-R&D"), zaxis=list(title="Returns to R&D"))) 
+rdrq <- plot_ly(x=vectau, y=vectau, z=rdr, colorscale="Jet", type="surface", showscale=FALSE, scene="scene2", name=" ", hovertemplate = paste("<i>𝛕-innovation<i>: %{x:.2f}", "<br>𝛕-R&D: %{y:.2f}<br>", "Estimate: %{z:.3f}")) %>% layout(scene2=list(camera=list(eye=list(x=-1.5, y=-1.5, z=0.5)), aspectratio=list(x=1, y=1, z=1), xaxis=list(title="𝛕-innovation"), yaxis=list(title="𝛕-R&D"), zaxis=list(title="Returns to R&D"))) 
 rdplot <- subplot(rdwq, rdrq) %>% layout(scene=list(aspectratio=list(x=0.9, y=0.9, z=0.9), xaxis=list(title="𝛕-innovation"), yaxis=list(title="𝛕-productivity"), zaxis=list(title="Returns")), 
 	scene2=list(aspectratio=list(x=0.9, y=0.9, z=0.9), xaxis=list(title="𝛕-innovation"), yaxis=list(title="𝛕-R&D"), zaxis=list(title="Returns")))
+rdplot <- rdplot %>% layout(annotations=annotationsab)
 rdplot
 rdplot    <- plotly_json(rdplot, FALSE)
 write(rdplot, "/Users/justindoty/Documents/Home/My_Website/static/jmp/rnd/rdplot.json")

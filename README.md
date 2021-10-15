@@ -19,8 +19,8 @@ The following folders contain replication files for the tables and figures in th
 	
 In addition, each of the folders contain variations of the same files used in estimation
 - Production_EM.R: Main estimation file. Uses functions below as dependencies.
-- Posterior.R: Function used to compute to posterior density
-- Mstep.R: Function to perform Maximization step of algorithm
+- Posterior.R: Function used to compute the posterior density (E-step)
+- Mstep.R: Function to perform Maximization step (M-step) of algorithm
 - Tensors.R: Function used to specify functional forms for the production function, inputs, and productivity
 - omega.R: Function used to estimate a production function using [Levinsohn and Petrin (2003)](https://doi.org/10.1111/1467-937X.00246)
 - Auxfuns.R: Contains auxiliary files used in estimation procedures
