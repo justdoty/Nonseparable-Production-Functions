@@ -210,14 +210,21 @@ persplotly <- subplot(omg3d, romg3d, omgr3d) %>% layout(scene=list(aspectratio=l
 	scene2=list(aspectratio=list(x=0.6, y=0.6, z=0.6), xaxis=list(title="𝛕-innovation"), yaxis=list(title="𝛕-productivity"), zaxis=list(title="Persistence")),
 	scene3=list(aspectratio=list(x=0.6, y=0.6, z=0.6), xaxis=list(title="𝛕-innovation"), yaxis=list(title="𝛕-R&D"), zaxis=list(title="Persistence")))
 #Annotations
-annotations <- list(list(x=0.11, y=0.75, text="(a) Non-performers", font=list(size=30), xref="paper", yref="paper", xanchor="center,", yanchor="bottom", showarrow=FALSE),
+latexannotations <- list(list(x=0.10, y=0.75, text="(a) Non-performers", font=list(size=30), xref="paper", yref="paper", xanchor="center,", yanchor="bottom", showarrow=FALSE),
 	list(x=0.5, y=0.75, text="(b) Performers", font=list(size=30), xref="paper", yref="paper", xanchor="center,", yanchor="bottom", showarrow=FALSE),
 	list(x=0.88, y=0.75, text="(c) Performers", font=list(size=30), xref="paper", yref="paper", xanchor="center,", yanchor="bottom", showarrow=FALSE))
-annotationsab <- list(list(x=0.25, y=0.8, text="(a)", font=list(size=30), xref="paper", yref="paper", xanchor="center,", yanchor="bottom", showarrow=FALSE),
+annotations <- list(list(x=0.11, y=0.75, text="(a) Non-performers", font=list(size=18), xref="paper", yref="paper", xanchor="center,", yanchor="bottom", showarrow=FALSE),
+	list(x=0.5, y=0.75, text="(b) Performers", font=list(size=18), xref="paper", yref="paper", xanchor="center,", yanchor="bottom", showarrow=FALSE),
+	list(x=0.88, y=0.75, text="(c) Performers", font=list(size=18), xref="paper", yref="paper", xanchor="center,", yanchor="bottom", showarrow=FALSE))
+latexannotationsab <- list(list(x=0.25, y=0.8, text="(a)", font=list(size=30), xref="paper", yref="paper", xanchor="center,", yanchor="bottom", showarrow=FALSE),
 	list(x=0.75, y=0.8, text="(b)", font=list(size=30), xref="paper", yref="paper", xanchor="center,", yanchor="bottom", showarrow=FALSE))
+annotationsab <- list(list(x=0.25, y=0.8, text="(a)", font=list(size=18), xref="paper", yref="paper", xanchor="center,", yanchor="bottom", showarrow=FALSE),
+	list(x=0.75, y=0.8, text="(b)", font=list(size=18), xref="paper", yref="paper", xanchor="center,", yanchor="bottom", showarrow=FALSE))
+
 #Add
+persplotly_latex <- persplotly %>% layout(annotations=latexannotations)
+persplotly_latex
 persplotly <- persplotly %>% layout(annotations=annotations)
-persplotly
 persplotly <- plotly_json(persplotly, FALSE)
 write(persplotly, "/Users/justindoty/Documents/Home/My_Website/static/jmp/rnd/persplotly.json")
 #Returns to R&D (fixed percentiles of productivity)
@@ -226,8 +233,9 @@ rdwq <- plot_ly(x=vectau, y=vectau, z=rdw, colorscale="Jet", type="surface", sho
 rdrq <- plot_ly(x=vectau, y=vectau, z=rdr, colorscale="Jet", type="surface", showscale=FALSE, scene="scene2", name=" ", hovertemplate = paste("<i>𝛕-innovation<i>: %{x:.2f}", "<br>𝛕-R&D: %{y:.2f}<br>", "Estimate: %{z:.3f}")) %>% layout(scene2=list(camera=list(eye=list(x=-1.5, y=-1.5, z=0.5)), aspectratio=list(x=1, y=1, z=1), xaxis=list(title="𝛕-innovation"), yaxis=list(title="𝛕-R&D"), zaxis=list(title="Returns to R&D"))) 
 rdplot <- subplot(rdwq, rdrq) %>% layout(scene=list(aspectratio=list(x=0.9, y=0.9, z=0.9), xaxis=list(title="𝛕-innovation"), yaxis=list(title="𝛕-productivity"), zaxis=list(title="Returns")), 
 	scene2=list(aspectratio=list(x=0.9, y=0.9, z=0.9), xaxis=list(title="𝛕-innovation"), yaxis=list(title="𝛕-R&D"), zaxis=list(title="Returns")))
+rdplot_latex <- rdplot %>% layout(annotations=latexannotationsab)
+rdplot_latex
 rdplot <- rdplot %>% layout(annotations=annotationsab)
-rdplot
 rdplot    <- plotly_json(rdplot, FALSE)
 write(rdplot, "/Users/justindoty/Documents/Home/My_Website/static/jmp/rnd/rdplot.json")
 
