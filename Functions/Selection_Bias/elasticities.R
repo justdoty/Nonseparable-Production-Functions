@@ -298,18 +298,18 @@ mwplot <- plot_ly(x=vectau, y=vectau, z=mw3d, colorscale="Jet", type="surface", 
 # mw3dplotly
 #Combined Plot.ly Elasticities
 #Elasticities (over percentiles of inputs)
-klmplot <- subplot(kplot, lplot, mplot, shareX=TRUE) %>% layout(scene=list(aspectratio=list(x=.6, y=.6, z=.6), xaxis=list(title="𝛕-output"), yaxis=list(title="𝛕-capital"), zaxis=list(title="Capital")), 
-	scene2=list(aspectratio=list(x=.6, y=.6, z=.6), xaxis=list(title="𝛕-output"), yaxis=list(title="𝛕-labor"), zaxis=list(title="Labor")),
-	scene3=list(aspectratio=list(x=.6, y=.6, z=.6), xaxis=list(title="𝛕-output"), yaxis=list(title="𝛕-materials"), zaxis=list(title="Materials")))
-#Elasticities (over percentiles of productivity)
-klmwqplot <- subplot(kwqplot, lwqplot, mwqplot, shareX=TRUE) %>% layout(scene=list(aspectratio=list(x=.6, y=.6, z=.6), xaxis=list(title="𝛕-output"), yaxis=list(title="𝛕-productivity"), zaxis=list(title="Capital")), 
-	scene2=list(aspectratio=list(x=.6, y=.6, z=.6), xaxis=list(title="𝛕-output"), yaxis=list(title="𝛕-productivity"), zaxis=list(title="Labor")),
-	scene3=list(aspectratio=list(x=.6, y=.6, z=.6), xaxis=list(title="𝛕-output"), yaxis=list(title="𝛕-productivity"), zaxis=list(title="Materials")))
+klmplot <- subplot(kplot, lplot, mplot, shareX=TRUE) %>% layout(scene=list(aspectratio=list(x=.6, y=.6, z=.6), xaxis=list(title="𝛕-output", titlefont=list(size=18), tickfont=list(size=14)), yaxis=list(title="𝛕-capital", titlefont=list(size=18), tickfont=list(size=14)), zaxis=list(title="Capital", titlefont=list(size=18), tickfont=list(size=14))), 
+	scene2=list(aspectratio=list(x=.6, y=.6, z=.6), xaxis=list(title="𝛕-output", titlefont=list(size=18), tickfont=list(size=14)), yaxis=list(title="𝛕-labor", titlefont=list(size=18), tickfont=list(size=14)), zaxis=list(title="Labor", titlefont=list(size=18), tickfont=list(size=14))),
+	scene3=list(aspectratio=list(x=.6, y=.6, z=.6), xaxis=list(title="𝛕-output", titlefont=list(size=18), tickfont=list(size=14)), yaxis=list(title="𝛕-materials", titlefont=list(size=18), tickfont=list(size=14)), zaxis=list(title="Materials", titlefont=list(size=18), tickfont=list(size=14))))
+# Elasticities (over percentiles of productivity)
+klmwqplot <- subplot(kwqplot, lwqplot, mwqplot, shareX=TRUE) %>% layout(scene=list(aspectratio=list(x=.6, y=.6, z=.6), xaxis=list(title="𝛕-output", titlefont=list(size=18), tickfont=list(size=14)), yaxis=list(title="𝛕-productivity", titlefont=list(size=18), tickfont=list(size=14)), zaxis=list(title="Capital", titlefont=list(size=18), tickfont=list(size=14))), 
+	scene2=list(aspectratio=list(x=.6, y=.6, z=.6), xaxis=list(title="𝛕-output", titlefont=list(size=18), tickfont=list(size=14)), yaxis=list(title="𝛕-productivity", titlefont=list(size=18), tickfont=list(size=14)), zaxis=list(title="Labor", titlefont=list(size=18), tickfont=list(size=14))),
+	scene3=list(aspectratio=list(x=.6, y=.6, z=.6), xaxis=list(title="𝛕-output", titlefont=list(size=18), tickfont=list(size=14)), yaxis=list(title="𝛕-productivity", titlefont=list(size=18), tickfont=list(size=14)), zaxis=list(title="Materials", titlefont=list(size=18), tickfont=list(size=14))))
 #Annotations
 #I use two different text sizes (one for latex and one for my website)
-latexannotationsklm <- list(list(x=0.09, y=0.75, text="(a) Capital Elasticity", font=list(size=30), xref="paper", yref="paper", xanchor="center,", yanchor="bottom", showarrow=FALSE),
-	list(x=0.5, y=0.75, text="(b) Labor Elasticity", font=list(size=30), xref="paper", yref="paper", xanchor="center,", yanchor="bottom", showarrow=FALSE),
-	list(x=0.95, y=0.75, text="(c) Materials Elasticity", font=list(size=30), xref="paper", yref="paper", xanchor="center,", yanchor="bottom", showarrow=FALSE))
+latexannotationsklm <- list(list(x=0.09, y=0.75, text="(a) Capital Elasticity", font=list(size=30, family="Times New Roman"), xref="paper", yref="paper", xanchor="center,", yanchor="bottom", showarrow=FALSE),
+	list(x=0.5, y=0.75, text="(b) Labor Elasticity", font=list(size=30, family="Times New Roman"), xref="paper", yref="paper", xanchor="center,", yanchor="bottom", showarrow=FALSE),
+	list(x=0.95, y=0.75, text="(c) Materials Elasticity", font=list(size=30, family="Times New Roman"), xref="paper", yref="paper", xanchor="center,", yanchor="bottom", showarrow=FALSE))
 annotationsklm <- list(list(x=0.1, y=0.75, text="(a) Capital Elasticity", font=list(size=18), xref="paper", yref="paper", xanchor="center,", yanchor="bottom", showarrow=FALSE),
 	list(x=0.5, y=0.75, text="(b) Labor Elasticity", font=list(size=18), xref="paper", yref="paper", xanchor="center,", yanchor="bottom", showarrow=FALSE),
 	list(x=0.9, y=0.75, text="(c) Materials Elasticity", font=list(size=18), xref="paper", yref="paper", xanchor="center,", yanchor="bottom", showarrow=FALSE))
@@ -325,16 +325,16 @@ klmwqplot <- klmwqplot %>% layout(annotations=annotationsklm)
 #Json
 klmplot   <- plotly_json(klmplot, FALSE)
 klmwqplot  <- plotly_json(klmwqplot, FALSE)
-write(klmplot, "/Users/justindoty/Documents/Home/My_Website/static/jmp/selection/klm3dplotly.json")
-write(klmwqplot , "/Users/justindoty/Documents/Home/My_Website/static/jmp/selection/klmwq3dplotly.json")
+# write(klmplot, "/Users/justindoty/Documents/Home/My_Website/static/jmp/selection/klm3dplotly.json")
+# write(klmwqplot , "/Users/justindoty/Documents/Home/My_Website/static/jmp/selection/klmwq3dplotly.json")
 #Combined Plot.ly Efficiecies
-hklmplot <- subplot(hkplot, hlplot, hmplot, shareX=TRUE) %>% layout(scene=list(aspectratio=list(x=.6, y=.6, z=.6), xaxis=list(title="𝛕-output"), yaxis=list(title="𝛕-capital"), zaxis=list(title="Capital")), 
-	scene2=list(aspectratio=list(x=.6, y=.6, z=.6), xaxis=list(title="𝛕-output"), yaxis=list(title="𝛕-labor"), zaxis=list(title="Labor")),
-	scene3=list(aspectratio=list(x=.6, y=.6, z=.6), xaxis=list(title="𝛕-output"), yaxis=list(title="𝛕-materials"), zaxis=list(title="Materials")))
+hklmplot <- subplot(hkplot, hlplot, hmplot, shareX=TRUE) %>% layout(scene=list(aspectratio=list(x=.6, y=.6, z=.6), xaxis=list(title="𝛕-output", titlefont=list(size=18), tickfont=list(size=14)), yaxis=list(title="𝛕-capital", titlefont=list(size=18), tickfont=list(size=14)), zaxis=list(title="Capital", titlefont=list(size=18), tickfont=list(size=14))), 
+	scene2=list(aspectratio=list(x=.6, y=.6, z=.6), xaxis=list(title="𝛕-output", titlefont=list(size=18), tickfont=list(size=14)), yaxis=list(title="𝛕-labor", titlefont=list(size=18), tickfont=list(size=14)), zaxis=list(title="Labor", titlefont=list(size=18), tickfont=list(size=14))),
+	scene3=list(aspectratio=list(x=.6, y=.6, z=.6), xaxis=list(title="𝛕-output", titlefont=list(size=18), tickfont=list(size=14)), yaxis=list(title="𝛕-materials", titlefont=list(size=18), tickfont=list(size=14)), zaxis=list(title="Materials", titlefont=list(size=18), tickfont=list(size=14))))
 #Annotations
-latexannotationshklm <- list(list(x=0.09, y=0.75, text="(a) Capital Efficiency", font=list(size=30), xref="paper", yref="paper", xanchor="center,", yanchor="bottom", showarrow=FALSE),
-	list(x=0.5, y=0.75, text="(b) Labor Efficiency", font=list(size=30), xref="paper", yref="paper", xanchor="center,", yanchor="bottom", showarrow=FALSE),
-	list(x=0.95, y=0.75, text="(c) Materials Efficiency", font=list(size=30), xref="paper", yref="paper", xanchor="center,", yanchor="bottom", showarrow=FALSE))
+latexannotationshklm <- list(list(x=0.09, y=0.75, text="(a) Capital Efficiency", font=list(size=30, family="Times New Roman"), xref="paper", yref="paper", xanchor="center,", yanchor="bottom", showarrow=FALSE),
+	list(x=0.5, y=0.75, text="(b) Labor Efficiency", font=list(size=30, family="Times New Roman"), xref="paper", yref="paper", xanchor="center,", yanchor="bottom", showarrow=FALSE),
+	list(x=0.95, y=0.75, text="(c) Materials Efficiency", font=list(size=30, family="Times New Roman"), xref="paper", yref="paper", xanchor="center,", yanchor="bottom", showarrow=FALSE))
 annotationshklm <- list(list(x=0.1, y=0.75, text="(a) Capital Efficiency", font=list(size=18), xref="paper", yref="paper", xanchor="center,", yanchor="bottom", showarrow=FALSE),
 	list(x=0.5, y=0.75, text="(b) Labor Efficiency", font=list(size=18), xref="paper", yref="paper", xanchor="center,", yanchor="bottom", showarrow=FALSE),
 	list(x=0.9, y=0.75, text="(c) Materials Efficiency", font=list(size=18), xref="paper", yref="paper", xanchor="center,", yanchor="bottom", showarrow=FALSE))
@@ -347,18 +347,18 @@ hklmplot_latex
 hklmplot <- hklmplot %>% layout(annotations=annotationshklm)
 #Save
 hklmplot   <- plotly_json(hklmplot, FALSE)
-write(hklmplot, "/Users/justindoty/Documents/Home/My_Website/static/jmp/selection/hklm3dplotly.json")
+# write(hklmplot, "/Users/justindoty/Documents/Home/My_Website/static/jmp/selection/hklm3dplotly.json")
 #Combined Productivities
-lmiwplot <- subplot(iwplot, lwplot, mwplot) %>% layout(scene=list(aspectratio=list(x=0.6, y=0.6, z=0.6), xaxis=list(title="𝛕-investment"), yaxis=list(title="𝛕-productivity"), zaxis=list(title="Investment")), 
-	scene2=list(aspectratio=list(x=0.6, y=0.6, z=0.6), xaxis=list(title="𝛕-labor"), yaxis=list(title="𝛕-productivity"), zaxis=list(title="Labor")),
-	scene3=list(aspectratio=list(x=0.6, y=0.6, z=0.6), xaxis=list(title="𝛕-materials"), yaxis=list(title="𝛕-productivity"), zaxis=list(title="Materials")))
+lmiwplot <- subplot(iwplot, lwplot, mwplot) %>% layout(scene=list(aspectratio=list(x=0.6, y=0.6, z=0.6), xaxis=list(title="𝛕-investment", titlefont=list(size=18), tickfont=list(size=14)), yaxis=list(title="𝛕-productivity", titlefont=list(size=18), tickfont=list(size=14)), zaxis=list(title="Investment", titlefont=list(size=18), tickfont=list(size=14))), 
+	scene2=list(aspectratio=list(x=0.6, y=0.6, z=0.6), xaxis=list(title="𝛕-labor", titlefont=list(size=18), tickfont=list(size=14)), yaxis=list(title="𝛕-productivity", titlefont=list(size=18), tickfont=list(size=14)), zaxis=list(title="Labor", titlefont=list(size=18), tickfont=list(size=14))),
+	scene3=list(aspectratio=list(x=0.6, y=0.6, z=0.6), xaxis=list(title="𝛕-materials", titlefont=list(size=18), tickfont=list(size=14)), yaxis=list(title="𝛕-productivity", titlefont=list(size=18), tickfont=list(size=14)), zaxis=list(title="Materials", titlefont=list(size=18), tickfont=list(size=14))))
 #Annotations
-latexannotationsw <- list(list(x=0.04, y=0.75, text="(a) Investment Productivity", font=list(size=30), xref="paper", yref="paper", xanchor="center,", yanchor="bottom", showarrow=FALSE),
-	list(x=0.5, y=0.75, text="(b) Labor Productivity", font=list(size=30), xref="paper", yref="paper", xanchor="center,", yanchor="bottom", showarrow=FALSE),
-	list(x=0.94, y=0.75, text="(c) Materials Productivity", font=list(size=30), xref="paper", yref="paper", xanchor="center,", yanchor="bottom", showarrow=FALSE))
-annotationsw <- list(list(x=0.07, y=0.75, text="(a) Investment Productivity", font=list(size=18), xref="paper", yref="paper", xanchor="center,", yanchor="bottom", showarrow=FALSE),
-	list(x=0.5, y=0.75, text="(b) Labor Productivity", font=list(size=18), xref="paper", yref="paper", xanchor="center,", yanchor="bottom", showarrow=FALSE),
-	list(x=0.92, y=0.75, text="(c) Materials Productivity", font=list(size=18), xref="paper", yref="paper", xanchor="center,", yanchor="bottom", showarrow=FALSE))
+latexannotationsw <- list(list(x=0.08, y=0.75, text="(a) Investment Response", font=list(size=30, family="Times New Roman"), xref="paper", yref="paper", xanchor="center,", yanchor="bottom", showarrow=FALSE),
+	list(x=0.5, y=0.75, text="(b) Labor Response", font=list(size=30, family="Times New Roman"), xref="paper", yref="paper", xanchor="center,", yanchor="bottom", showarrow=FALSE),
+	list(x=0.92, y=0.75, text="(c) Materials Response", font=list(size=30, family="Times New Roman"), xref="paper", yref="paper", xanchor="center,", yanchor="bottom", showarrow=FALSE))
+annotationsw <- list(list(x=0.07, y=0.75, text="(a) Investment Response", font=list(size=18), xref="paper", yref="paper", xanchor="center,", yanchor="bottom", showarrow=FALSE),
+	list(x=0.5, y=0.75, text="(b) Labor Response", font=list(size=18), xref="paper", yref="paper", xanchor="center,", yanchor="bottom", showarrow=FALSE),
+	list(x=0.92, y=0.75, text="(c) Materials Response", font=list(size=18), xref="paper", yref="paper", xanchor="center,", yanchor="bottom", showarrow=FALSE))
 #Add
 lmiwplot_latex <- lmiwplot %>% layout(annotations=latexannotationsw)
 #Plot
@@ -382,7 +382,7 @@ for (q in 1:ntau){
 	
 }
 #Productivity Persistence
-omgplotly <- plot_ly(x=vectau, y=vectau, z=omg3dq, colorscale="Jet", type="surface", showscale=FALSE, scene="scene1", name=" ", hovertemplate = paste("<i>𝛕-innovation<i>: %{x:.2f}", "<br>𝛕-productivity: %{y:.2f}<br>", "Estimate: %{z:.3f}")) %>% layout(scene1=list(camera=list(eye=list(x=-1.5, y=-1.5, z=0.5)), aspectratio=list(x=1, y=1, z=1), xaxis=list(title="𝛕-innovation"), yaxis=list(title="𝛕-productivity"), zaxis=list(title="Persistence"))) 
-# omgplotly
+omgplotly <- plot_ly(x=vectau, y=vectau, z=omg3dq, colorscale="Jet", type="surface", showscale=FALSE, scene="scene1", name=" ", hovertemplate = paste("<i>𝛕-innovation<i>: %{x:.2f}", "<br>𝛕-productivity: %{y:.2f}<br>", "Estimate: %{z:.3f}")) %>% layout(scene1=list(camera=list(eye=list(x=-1.5, y=-1.5, z=0.5)), aspectratio=list(x=1, y=1, z=1), xaxis=list(title="𝛕-innovation", titlefont=list(size=20), tickfont=list(size=16)), yaxis=list(title="𝛕-productivity", titlefont=list(size=20), tickfont=list(size=16)), zaxis=list(title="Persistence", titlefont=list(size=20), tickfont=list(size=16)))) 
+omgplotly
 omgplotly <- plotly_json(omgplotly, FALSE)
 write(omgplotly, "/Users/justindoty/Documents/Home/My_Website/static/jmp/selection/omgplotly.json")

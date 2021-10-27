@@ -144,27 +144,27 @@ ltitles <- list("Low Labor Shock<br>High Labor", "Low Labor Shock<br>Medium Labo
 Lplotly <- list()
 for (i in 1:12){
 	ldat <- data.frame(Time=labpath$Time, Y=labpath[,i+1])
-	Lplotly[[i]] <- plot_ly(ldat, x=~Time, y=~Y, type = 'scatter', mode = 'lines', showlegend=F, line=list(color="black"), name=ltitles[[i]], hovertemplate = paste("<i>Year<i>: %{x}", "<br>Labor Change: %{y:.2f}")) %>% layout(xaxis=list(title="Years"), yaxis=list(title="Labor", range=list(min(labpath[,-1]), max(labpath[,-1]))), shapes=list(hline(y=0)))
+	Lplotly[[i]] <- plot_ly(ldat, x=~Time, y=~Y, type = 'scatter', mode = 'lines', showlegend=F, line=list(color="black"), name=ltitles[[i]], hovertemplate = paste("<i>Year<i>: %{x}", "<br>Labor Change: %{y:.2f}")) %>% layout(xaxis=list(title="Years", titlefont=list(size=18), tickfont=list(size=14)), yaxis=list(title="Labor", titlefont=list(size=18), tickfont=list(size=14), range=list(min(labpath[,-1]), max(labpath[,-1]))), shapes=list(hline(y=0)))
 
 
 }
-annotationsL <- list(list(x=0.11, y=0.97, text=TeX("(a)\\,\\tau_{l_{t-1}}=0.1, \\tau_{l}=0.1"), font=list(size=22), xref="paper", yref="paper", xanchor="center,", yanchor="bottom", showarrow=FALSE),
-	list(x=0.495, y=0.97, text=TeX("(b)\\,\\tau_{l_{t-1}}=0.1, \\tau_{l}=0.5"), font=list(size=22), xref="paper", yref="paper", xanchor="center,", yanchor="bottom", showarrow=FALSE),
-		list(x=0.88, y=0.97, text=TeX("(c)\\,\\tau_{l_{t-1}}=0.1, \\tau_{l}=0.9"), font=list(size=22), xref="paper", yref="paper", xanchor="center,", yanchor="bottom", showarrow=FALSE),
-		list(x=0.11, y=0.7, text=TeX("(d)\\,\\tau_{l_{t-1}}=0.25, \\tau_{l}=0.1"), font=list(size=22), xref="paper", yref="paper", xanchor="center,", yanchor="bottom", showarrow=FALSE),
-		list(x=0.495, y=0.7, text=TeX("(e)\\,\\tau_{l_{t-1}}=0.25, \\tau_{l}=0.5"), font=list(size=22), xref="paper", yref="paper", xanchor="center,", yanchor="bottom", showarrow=FALSE),
-		list(x=0.88, y=0.7, text=TeX("(f)\\,\\tau_{l_{t-1}}=0.25, \\tau_{l}=0.9"), font=list(size=22), xref="paper", yref="paper", xanchor="center,", yanchor="bottom", showarrow=FALSE),
-		list(x=0.11, y=0.45, text=TeX("(g)\\,\\tau_{l_{t-1}}=0.75, \\tau_{l}=0.1"), font=list(size=22), xref="paper", yref="paper", xanchor="center,", yanchor="bottom", showarrow=FALSE),
-		list(x=0.495, y=0.45, text=TeX("(h)\\,\\tau_{l_{t-1}}=0.75, \\tau_{l}=0.5"), font=list(size=22), xref="paper", yref="paper", xanchor="center,", yanchor="bottom", showarrow=FALSE),
-		list(x=0.88, y=0.45, text=TeX("(i)\\,\\tau_{l_{t-1}}=0.75, \\tau_{l}=0.9"), font=list(size=22), xref="paper", yref="paper", xanchor="center,", yanchor="bottom", showarrow=FALSE),
-		list(x=0.11, y=0.2, text=TeX("(j)\\,\\tau_{l_{t-1}}=0.9, \\tau_{l}=0.1"), font=list(size=22), xref="paper", yref="paper", xanchor="center,", yanchor="bottom", showarrow=FALSE),
-		list(x=0.495, y=0.2, text=TeX("(k)\\,\\tau_{l_{t-1}}=0.9, \\tau_{l}=0.5"), font=list(size=22), xref="paper", yref="paper", xanchor="center,", yanchor="bottom", showarrow=FALSE),
-		list(x=0.88, y=0.2, text=TeX("(l)\\,\\tau_{l_{t-1}}=0.9, \\tau_{l}=0.9"), font=list(size=22), xref="paper", yref="paper", xanchor="center,", yanchor="bottom", showarrow=FALSE))
+annotationsL <- list(list(x=0.11, y=0.97, text=TeX("\\boldsymbol{(a)\\,\\tau_{l_{t-1}}=0.1, \\tau_{l}=0.1}"), font=list(size=30), xref="paper", yref="paper", xanchor="center,", yanchor="bottom", showarrow=FALSE),
+	list(x=0.495, y=0.97, text=TeX("\\boldsymbol{(b)\\,\\tau_{l_{t-1}}=0.1, \\tau_{l}=0.5}"), font=list(size=30), xref="paper", yref="paper", xanchor="center,", yanchor="bottom", showarrow=FALSE),
+		list(x=0.88, y=0.97, text=TeX("\\boldsymbol{(c)\\,\\tau_{l_{t-1}}=0.1, \\tau_{l}=0.9}"), font=list(size=30), xref="paper", yref="paper", xanchor="center,", yanchor="bottom", showarrow=FALSE),
+		list(x=0.11, y=0.7, text=TeX("\\boldsymbol{(d)\\,\\tau_{l_{t-1}}=0.25, \\tau_{l}=0.1}"), font=list(size=30), xref="paper", yref="paper", xanchor="center,", yanchor="bottom", showarrow=FALSE),
+		list(x=0.495, y=0.7, text=TeX("\\boldsymbol{(e)\\,\\tau_{l_{t-1}}=0.25, \\tau_{l}=0.5}"), font=list(size=30), xref="paper", yref="paper", xanchor="center,", yanchor="bottom", showarrow=FALSE),
+		list(x=0.88, y=0.7, text=TeX("\\boldsymbol{(f)\\,\\tau_{l_{t-1}}=0.25, \\tau_{l}=0.9}"), font=list(size=30), xref="paper", yref="paper", xanchor="center,", yanchor="bottom", showarrow=FALSE),
+		list(x=0.11, y=0.45, text=TeX("\\boldsymbol{(g)\\,\\tau_{l_{t-1}}=0.75, \\tau_{l}=0.1}"), font=list(size=30), xref="paper", yref="paper", xanchor="center,", yanchor="bottom", showarrow=FALSE),
+		list(x=0.495, y=0.45, text=TeX("\\boldsymbol{(h)\\,\\tau_{l_{t-1}}=0.75, \\tau_{l}=0.5}"), font=list(size=30), xref="paper", yref="paper", xanchor="center,", yanchor="bottom", showarrow=FALSE),
+		list(x=0.88, y=0.45, text=TeX("\\boldsymbol{(i)\\,\\tau_{l_{t-1}}=0.75, \\tau_{l}=0.9}"), font=list(size=30), xref="paper", yref="paper", xanchor="center,", yanchor="bottom", showarrow=FALSE),
+		list(x=0.11, y=0.2, text=TeX("\\boldsymbol{(j)\\,\\tau_{l_{t-1}}=0.9, \\tau_{l}=0.1}"), font=list(size=30), xref="paper", yref="paper", xanchor="center,", yanchor="bottom", showarrow=FALSE),
+		list(x=0.495, y=0.2, text=TeX("\\boldsymbol{(k)\\,\\tau_{l_{t-1}}=0.9, \\tau_{l}=0.5}"), font=list(size=30), xref="paper", yref="paper", xanchor="center,", yanchor="bottom", showarrow=FALSE),
+		list(x=0.88, y=0.2, text=TeX("\\boldsymbol{(l)\\,\\tau_{l_{t-1}}=0.9, \\tau_{l}=0.9}"), font=list(size=30), xref="paper", yref="paper", xanchor="center,", yanchor="bottom", showarrow=FALSE))
 L <- subplot(Lplotly[[1]], Lplotly[[2]], Lplotly[[3]], Lplotly[[4]], Lplotly[[5]], Lplotly[[6]], Lplotly[[7]], Lplotly[[8]], Lplotly[[9]], Lplotly[[10]], Lplotly[[11]], Lplotly[[12]], shareX=TRUE, shareY=TRUE, nrows=4)
 Lplot <- L %>% layout(annotations=annotationsL) %>% config(mathjax = 'cdn')
-# Lplot
+Lplot
 Ljson <- plotly_json(L, FALSE)
-write(Ljson, "/Users/justindoty/Documents/Home/My_Website/static/jmp/labor/impulseL.json")
+# write(Ljson, "/Users/justindoty/Documents/Home/My_Website/static/jmp/labor/impulseL.json")
 
 
 
