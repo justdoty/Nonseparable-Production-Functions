@@ -50,7 +50,13 @@ parRb <- results$resrb1bLmat
 parW1b <- results$resw1b1bLmat
 WTminmax <- results$maxminwtmat
 #De-mean
-US <- US %>% mutate(Y=Y-mean(Y), K=K-mean(K), L=L-mean(L), M=M-mean(M), I=I-mean(I))
+stdY <- sd(US$Y)
+stdK <- sd(US$K)
+stdL <- sd(US$L)
+stdM <- sd(US$M)
+stdI <- sd(US$I)
+#De-mean
+US <- US %>% mutate(Y=(Y-mean(Y))/stdY, K=(K-mean(K))/stdK, L=(L-mean(L))/stdL, M=(M-mean(M))/stdM, I=(I-mean(I))/stdI)
 lnr <- log(US$R[US$R>0])
 lnr <- lnr-mean(lnr)
 US$R[US$R>0] <- lnr

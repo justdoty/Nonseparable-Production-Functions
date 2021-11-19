@@ -67,8 +67,13 @@ parIb <- results$resib1bLmat
 parWTb <- results$reswtb1bLmat
 parW1b <- results$resw1b1bLmat
 WTminmax <- results$maxminwtmat
+stdY <- sd(US$Y)
+stdK <- sd(US$K)
+stdL <- sd(US$L)
+stdM <- sd(US$M)
+stdI <- sd(US$I)
 #De-mean
-US <- US %>% mutate(Y=Y-mean(Y), K=K-mean(K), L=L-mean(L), M=M-mean(M), I=I-mean(I))
+US <- US %>% mutate(Y=(Y-mean(Y))/stdY, K=(K-mean(K))/stdK, L=(L-mean(L))/stdL, M=(M-mean(M))/stdM, I=(I-mean(I))/stdI)
 wmin <- min(US$Y)
 wmax <- max(US$Y)
 #Load the method used (e.g. Cobb, Translog, Hermite)
@@ -191,7 +196,33 @@ hlpost <- c(13, 15, 16, 19)
 #Hicks-Materials
 hmpost <- c(14, 16, 17, 20)
 ########################################################################################
-#Individual Quantile Marginal Effects####################################################
+#Productivity Dynamics####################################################
+#########################################################################################
+#Linear AR(1) process
+lmomega <- as.numeric(lm(omega[idcon]~omega[idlag], data=US)$coefficients)[2]
+lmomega <- matrix(lmomega, nrow=ntau, ncol=ntau)
+lmomega_plot <- plot_ly(x=vectau, y=vectau, z=lmomega, colorscale="Jet", type="surface", showscale=FALSE, scene="scene1", name=" ", hovertemplate = paste("<i>𝛕-innovation<i>: %{x:.2f}", "<br>𝛕-productivity: %{y:.2f}<br>", "Estimate: %{z:.3f}")) %>% layout(scene1=list(camera=list(eye=list(x=-1.5, y=-1.5, z=0.5)), aspectratio=list(x=1, y=1, z=1), xaxis=list(title="𝛕-innovation", titlefont=list(size=20), tickfont=list(size=16)), yaxis=list(title="𝛕-productivity", titlefont=list(size=20), tickfont=list(size=16)), zaxis=list(title="Persistence", titlefont=list(size=20), tickfont=list(size=16)))) 
+#Non-linear AR(1) process
+nlomega <- as.numeric(lm(omega[idcon]~omega[idlag]+I(omega[idlag]^2)+I(omega[idlag]^3), data=US)$coefficients)[-1]
+nlomegamat <- matrix(0, nrow=ntau, ncol=ntau)
+for (q in 1:ntau){
+	omgq <- rep(as.numeric(quantile(US$omega, probs=vectau[q])), nrow(US))
+	nlomegamat[q,] <- colMeans(cbind(1, 2*omgq, 3*omgq^2)%*%nlomega)
+}
+nlomegamat_plot <- plot_ly(x=vectau, y=vectau, z=nlomegamat , colorscale="Jet", type="surface", showscale=FALSE, scene="scene2", name=" ", hovertemplate = paste("<i>𝛕-innovation<i>: %{x:.2f}", "<br>𝛕-productivity: %{y:.2f}<br>", "Estimate: %{z:.3f}")) %>% layout(scene2=list(camera=list(eye=list(x=-1.5, y=-1.5, z=0.5)), aspectratio=list(x=1, y=1, z=1), xaxis=list(title="𝛕-innovation", titlefont=list(size=20), tickfont=list(size=16)), yaxis=list(title="𝛕-productivity", titlefont=list(size=20), tickfont=list(size=16)), zaxis=list(title="Persistence", titlefont=list(size=20), tickfont=list(size=16))))
+#Conditional Skewness, Dispersion, and Kurtosis evaluated at percentiles of productivity
+skomega <- array(0, c(ntau))
+dispomega <- array(0, c(ntau))
+kurpomega <- array(0, c(ntau))
+for (q in 1:ntau){
+	omgqlag <- as.numeric(quantile(omglag, probs=vectau[q]))
+	skomega[q] <-  (WX(omega=omgqlag)%*%parWT[,ntau]+WX(omega=omgqlag)%*%parWT[,1]-2*WX(omega=omgqlag)%*%parWT[,6])/(WX(omega=omgqlag)%*%parWT[,ntau]-WX(omega=omgqlag)%*%parWT[,1])
+	dispomega[q] <- WX(omega=omgqlag)%*%parWT[,ntau]-WX(omega=omgqlag)%*%parWT[,1]
+	kurpomega[q] <- (WX(omega=omgqlag)%*%parWT[,(ntau-1)]-WX(omega=omgqlag)%*%parWT[,1])/(WX(omega=omgqlag)%*%parWT[,(ntau-2)]-WX(omega=omgqlag)%*%parWT[,2])
+}
+plot(vectau, kurpomega, type="l")
+########################################################################################
+#Individual Quantile Marginal Effects########################x############################
 #########################################################################################
 #Commands for Colors
 nrz <- length(vectau)
@@ -294,7 +325,7 @@ for (q in 1:ntau){
 ##################################################
 #Elasticity (over capital)
 kplot <- plot_ly(x=vectau, y=vectau, z=k3d, colorscale="Jet", type="surface", showscale=FALSE, scene="scene1", name=" ", hovertemplate = paste("<i>𝛕-output<i>: %{x:.2f}", "<br>𝛕-capital: %{y:.2f}<br>", "Estimate: %{z:.3f}")) %>% layout(scene1=list(camera=list(eye=list(x=-1.5, y=-1.5, z=0.5)), aspectratio=list(x=1, y=1, z=1), xaxis=list(title="𝛕-output"), yaxis=list(title="𝛕-capital"), zaxis=list(title="Capital Elasticity")))
-kplot
+# kplot
 # k3dplotly
 # Elasticity (over productivity)
 kwqplot <- plot_ly(x=vectau, y=vectau, z=kwq3d, colorscale="Jet", type="surface", showscale=FALSE, scene="scene1", name=" ", hovertemplate = paste("<i>𝛕-output<i>: %{x:.2f}", "<br>𝛕-productivity: %{y:.2f}<br>", "Estimate: %{z:.3f}")) %>% layout(scene1=list(camera=list(eye=list(x=-1.5, y=-1.5, z=0.5)), aspectratio=list(x=1, y=1, z=1), xaxis=list(title="𝛕-output"), yaxis=list(title="𝛕-productivity"), zaxis=list(title="Capital Elasticity")))
@@ -435,11 +466,11 @@ klmwqplot  <- plotly_json(klmwqplot, FALSE)
 kinpqplot  <- plotly_json(kinpqplot, FALSE)
 linpqplot   <- plotly_json(linpqplot, FALSE)
 minpqplot   <- plotly_json(minpqplot, FALSE)
-write(klmplot, "/Users/justindoty/Documents/Home/My_Website/static/jmp/main/klm3dplotly.json")
-write(klmwqplot , "/Users/justindoty/Documents/Home/My_Website/static/jmp/main/klmwq3dplotly.json")
-write(kinpqplot, "/Users/justindoty/Documents/Home/My_Website/static/jmp/mainext/kinpq3dplotly.json")
-write(linpqplot, "/Users/justindoty/Documents/Home/My_Website/static/jmp/mainext/linpq3dplotly.json")
-write(minpqplot, "/Users/justindoty/Documents/Home/My_Website/static/jmp/mainext/minpq3dplotly.json")
+# write(klmplot, "/Users/justindoty/Documents/Home/My_Website/static/jmp/main/klm3dplotly.json")
+# write(klmwqplot , "/Users/justindoty/Documents/Home/My_Website/static/jmp/main/klmwq3dplotly.json")
+# write(kinpqplot, "/Users/justindoty/Documents/Home/My_Website/static/jmp/mainext/kinpq3dplotly.json")
+# write(linpqplot, "/Users/justindoty/Documents/Home/My_Website/static/jmp/mainext/linpq3dplotly.json")
+# write(minpqplot, "/Users/justindoty/Documents/Home/My_Website/static/jmp/mainext/minpq3dplotly.json")
 #Combined Plot.ly Efficiecies
 hklmplot <- subplot(hkplot, hlplot, hmplot, shareX=TRUE) %>% layout(scene=list(aspectratio=list(x=.6, y=.6, z=.6), xaxis=list(title="𝛕-output", titlefont=list(size=18), tickfont=list(size=14)), yaxis=list(title="𝛕-capital", titlefont=list(size=18), tickfont=list(size=14)), zaxis=list(title="Capital", titlefont=list(size=18), tickfont=list(size=14))), 
 	scene2=list(aspectratio=list(x=.6, y=.6, z=.6), xaxis=list(title="𝛕-output", titlefont=list(size=18), tickfont=list(size=14)), yaxis=list(title="𝛕-labor", titlefont=list(size=18), tickfont=list(size=14)), zaxis=list(title="Labor", titlefont=list(size=18), tickfont=list(size=14))),
@@ -482,10 +513,10 @@ hklmplot   <- plotly_json(hklmplot, FALSE)
 hkinpqplot   <- plotly_json(hkinpqplot, FALSE)
 hlinpqplot   <- plotly_json(hlinpqplot, FALSE)
 hminpqplot   <- plotly_json(hminpqplot, FALSE)
-write(hklmplot, "/Users/justindoty/Documents/Home/My_Website/static/jmp/main/hklm3dplotly.json")
-write(hkinpqplot, "/Users/justindoty/Documents/Home/My_Website/static/jmp/mainext/hkinpq3dplotly.json")
-write(hlinpqplot, "/Users/justindoty/Documents/Home/My_Website/static/jmp/mainext/hlinpq3dplotly.json")
-write(hminpqplot, "/Users/justindoty/Documents/Home/My_Website/static/jmp/mainext/hminpq3dplotly.json")
+# write(hklmplot, "/Users/justindoty/Documents/Home/My_Website/static/jmp/main/hklm3dplotly.json")
+# write(hkinpqplot, "/Users/justindoty/Documents/Home/My_Website/static/jmp/mainext/hkinpq3dplotly.json")
+# write(hlinpqplot, "/Users/justindoty/Documents/Home/My_Website/static/jmp/mainext/hlinpq3dplotly.json")
+# write(hminpqplot, "/Users/justindoty/Documents/Home/My_Website/static/jmp/mainext/hminpq3dplotly.json")
 #Combined Productivities
 lmiwplot <- subplot(iwplot, lwplot, mwplot) %>% layout(scene=list(aspectratio=list(x=0.6, y=0.6, z=0.6), xaxis=list(title="𝛕-investment", titlefont=list(size=18), tickfont=list(size=14)), yaxis=list(title="𝛕-productivity", titlefont=list(size=18), tickfont=list(size=14)), zaxis=list(title="Investment", titlefont=list(size=18), tickfont=list(size=14))), 
 	scene2=list(aspectratio=list(x=0.6, y=0.6, z=0.6), xaxis=list(title="𝛕-labor", titlefont=list(size=18), tickfont=list(size=14)), yaxis=list(title="𝛕-productivity", titlefont=list(size=18), tickfont=list(size=14)), zaxis=list(title="Labor", titlefont=list(size=18), tickfont=list(size=14))),
@@ -512,8 +543,8 @@ lmiwkqplot <- lmiwkqplot %>% layout(annotations=annotationsw)
 #Save
 lmiwplot   <- plotly_json(lmiwplot, FALSE)
 lmiwkqplot   <- plotly_json(lmiwkqplot, FALSE)
-write(lmiwplot, "/Users/justindoty/Documents/Home/My_Website/static/jmp/main/lmiw3dplotly.json")
-write(lmiwkqplot, "/Users/justindoty/Documents/Home/My_Website/static/jmp/mainext/lmiwkq3dplotly.json")
+# write(lmiwplot, "/Users/justindoty/Documents/Home/My_Website/static/jmp/main/lmiw3dplotly.json")
+# write(lmiwkqplot, "/Users/justindoty/Documents/Home/My_Website/static/jmp/mainext/lmiwkq3dplotly.json")
 ######################################################################################################################################################################################
 #Productivity
 #####################################################################################################################################################################################
@@ -531,4 +562,4 @@ for (q in 1:ntau){
 omgplotly <- plot_ly(x=vectau, y=vectau, z=omg3dq, colorscale="Jet", type="surface", showscale=FALSE, scene="scene1", name=" ", hovertemplate = paste("<i>𝛕-innovation<i>: %{x:.2f}", "<br>𝛕-productivity: %{y:.2f}<br>", "Estimate: %{z:.3f}")) %>% layout(scene1=list(camera=list(eye=list(x=-1.5, y=-1.5, z=0.5)), aspectratio=list(x=1, y=1, z=1), xaxis=list(title="𝛕-innovation", titlefont=list(size=20), tickfont=list(size=16)), yaxis=list(title="𝛕-productivity", titlefont=list(size=20), tickfont=list(size=16)), zaxis=list(title="Persistence", titlefont=list(size=20), tickfont=list(size=16)))) 
 omgplotly
 omgplotly <- plotly_json(omgplotly, FALSE)
-write(omgplotly, "/Users/justindoty/Documents/Home/My_Website/static/jmp/main/omgplotly.json")
+# write(omgplotly, "/Users/justindoty/Documents/Home/My_Website/static/jmp/main/omgplotly.json")

@@ -36,8 +36,6 @@ parM <- results$resMmat
 parI <- results$resImat
 parWT <- results$resWTmat
 parBAR <- results$resBARmat
-parG1 <- results$g1coef[1]
-parGL <- results$gLcoef[1]
 parW1 <- results$resW1mat
 parYb <- results$resyb1bLmat
 parLb <- results$reslb1bLmat
@@ -47,7 +45,13 @@ parWTb <- results$reswtb1bLmat
 parW1b <- results$resw1b1bLmat
 WTminmax <- results$maxminwtmat
 #De-mean
-US <- US %>% mutate(Y=Y-mean(Y), K=K-mean(K), L=L-mean(L), M=M-mean(M), I=I-mean(I))
+stdY <- sd(US$Y)
+stdK <- sd(US$K)
+stdL <- sd(US$L)
+stdM <- sd(US$M)
+stdI <- sd(US$I)
+#De-mean
+US <- US %>% mutate(Y=(Y-mean(Y))/stdY, K=(K-mean(K))/stdK, L=(L-mean(L))/stdL, M=(M-mean(M))/stdM, I=(I-mean(I))/stdI)
 wmin <- min(US$Y)
 wmax <- max(US$Y)
 #Load the method used (e.g. Cobb, Translog, Hermite)
@@ -107,7 +111,7 @@ for (t in 2:T){
 	#Restrict the Support of Capital 
 	lnkdata[,t] <- (lnkdata[,t]>max(ttdata$K))*max(ttdata$K)+(lnkdata[,t]<min(ttdata$K))*min(ttdata$K)+(lnkdata[,t]<=max(ttdata$K))*(lnkdata[,t]>=min(ttdata$K))*lnkdata[,t]
 	#Productivity
-	omgdata[,t] <- rowSums(WX(omega=omgdata[,t-1])*wlspline(vectau=vectau, bvec=parWT, b1=parWTb[1], bL=parWTb[2], scoef=c(parG1, parGL), u=xidata[,t]))
+	omgdata[,t] <- rowSums(WX(omega=omgdata[,t-1])*lspline(vectau=vectau, bvec=parWT, b1=parWTb[1], bL=parWTb[2], u=xidata[,t]))
 	#Restrict the Support of Productivity
 	omgdata[,t] <- (omgdata[,t]>wmax)*wmax+(omgdata[,t]<wmin)*wmin+(omgdata[,t]<=wmax)*(omgdata[,t]>=wmin)*omgdata[,t]
 	#Exit Probabilities
@@ -325,8 +329,8 @@ klmwqplot <- klmwqplot %>% layout(annotations=annotationsklm)
 #Json
 klmplot   <- plotly_json(klmplot, FALSE)
 klmwqplot  <- plotly_json(klmwqplot, FALSE)
-# write(klmplot, "/Users/justindoty/Documents/Home/My_Website/static/jmp/selection/klm3dplotly.json")
-# write(klmwqplot , "/Users/justindoty/Documents/Home/My_Website/static/jmp/selection/klmwq3dplotly.json")
+write(klmplot, "/Users/justindoty/Documents/Home/My_Website/static/jmp/selection/klm3dplotly.json")
+write(klmwqplot , "/Users/justindoty/Documents/Home/My_Website/static/jmp/selection/klmwq3dplotly.json")
 #Combined Plot.ly Efficiecies
 hklmplot <- subplot(hkplot, hlplot, hmplot, shareX=TRUE) %>% layout(scene=list(aspectratio=list(x=.6, y=.6, z=.6), xaxis=list(title="𝛕-output", titlefont=list(size=18), tickfont=list(size=14)), yaxis=list(title="𝛕-capital", titlefont=list(size=18), tickfont=list(size=14)), zaxis=list(title="Capital", titlefont=list(size=18), tickfont=list(size=14))), 
 	scene2=list(aspectratio=list(x=.6, y=.6, z=.6), xaxis=list(title="𝛕-output", titlefont=list(size=18), tickfont=list(size=14)), yaxis=list(title="𝛕-labor", titlefont=list(size=18), tickfont=list(size=14)), zaxis=list(title="Labor", titlefont=list(size=18), tickfont=list(size=14))),
@@ -347,7 +351,7 @@ hklmplot_latex
 hklmplot <- hklmplot %>% layout(annotations=annotationshklm)
 #Save
 hklmplot   <- plotly_json(hklmplot, FALSE)
-# write(hklmplot, "/Users/justindoty/Documents/Home/My_Website/static/jmp/selection/hklm3dplotly.json")
+write(hklmplot, "/Users/justindoty/Documents/Home/My_Website/static/jmp/selection/hklm3dplotly.json")
 #Combined Productivities
 lmiwplot <- subplot(iwplot, lwplot, mwplot) %>% layout(scene=list(aspectratio=list(x=0.6, y=0.6, z=0.6), xaxis=list(title="𝛕-investment", titlefont=list(size=18), tickfont=list(size=14)), yaxis=list(title="𝛕-productivity", titlefont=list(size=18), tickfont=list(size=14)), zaxis=list(title="Investment", titlefont=list(size=18), tickfont=list(size=14))), 
 	scene2=list(aspectratio=list(x=0.6, y=0.6, z=0.6), xaxis=list(title="𝛕-labor", titlefont=list(size=18), tickfont=list(size=14)), yaxis=list(title="𝛕-productivity", titlefont=list(size=18), tickfont=list(size=14)), zaxis=list(title="Labor", titlefont=list(size=18), tickfont=list(size=14))),

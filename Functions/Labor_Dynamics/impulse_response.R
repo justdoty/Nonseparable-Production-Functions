@@ -17,7 +17,13 @@ select(id, year, lny, lnk1, lnk2, lnl, lnm, lni, age) %>% transmute(id=id, year=
 omegainit <- omega_est(idvar=US$id, timevar=US$year, Y=US$Y, A=US$A, K=US$K, L=US$L, M=US$M)$omega
 US <- US %>% mutate(omega=omegainit)
 #De-mean
-US <- US %>% mutate(Y=Y-mean(Y), K=K-mean(K), L=L-mean(L), M=M-mean(M), I=I-mean(I))
+stdY <- sd(US$Y)
+stdK <- sd(US$K)
+stdL <- sd(US$L)
+stdM <- sd(US$M)
+stdI <- sd(US$I)
+#De-mean
+US <- US %>% mutate(Y=(Y-mean(Y))/stdY, K=(K-mean(K))/stdK, L=(L-mean(L))/stdL, M=(M-mean(M))/stdM, I=(I-mean(I))/stdI)
 ########################################################################################################
 ##########################################Load Results############################################
 ########################################################################################################
@@ -144,7 +150,7 @@ ltitles <- list("Low Labor Shock<br>High Labor", "Low Labor Shock<br>Medium Labo
 Lplotly <- list()
 for (i in 1:12){
 	ldat <- data.frame(Time=labpath$Time, Y=labpath[,i+1])
-	Lplotly[[i]] <- plot_ly(ldat, x=~Time, y=~Y, type = 'scatter', mode = 'lines', showlegend=F, line=list(color="black"), name=ltitles[[i]], hovertemplate = paste("<i>Year<i>: %{x}", "<br>Labor Change: %{y:.2f}")) %>% layout(xaxis=list(title="Years", titlefont=list(size=18), tickfont=list(size=14)), yaxis=list(title="Labor", titlefont=list(size=18), tickfont=list(size=14), range=list(min(labpath[,-1]), max(labpath[,-1]))), shapes=list(hline(y=0)))
+	Lplotly[[i]] <- plot_ly(ldat, x=~Time, y=~Y, type = 'scatter', mode = 'lines', showlegend=F, line=list(color="black"), name=ltitles[[i]], hovertemplate = paste("<i>Year<i>: %{x}", "<br>Labor Change: %{y:.3f}")) %>% layout(xaxis=list(title="Years", titlefont=list(size=18), tickfont=list(size=14)), yaxis=list(title="Labor", titlefont=list(size=18), tickfont=list(size=14), range=list(min(labpath[,-1]), max(labpath[,-1]))), shapes=list(hline(y=0)))
 
 
 }
@@ -157,14 +163,14 @@ annotationsL <- list(list(x=0.11, y=0.97, text=TeX("\\boldsymbol{(a)\\,\\tau_{l_
 		list(x=0.11, y=0.45, text=TeX("\\boldsymbol{(g)\\,\\tau_{l_{t-1}}=0.75, \\tau_{l}=0.1}"), font=list(size=30), xref="paper", yref="paper", xanchor="center,", yanchor="bottom", showarrow=FALSE),
 		list(x=0.495, y=0.45, text=TeX("\\boldsymbol{(h)\\,\\tau_{l_{t-1}}=0.75, \\tau_{l}=0.5}"), font=list(size=30), xref="paper", yref="paper", xanchor="center,", yanchor="bottom", showarrow=FALSE),
 		list(x=0.88, y=0.45, text=TeX("\\boldsymbol{(i)\\,\\tau_{l_{t-1}}=0.75, \\tau_{l}=0.9}"), font=list(size=30), xref="paper", yref="paper", xanchor="center,", yanchor="bottom", showarrow=FALSE),
-		list(x=0.11, y=0.2, text=TeX("\\boldsymbol{(j)\\,\\tau_{l_{t-1}}=0.9, \\tau_{l}=0.1}"), font=list(size=30), xref="paper", yref="paper", xanchor="center,", yanchor="bottom", showarrow=FALSE),
-		list(x=0.495, y=0.2, text=TeX("\\boldsymbol{(k)\\,\\tau_{l_{t-1}}=0.9, \\tau_{l}=0.5}"), font=list(size=30), xref="paper", yref="paper", xanchor="center,", yanchor="bottom", showarrow=FALSE),
-		list(x=0.88, y=0.2, text=TeX("\\boldsymbol{(l)\\,\\tau_{l_{t-1}}=0.9, \\tau_{l}=0.9}"), font=list(size=30), xref="paper", yref="paper", xanchor="center,", yanchor="bottom", showarrow=FALSE))
+		list(x=0.11, y=0.25, text=TeX("\\boldsymbol{(j)\\,\\tau_{l_{t-1}}=0.9, \\tau_{l}=0.1}"), font=list(size=30), xref="paper", yref="paper", xanchor="center,", yanchor="bottom", showarrow=FALSE),
+		list(x=0.495, y=0.25, text=TeX("\\boldsymbol{(k)\\,\\tau_{l_{t-1}}=0.9, \\tau_{l}=0.5}"), font=list(size=30), xref="paper", yref="paper", xanchor="center,", yanchor="bottom", showarrow=FALSE),
+		list(x=0.88, y=0.25, text=TeX("\\boldsymbol{(l)\\,\\tau_{l_{t-1}}=0.9, \\tau_{l}=0.9}"), font=list(size=30), xref="paper", yref="paper", xanchor="center,", yanchor="bottom", showarrow=FALSE))
 L <- subplot(Lplotly[[1]], Lplotly[[2]], Lplotly[[3]], Lplotly[[4]], Lplotly[[5]], Lplotly[[6]], Lplotly[[7]], Lplotly[[8]], Lplotly[[9]], Lplotly[[10]], Lplotly[[11]], Lplotly[[12]], shareX=TRUE, shareY=TRUE, nrows=4)
 Lplot <- L %>% layout(annotations=annotationsL) %>% config(mathjax = 'cdn')
 Lplot
 Ljson <- plotly_json(L, FALSE)
-# write(Ljson, "/Users/justindoty/Documents/Home/My_Website/static/jmp/labor/impulseL.json")
+write(Ljson, "/Users/justindoty/Documents/Home/My_Website/static/jmp/labor/impulseL.json")
 
 
 

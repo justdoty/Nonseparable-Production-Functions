@@ -43,10 +43,15 @@ parIb <- results$resib1bLmat
 parWTb <- results$reswtb1bLmat
 parW1b <- results$resw1b1bLmat
 WTminmax <- results$maxminwtmat
+stdY <- sd(US$Y)
+stdK <- sd(US$K)
+stdL <- sd(US$L)
+stdM <- sd(US$M)
+stdI <- sd(US$I)
 #De-mean
-US <- US %>% mutate(Y=Y-mean(Y), K=K-mean(K), L=L-mean(L), M=M-mean(M), I=I-mean(I))
-wmin <- min(US$Y)
-wmax <- max(US$Y)
+US <- US %>% mutate(Y=(Y-mean(Y))/stdY, K=(K-mean(K))/stdK, L=(L-mean(L))/stdL, M=(M-mean(M))/stdM, I=(I-mean(I))/stdI)
+wmin <- -5
+wmax <- 5
 #Load the method used (e.g. Cobb, Translog, Hermite)
 method <- results$method
 resY <- results$resY
@@ -196,17 +201,17 @@ for (q1 in 1:length(tauxi)){
 labpath <- data.frame(1:T, lnlmed[,1,]-lnlmed[,2,], lnlmed[,3,]-lnlmed[,2,])
 names(labpath) <- c("Time", "LowLow", "LowMed", "LowHigh", "HighLow", "HighMed", "HighHigh")
 #Save to Selection_Bias Folder
-write.csv(labpath, "/Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Function_QR/Code/Functions/Selection_Bias/labpath.csv")
+# write.csv(labpath, "/Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Function_QR/Code/Functions/Selection_Bias/labpath.csv")
 #Paths for Materials at different ranks of materials shock
 matpath <- data.frame(1:T, lnmmed[,1,]-lnmmed[,2,], lnmmed[,3,]-lnmmed[,2,])
 names(matpath) <- c("Time", "LowLow", "LowMed", "LowHigh", "HighLow", "HighMed", "HighHigh")
 #Save to Selection_Bias Folder
-write.csv(matpath, "/Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Function_QR/Code/Functions/Selection_Bias/matpath.csv")
+# write.csv(matpath, "/Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Function_QR/Code/Functions/Selection_Bias/matpath.csv")
 #Paths for Productivity at different ranks of initial productivity shock
 omegapath <- data.frame(1:T, omgqmed[,1,]-omgqmed[,2,], omgqmed[,3,]-omgqmed[,2,])
 names(omegapath) <- c("Time", "LowLow", "LowMed", "LowHigh", "HighLow", "HighMed", "HighHigh")
 #Save to Selection_Bias Folder
-write.csv(omegapath, "/Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Function_QR/Code/Functions/Selection_Bias/omegapath.csv")
+# write.csv(omegapath, "/Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Function_QR/Code/Functions/Selection_Bias/omegapath.csv")
 #Plotting
 hline <- function(y = 0, color = "red") {
   list(
@@ -272,7 +277,7 @@ for (q1 in 1:length(tauxi)){
 # Capital
 kpath <- data.frame(1:T, qlnkmed[,1,]-qlnkmed[,2,], qlnkmed[,3,]-qlnkmed[,2,])
 names(kpath) <- c("Time", "LowLow", "LowMed", "LowHigh", "HighLow", "HighMed", "HighHigh")
-write.csv(kpath, "/Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Function_QR/Code/Functions/Selection_Bias/kpath.csv")
+# write.csv(kpath, "/Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Function_QR/Code/Functions/Selection_Bias/kpath.csv")
 ktitles <- list("Negative Shock<br>Low Investment", "Negative Shock<br>Medium Investment", "Negative Shock<br>High Investment", "Positive Shock<br>Low Investment", "Positive Shock<br>Medium Investment", "Positive Shock<br>High Investment")
 #Plotting
 Kplotly <- list()
@@ -294,7 +299,7 @@ W <- subplot(Wplotly[[1]], Wplotly[[2]], Wplotly[[3]], Wplotly[[4]], Wplotly[[5]
 Wplot <- W %>% layout(annotations=annotationsW) %>% config(mathjax = 'cdn')
 Wplot
 Wjson <- plotly_json(W, FALSE)
-write(Wjson, "/Users/justindoty/Documents/Home/My_Website/static/jmp/main/impulseW.json")
+# write(Wjson, "/Users/justindoty/Documents/Home/My_Website/static/jmp/main/impulseW.json")
 #Labor 
 annotationsL <- list(list(x=0.11, y=0.9, text=TeX("\\boldsymbol{(a) \\, \\tau_{\\xi}=0.1, \\tau_{l}=0.1}"), font=list(size=40), xref="paper", yref="paper", xanchor="center,", yanchor="bottom", showarrow=FALSE),
 	list(x=0.495, y=0.9, text=TeX("\\boldsymbol{(b)\\,\\tau_{\\xi}=0.1, \\tau_{l}=0.5}"), font=list(size=40), xref="paper", yref="paper", xanchor="center,", yanchor="bottom", showarrow=FALSE),
@@ -306,7 +311,7 @@ L <- subplot(Lplotly[[1]], Lplotly[[2]], Lplotly[[3]], Lplotly[[4]], Lplotly[[5]
 Lplot <- L %>% layout(annotations=annotationsL) %>% config(mathjax = 'cdn')
 Lplot
 Ljson <- plotly_json(L, FALSE)
-write(Ljson, "/Users/justindoty/Documents/Home/My_Website/static/jmp/main/impulseL.json")
+# write(Ljson, "/Users/justindoty/Documents/Home/My_Website/static/jmp/main/impulseL.json")
 #Materials
 annotationsM <- list(list(x=0.11, y=0.9, text=TeX("\\boldsymbol{(a) \\, \\tau_{\\xi}=0.1, \\tau_{m}=0.1}"), font=list(size=40), xref="paper", yref="paper", xanchor="center,", yanchor="bottom", showarrow=FALSE),
 	list(x=0.495, y=0.9, text=TeX("\\boldsymbol{(b)\\,\\tau_{\\xi}=0.1, \\tau_{m}=0.5}"), font=list(size=40), xref="paper", yref="paper", xanchor="center,", yanchor="bottom", showarrow=FALSE),
@@ -318,7 +323,7 @@ M <- subplot(Mplotly[[1]], Mplotly[[2]], Mplotly[[3]], Mplotly[[4]], Mplotly[[5]
 Mplot <- M %>% layout(annotations=annotationsM) %>% config(mathjax = 'cdn')
 Mplot
 Mjson <- plotly_json(M, FALSE)
-write(Mjson, "/Users/justindoty/Documents/Home/My_Website/static/jmp/main/impulseM.json")
+# write(Mjson, "/Users/justindoty/Documents/Home/My_Website/static/jmp/main/impulseM.json")
 #Investment
 annotationsI <- list(list(x=0.11, y=0.9, text=TeX("\\boldsymbol{(a) \\, \\tau_{\\xi}=0.1, \\tau_{i}=0.1}"), font=list(size=40), xref="paper", yref="paper", xanchor="center,", yanchor="bottom", showarrow=FALSE),
 	list(x=0.495, y=0.9, text=TeX("\\boldsymbol{(b)\\,\\tau_{\\xi}=0.1, \\tau_{i}=0.5}"), font=list(size=40), xref="paper", yref="paper", xanchor="center,", yanchor="bottom", showarrow=FALSE),
@@ -331,7 +336,7 @@ K <- subplot(Kplotly[[1]], Kplotly[[2]], Kplotly[[3]], Kplotly[[4]], Kplotly[[5]
 Kplot <- K %>% layout(annotations=annotationsI) %>% config(mathjax = 'cdn')
 Kplot
 Kjson <- plotly_json(K, FALSE)
-write(Kjson, "/Users/justindoty/Documents/Home/My_Website/static/jmp/main/impulseK.json")
+# write(Kjson, "/Users/justindoty/Documents/Home/My_Website/static/jmp/main/impulseK.json")
 
 
 

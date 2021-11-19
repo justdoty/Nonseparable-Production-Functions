@@ -18,7 +18,13 @@ select(id, year, lny, lnk1, lnk2, lnl, lnm, lni, age) %>% transmute(id=id, year=
 omegainit <- omega_est(idvar=US$id, timevar=US$year, Y=US$Y, A=US$A, K=US$K, L=US$L, M=US$M)$omega
 US <- US %>% mutate(omega=omegainit)
 #De-mean
-US <- US %>% mutate(Y=Y-mean(Y), K=K-mean(K), L=L-mean(L), M=M-mean(M), I=I-mean(I))
+stdY <- sd(US$Y)
+stdK <- sd(US$K)
+stdL <- sd(US$L)
+stdM <- sd(US$M)
+stdI <- sd(US$I)
+#De-mean
+US <- US %>% mutate(Y=(Y-mean(Y))/stdY, K=(K-mean(K))/stdK, L=(L-mean(L))/stdL, M=(M-mean(M))/stdM, I=(I-mean(I))/stdI)
 ########################################################################################################
 ##########################################Load Results############################################
 ########################################################################################################
@@ -34,8 +40,6 @@ parM <- results$resMmat
 parI <- results$resImat
 parWT <- results$resWTmat
 parBAR <- results$resBARmat
-parG1 <- results$g1coef[1]
-parGL <- results$gLcoef[1]
 parW1 <- results$resW1mat
 parYb <- results$resyb1bLmat
 parLb <- results$reslb1bLmat
@@ -146,7 +150,7 @@ for (q1 in 1:length(tauxi)){
 for (t in 2:T){
 	ttdata <- US %>% group_by(id) %>% slice(t)
 	for (q1 in 1:length(tauxi)){
-		omg <- rowSums(WX(omega=omgdata[,,q1][,t-1])*wlspline(vectau=vectau, bvec=parWT, b1=parWTb[1], bL=parWTb[2], scoef=c(parG1, parGL), u=xidata[,,q1][,t]))
+		omg <- rowSums(WX(omega=omgdata[,,q1][,t-1])*lspline(vectau=vectau, bvec=parWT, b1=parWTb[1], bL=parWTb[2], u=xidata[,,q1][,t]))
 		#Restricting the Supports
 		omgdata[,,q1][,t] <- (omg>wmax)*wmax+(omg<wmin)*wmin+(omg<=wmax)*(omg>=wmin)*omg
 		#Generate Capital According to Accumulation Process with Depreciation
@@ -160,7 +164,7 @@ for (t in 2:T){
 		# pdata[,,q1][,t] <- pnorm(WBAR(omega=omgdata[,,q1][,t], K=lnkdata[,,q1][,t])%*%parBAR)
 		#Generate Productivity
 		for (q2 in 1:length(tauinp)){
-			omgq <- rowSums(WX(omega=omgqdata[,,,q2][,,q1][,t-1])*wlspline(vectau=vectau, bvec=parWT, b1=parWTb[1], bL=parWTb[2], scoef=c(parG1, parGL), u=xidata[,,q1][,t]))
+			omgq <- rowSums(WX(omega=omgqdata[,,,q2][,,q1][,t-1])*lspline(vectau=vectau, bvec=parWT, b1=parWTb[1], bL=parWTb[2], u=xidata[,,q1][,t]))
 			#Restricting the Supports
 			omgqdata[,,,q2][,,q1][,t] <- (omgq>wmax)*wmax+(omgq<wmin)*wmin+(omgq<=wmax)*(omgq>=wmin)*omgq
 			# pqdata[,,,q2][,,q1][,t] <- pnorm(WBAR(omega=omgqdata[,,,q2][,,q1][,t], K=lnkdata[,,q1][,t])%*%parBAR)
@@ -175,7 +179,7 @@ for (t in 2:T){
 		for (q2 in 1:length(tauxi)){
 			pqdata[,,,q2][,,q1][,t] <- pnorm(WBAR(omega=omgqdata[,,,q2][,,q1][,t-1], K=mean(lnkdata[,,q1][,t]))%*%parBAR)
 			lab  <- rowSums(LX(K=mean(lnkdata[,,q1]), omega=omgdata[,,q1][,t])*lspline(vectau=vectau, bvec=parL, b1=parLb[1], bL=parLb[2], u=epsl[,,q2][,t]))
-			lnldata[,,,q2][,,q1][,t] <- (lab>max(ttdata$L))*max(ttdata$L)+(lab<min(ttdata$L))*min(ttdata$L)+(lab<=max(ttdata$L))*(lab>=min(ttdata$L))*lab
+			lnldata[,,,q2][,,q1][,t] <- (lab>3*max(ttdata$L))*3*max(ttdata$L)+(lab<3*min(ttdata$L))*3*min(ttdata$L)+(lab<=3*max(ttdata$L))*(lab>=3*min(ttdata$L))*lab
 		}
 	}
 }
@@ -250,11 +254,11 @@ Lplotly <- list()
 Mplotly <- list()
 for (i in 1:6){
 	wdat <- data.frame(Time=omegapath$Time, Y=omegapath[,i+1], Z=omegamain[,i+1])
-	Wplotly[[i]] <- plot_ly(wdat, x=~Time, y=~Y, type = 'scatter', mode = 'lines', showlegend=F, line=list(color="black"), name=wtitlesS[[i]], hovertemplate = paste("<i>Year<i>: %{x}", "<br>Productivity Change: %{y:.2f}")) %>% add_trace(y = ~Z, mode = 'lines', showlegend=F, line=list(color="blue", dash="dash"), name=wtitlesNOS[[i]], hovertemplate = paste("<i>Year<i>: %{x}", "<br>Productivity Change: %{y:.2f}")) %>% layout(xaxis=list(title="Years", titlefont=list(size=18), tickfont=list(size=14)), yaxis=list(title="Productivity", titlefont=list(size=18), tickfont=list(size=14), range=list(min(min(omegapath[,-1]), min(omegamain[,-1])), max(max(omegapath[,-1]), max(omegamain[,-1])))), shapes=list(hline(y=0)))
+	Wplotly[[i]] <- plot_ly(wdat, x=~Time, y=~Y, type = 'scatter', mode = 'lines', showlegend=F, line=list(color="black"), name=wtitlesS[[i]], hovertemplate = paste("<i>Year<i>: %{x}", "<br>Productivity Change: %{y:.3f}")) %>% add_trace(y = ~Z, mode = 'lines', showlegend=F, line=list(color="blue", dash="dash"), name=wtitlesNOS[[i]], hovertemplate = paste("<i>Year<i>: %{x}", "<br>Productivity Change: %{y:.3f}")) %>% layout(xaxis=list(title="Years", titlefont=list(size=18), tickfont=list(size=14)), yaxis=list(title="Productivity", titlefont=list(size=18), tickfont=list(size=14), range=list(min(min(omegapath[,-1]), min(omegamain[,-1])), max(max(omegapath[,-1]), max(omegamain[,-1])))), shapes=list(hline(y=0)))
 	ldat <- data.frame(Time=labpath$Time, Y=labpath[,i+1], Z=labmain[,i+1])
-	Lplotly[[i]] <- plot_ly(ldat, x=~Time, y=~Y, type = 'scatter', mode = 'lines', showlegend=F, line=list(color="black"), name=ltitlesS[[i]], hovertemplate = paste("<i>Year<i>: %{x}", "<br>Labor Change: %{y:.2f}")) %>% add_trace(y = ~Z, mode = 'lines', showlegend=F,line=list(color="blue", dash="dash"), name=ltitlesNOS[[i]], hovertemplate = paste("<i>Year<i>: %{x}", "<br>Labor Change: %{y:.2f}")) %>% layout(xaxis=list(title="Years", titlefont=list(size=18), tickfont=list(size=14)), yaxis=list(title="Labor", titlefont=list(size=18), tickfont=list(size=14), range=list(min(min(labpath[,-1]), min(labmain[,-1])), max(max(labpath[,-1]), max(labmain[,-1])))), shapes=list(hline(y=0)))
+	Lplotly[[i]] <- plot_ly(ldat, x=~Time, y=~Y, type = 'scatter', mode = 'lines', showlegend=F, line=list(color="black"), name=ltitlesS[[i]], hovertemplate = paste("<i>Year<i>: %{x}", "<br>Labor Change: %{y:.3f}")) %>% add_trace(y = ~Z, mode = 'lines', showlegend=F,line=list(color="blue", dash="dash"), name=ltitlesNOS[[i]], hovertemplate = paste("<i>Year<i>: %{x}", "<br>Labor Change: %{y:.3f}")) %>% layout(xaxis=list(title="Years", titlefont=list(size=18), tickfont=list(size=14)), yaxis=list(title="Labor", titlefont=list(size=18), tickfont=list(size=14), range=list(min(min(labpath[,-1]), min(labmain[,-1])), max(max(labpath[,-1]), max(labmain[,-1])))), shapes=list(hline(y=0)))
 	mdat <- data.frame(Time=matpath$Time, Y=matpath[,i+1], Z=matmain[,i+1])
-	Mplotly[[i]] <- plot_ly(mdat, x=~Time, y=~Y, type = 'scatter', mode = 'lines', showlegend=F, line=list(color="black"), name=mtitlesS[[i]], hovertemplate = paste("<i>Year<i>: %{x}", "<br>Materials Change: %{y:.2f}")) %>% add_trace(y = ~Z, mode = 'lines', showlegend=F,line=list(color="blue", dash="dash"), name=mtitlesNOS[[i]], hovertemplate = paste("<i>Year<i>: %{x}", "<br>Materials Change: %{y:.2f}")) %>% layout(xaxis=list(title="Years", titlefont=list(size=18), tickfont=list(size=14)), yaxis=list(title="Materials", titlefont=list(size=18), tickfont=list(size=14), range=list(min(min(matpath[,-1]), min(matmain[,-1])), max(max(matpath[,-1]), max(matmain[,-1])))), shapes=list(hline(y=0)))
+	Mplotly[[i]] <- plot_ly(mdat, x=~Time, y=~Y, type = 'scatter', mode = 'lines', showlegend=F, line=list(color="black"), name=mtitlesS[[i]], hovertemplate = paste("<i>Year<i>: %{x}", "<br>Materials Change: %{y:.3f}")) %>% add_trace(y = ~Z, mode = 'lines', showlegend=F,line=list(color="blue", dash="dash"), name=mtitlesNOS[[i]], hovertemplate = paste("<i>Year<i>: %{x}", "<br>Materials Change: %{y:.3f}")) %>% layout(xaxis=list(title="Years", titlefont=list(size=18), tickfont=list(size=14)), yaxis=list(title="Materials", titlefont=list(size=18), tickfont=list(size=14), range=list(min(min(matpath[,-1]), min(matmain[,-1])), max(max(matpath[,-1]), max(matmain[,-1])))), shapes=list(hline(y=0)))
 }
 # # Capital##################################################################################################
 # I do the same procedure for capital except at different levels of shock to investment
@@ -314,7 +318,7 @@ ktitlesS <- list("Selection-Corrected<br>Negative Shock<br>Low Investment", "Sel
 Kplotly <- list()
 for (i in 1:6){
 	kdat <- data.frame(Time=kpath$Time, Y=kpath[,i+1], Z=kmain[,i+1])
-	Kplotly[[i]] <- plot_ly(kdat, x=~Time, y=~Y, type = 'scatter', mode = 'lines', showlegend=F, line=list(color="black"), name=ktitlesS[[i]], hovertemplate = paste("<i>Year<i>: %{x}", "<br>Capital Change: %{y:.2f}")) %>% add_trace(y = ~Z, mode = 'lines', showlegend=F,line=list(color="blue", dash="dash"), name=ktitlesNOS[[i]], hovertemplate = paste("<i>Year<i>: %{x}", "<br>Capital Change: %{y:.2f}")) %>% layout(xaxis=list(title="Years", titlefont=list(size=18), tickfont=list(size=14)), yaxis=list(title="Capital", titlefont=list(size=18), tickfont=list(size=14), range=list(min(min(kpath[,-1]), min(kmain[,-1])), max(max(kpath[,-1]), max(kmain[,-1])))), shapes=list(hline(y=0)))
+	Kplotly[[i]] <- plot_ly(kdat, x=~Time, y=~Y, type = 'scatter', mode = 'lines', showlegend=F, line=list(color="black"), name=ktitlesS[[i]], hovertemplate = paste("<i>Year<i>: %{x}", "<br>Capital Change: %{y:.3f}")) %>% add_trace(y = ~Z, mode = 'lines', showlegend=F,line=list(color="blue", dash="dash"), name=ktitlesNOS[[i]], hovertemplate = paste("<i>Year<i>: %{x}", "<br>Capital Change: %{y:.3f}")) %>% layout(xaxis=list(title="Years", titlefont=list(size=18), tickfont=list(size=14)), yaxis=list(title="Capital", titlefont=list(size=18), tickfont=list(size=14), range=list(min(min(kpath[,-1]), min(kmain[,-1])), max(max(kpath[,-1]), max(kmain[,-1])))), shapes=list(hline(y=0)))
 }
 # ##############################################################
 #For Plot.ly
@@ -356,10 +360,10 @@ Mplot
 Mjson <- plotly_json(M, FALSE)
 write(Mjson, "/Users/justindoty/Documents/Home/My_Website/static/jmp/selection/impulseM.json")
 #Capital
-annotationsI <- list(list(x=0.11, y=0.9, text=TeX("\\boldsymbol{(a) \\, \\tau_{\\xi}=0.1, \\tau_{i}=0.1}"), font=list(size=40), xref="paper", yref="paper", xanchor="center,", yanchor="bottom", showarrow=FALSE),
+annotationsI <- list(list(x=0.13, y=0.9, text=TeX("\\boldsymbol{(a) \\, \\tau_{\\xi}=0.1, \\tau_{i}=0.1}"), font=list(size=40), xref="paper", yref="paper", xanchor="center,", yanchor="bottom", showarrow=FALSE),
 	list(x=0.495, y=0.9, text=TeX("\\boldsymbol{(b)\\,\\tau_{\\xi}=0.1, \\tau_{i}=0.5}"), font=list(size=40), xref="paper", yref="paper", xanchor="center,", yanchor="bottom", showarrow=FALSE),
 		list(x=0.88, y=0.9, text=TeX("\\boldsymbol{(c)\\,\\tau_{\\xi}=0.1, \\tau_{i}=0.9}"), font=list(size=40), xref="paper", yref="paper", xanchor="center,", yanchor="bottom", showarrow=FALSE),
-		list(x=0.11, y=0.46, text=TeX("\\boldsymbol{(d)\\,\\tau_{\\xi}=0.9, \\tau_{i}=0.1}"), font=list(size=40), xref="paper", yref="paper", xanchor="center,", yanchor="bottom", showarrow=FALSE),
+		list(x=0.13, y=0.46, text=TeX("\\boldsymbol{(d)\\,\\tau_{\\xi}=0.9, \\tau_{i}=0.1}"), font=list(size=40), xref="paper", yref="paper", xanchor="center,", yanchor="bottom", showarrow=FALSE),
 		list(x=0.495, y=0.46, text=TeX("\\boldsymbol{(e)\\,\\tau_{\\xi}=0.9, \\tau_{i}=0.5}"), font=list(size=40), xref="paper", yref="paper", xanchor="center,", yanchor="bottom", showarrow=FALSE),
 		list(x=0.88, y=0.46, text=TeX("\\boldsymbol{(f)\\,\\tau_{\\xi}=0.9, \\tau_{i}=0.9}"), font=list(size=40), xref="paper", yref="paper", xanchor="center,", yanchor="bottom", showarrow=FALSE))
 K <- subplot(Kplotly[[1]], Kplotly[[2]], Kplotly[[3]], Kplotly[[4]], Kplotly[[5]], Kplotly[[6]], shareX=TRUE, shareY=TRUE, nrows=2)
