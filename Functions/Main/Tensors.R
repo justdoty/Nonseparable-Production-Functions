@@ -3,20 +3,9 @@
 ####################################################################################################
 #The Production Function: (Hicks Neutral Cobb-Douglas and Translog, Non Hicks Neutral Cobb-Douglass and Translog
 #and Non Hicks Neutral Tensor Product Hermite Polynomial)
-PF <- function(K, L, M, omega, method){
-	if (method=="cobbN"){
-		prodf <- cbind(1, K, L, M)
-	} else if (method=="transN") {
-		prodf <- cbind(1, K, L, M, K*L, L*M, K*M, K^2, L^2, M^2)
-	} else if (method=="cobb"){
-		prod <- cbind(K, L, M)
-		prodf <- cbind(1, prod, sweep(prod, 1, omega, `*`))
-	} else if (method=="trans"){
-		prod <- cbind(K, L, M, K*L, L*M, K*M, K^2, L^2, M^2)
-		prodf <- cbind(1, omega, prod, sweep(prod, 1, omega, `*`))
-	} else if (method=="hermite"){
-		prodf <- cbind(1, tensor(c(1,2,2,2), cbind(omega, K, L, M))[,-1])
-	} 
+PF <- function(K, L, M, omega){
+	prod <- cbind(K, L, M, K*L, L*M, K*M, K^2, L^2, M^2)
+	prodf <- cbind(1, omega, prod, sweep(prod, 1, omega, `*`))
 	return(prodf)
 }
 #Labor Decision Rule
@@ -35,8 +24,6 @@ LXD <- function(K, omega, par, pos, sdpos){
 }
 #Material Input Decision Rule
 MX <- function(K, L, omega){
-	# Mdat <- cbind(K, omega)
-	# M <- c(3,3)
 	Mdat <- cbind(K, L, omega)
 	M <- c(2,2,2)
 	MX <- cbind(1, tensor(M=M, vars=Mdat)[,-1])
@@ -44,8 +31,6 @@ MX <- function(K, L, omega){
 }
 #Derivative of Materials Rule
 MXD <- function(K, L, omega, par, pos, sdpos){
-	# Mdat <- cbind(K, omega)
-	# M <- c(3,3)
 	Mdat <- cbind(K, L, omega)
 	M <- c(2,2,2)
 	dten <- dtensor(M=M, vars=Mdat, pos=pos, sdpos=sdpos)

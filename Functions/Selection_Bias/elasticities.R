@@ -198,6 +198,34 @@ hkpost <- c(12, 15, 17, 18)
 hlpost <- c(13, 15, 16, 19)
 #Hicks-Materials
 hmpost <- c(14, 16, 17, 20)
+#Conditional Skewness, Dispersion, and Kurtosis evaluated at percentiles of productivity
+skomega <- array(0, c(ntau))
+dispomega <- array(0, c(ntau))
+kurpomega <- array(0, c(ntau))
+for (q in 1:ntau){
+	omgqlag <- as.numeric(quantile(omglag, probs=vectau[q]))
+	skomega[q] <-  (WX(omega=omgqlag)%*%parWT[,ntau]+WX(omega=omgqlag)%*%parWT[,1]-2*WX(omega=omgqlag)%*%parWT[,6])/(WX(omega=omgqlag)%*%parWT[,ntau]-WX(omega=omgqlag)%*%parWT[,1])
+	dispomega[q] <- WX(omega=omgqlag)%*%parWT[,ntau]-WX(omega=omgqlag)%*%parWT[,1]
+	kurpomega[q] <- (WX(omega=omgqlag)%*%parWT[,(ntau-1)]-WX(omega=omgqlag)%*%parWT[,1])/(WX(omega=omgqlag)%*%parWT[,(ntau-2)]-WX(omega=omgqlag)%*%parWT[,2])
+}
+displot <- plot_ly(data.frame(x=vectau, y=dispomega), x=~x, y=~y, type="scatter", mode="lines", line=list(color="black"), showlegend=F, name="", hovertemplate = paste("<i>𝛕-productivity<i>: %{x}", "<br>Conditional Dispersion: %{y:.3f}")) %>% layout(xaxis=list(title="𝛕-productivity", titlefont=list(size=30), tickfont=list(size=25)), yaxis=list(title="Conditional Dispersion", titlefont=list(size=18), tickfont=list(size=25)))
+skewplot <- plot_ly(data.frame(x=vectau, y=skomega), x=~x, y=~y, type="scatter", mode="lines", line=list(color="black"), showlegend=F, name="", hovertemplate = paste("<i>𝛕-productivity<i>: %{x}", "<br>Conditional Skewness: %{y:.3f}")) %>% layout(xaxis=list(title="𝛕-productivity", titlefont=list(size=30), tickfont=list(size=25)), yaxis=list(title="Conditional Skewness", titlefont=list(size=18), tickfont=list(size=25)))
+kurplot <- plot_ly(data.frame(x=vectau, y=kurpomega), x=~x, y=~y, type="scatter", mode="lines", line=list(color="black"), showlegend=F, name="", hovertemplate = paste("<i>𝛕-productivity<i>: %{x}", "<br>Conditional Kurtosis: %{y:.3f}")) %>% layout(xaxis=list(title="𝛕-productivity", titlefont=list(size=30), tickfont=list(size=25)), yaxis=list(title="Conditional Kurtosis", titlefont=list(size=18), tickfont=list(size=25)))
+#Annotate
+latexannotationsdist <- list(list(x=0.05, y=0.95, text="(a) Conditional Dispersion", font=list(size=35, family="Times New Roman"), xref="paper", yref="paper", xanchor="center,", yanchor="bottom", showarrow=FALSE),
+	list(x=0.5, y=0.95, text="(b) Conditional Skewness", font=list(size=35, family="Times New Roman"), xref="paper", yref="paper", xanchor="center,", yanchor="bottom", showarrow=FALSE),
+	list(x=0.95, y=0.95, text="(c) Conditional Kurtosis", font=list(size=35, family="Times New Roman"), xref="paper", yref="paper", xanchor="center,", yanchor="bottom", showarrow=FALSE))
+annotationsdist <- list(list(x=0.05, y=0.95, text="(a) Conditional Dispersion", font=list(size=18, family="Times New Roman"), xref="paper", yref="paper", xanchor="center,", yanchor="bottom", showarrow=FALSE),
+	list(x=0.5, y=0.95, text="(b) Conditional Skewness", font=list(size=18, family="Times New Roman"), xref="paper", yref="paper", xanchor="center,", yanchor="bottom", showarrow=FALSE),
+	list(x=0.95, y=0.95, text="(c) Conditional Kurtosis", font=list(size=18, family="Times New Roman"), xref="paper", yref="paper", xanchor="center,", yanchor="bottom", showarrow=FALSE))
+omgdist <- subplot(displot, skewplot, kurplot, nrows=1, shareX=TRUE) %>% layout(scene=list(aspectratio=list(x=.6, y=.6, z=.6), xaxis=list(title="𝛕-productivity", titlefont=list(size=25), tickfont=list(size=25)), yaxis=list(title="Conditional Dispersion", titlefont=list(size=18), tickfont=list(size=20))), 
+	scene2=list(aspectratio=list(x=.6, y=.6, z=.6), xaxis=list(title="𝛕-productivity", titlefont=list(size=25), tickfont=list(size=25)), yaxis=list(title="Conditional Skewness", titlefont=list(size=18), tickfont=list(size=25))),
+	scene3=list(aspectratio=list(x=.6, y=.6, z=.6), xaxis=list(title="𝛕-productivity", titlefont=list(size=25), tickfont=list(size=25)), yaxis=list(title="Conditional Kurtosis", titlefont=list(size=18), tickfont=list(size=25))))
+latexomgdist <- omgdist %>% layout(annotations=latexannotationsdist)
+latexomgdist
+omgdist <- omgdist %>% layout(annotations=annotationsdist)
+omgdist   <- plotly_json(omgdist, FALSE)
+write(omgdist, "/Users/justindoty/Documents/Home/My_Website/static/jmp/selection/omgdist.json")
 ########################################################################################
 #Individual Quantile Marginal Effects####################################################
 #########################################################################################

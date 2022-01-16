@@ -1,7 +1,8 @@
-#This function is used to do a basic LP estimation of productivity to use as initial model estimates
+# This function is used to do a basic LP estimation of productivity to use as initial model estimates
 #and initial draw for productivity in the stEM algorithm
+# source('NLPFQR/FUN/Auxfuns.R')
 #Function that estimates productivity (omega)
-omega_est <- function(idvar, timevar, Y, A, K, L, M, R){
+omega_est <- function(idvar, timevar, Y, A, K, L, M){
   idcon <- duplicated(idvar)
   idlag <- duplicated(idvar, fromLast=TRUE)
 	regvars <- data.frame(reg1=L, reg2=K, reg3=M, reg4=K^2, reg5=M^2)
@@ -32,7 +33,7 @@ omega_est <- function(idvar, timevar, Y, A, K, L, M, R){
   LPmZ <- cbind(K[idcon], M[idlag])
   #LP estimates for Capital and Labor
   LPhat <- optim(par=LPinit, fn=function(b) LP_Lambda(b, mY=LPmY, mX=LPmX, mlX=LPmlX, 
-    fitphi=LPfitphi, fitlagphi=LPfitlagphi, Rlag=R[idlag]), method="BFGS")$par
+    fitphi=LPfitphi, fitlagphi=LPfitlagphi), method="BFGS")$par
   LPvec <- c(LPhat[1], LPLabor, LPhat[2])
   omega <- Y-cbind(K, L, M)%*%LPvec
   return(list(LPhat=LPvec, omega=omega, LPresid=LPresid))
@@ -41,16 +42,17 @@ omega_est <- function(idvar, timevar, Y, A, K, L, M, R){
 #Functions for Estimating LP Coefficients
 ###########################################################################################
 #Function that defines the residuals
-LP_Lambda <- function(b, mY, mX, mlX, fitphi, fitlagphi, Rlag){
+LP_Lambda <- function(b, mY, mX, mlX, fitphi, fitlagphi){
   b <- as.matrix(as.numeric(b))
-  Rind <- Rlag>0
   A <- fitphi-mX%*%b[1:ncol(mX)]
-  omegalag <- fitlagphi-mlX%*%b[1:ncol(mX)]
-  B1 <- c(!Rind)*cbind(omegalag, omegalag^2, omegalag^3)
-  B2 <- c(Rind)*tensor(M=c(3,3), vars=cbind(omegalag, Rlag))[,-1]
-  omegapol <- cbind(1, B1, B2)
+  B <- fitlagphi-mlX%*%b[1:ncol(mX)]
+  omegapol <- poly(B, degree=3, raw=TRUE)
+  omegapol <- cbind(1, omegapol)
   gb <- solve(crossprod(omegapol), tol=1e-100)%*%t(omegapol)%*%A
   wfit <- omegapol%*%gb
+  # step1 <- lm(A~B)
+  # step1param <- as.numeric(coef(step1))
+  # wfit <- cbind(1, B)%*%step1param
   resid <- mY-mX%*%b[1:ncol(mX)]-wfit
   crit <- crossprod(resid)
   return(crit)

@@ -35,7 +35,7 @@ lspline <- function(vectau, bvec, b1, bL, u){
     #Initialization
     qpar <- (matrix(rep(bvec[,1], each=length(u)), nrow=length(u))+as.matrix((u-vectau[1])/(vectau[2]-vectau[1]))%*%t((bvec[,2]-bvec[,1])))*(vectau[1]<=u)*(u<vectau[2])
     for (q in 2:(length(vectau)-1)){
-        qpar <- qpar+(matrix(rep(bvec[,q], each=length(u)), nrow=length(u))++as.matrix((u-vectau[q])/(vectau[q+1]-vectau[q]))%*%t((bvec[,q+1]-bvec[,q])))*(vectau[q]<=u)*(u<vectau[q+1])
+        qpar <- qpar+(matrix(rep(bvec[,q], each=length(u)), nrow=length(u))+as.matrix((u-vectau[q])/(vectau[q+1]-vectau[q]))%*%t((bvec[,q+1]-bvec[,q])))*(vectau[q]<=u)*(u<vectau[q+1])
 
     }
     lspline <- qb1+qpar+qbL

@@ -181,6 +181,59 @@ romg3dq <- omg3dq
 omgr3dq <- omg3dq
 rdw <- omg3dq
 rdr <- omg3dq
+#Conditional Skewness, Dispersion, and Kurtosis evaluated at percentiles of productivity
+skomega <- array(0, c(ntau)); rskomega <- skomega
+dispomega <- array(0, c(ntau)); rdispomega <- dispomega
+kurpomega <- array(0, c(ntau)); rkurpomega <- kurpomega
+for (q in 1:ntau){
+	omgq <- rep(as.numeric(quantile(omglag, probs=vectau[q])), length(omglag))
+	rlagq <- rep(as.numeric(quantile(rlag, probs=vectau[q])), length(rlag))
+	#Productivity for Non-R&D Firms
+	WXNR <- rowSums(WX(omega=omgq, R=rlag, Rind=rind)*lspline(vectau=vectau, bvec=parWT, b1=parWTb[1], bL=parWTb[2], u=xicon))[!rind]
+	#Productivity for R&D Firms
+	WXR <- rowSums(WX(omega=omgq, R=rlag, Rind=rind)*lspline(vectau=vectau, bvec=parWT, b1=parWTb[1], bL=parWTb[2], u=xicon))[rind]
+	#Measures for non-R&D Firms
+	skomega[q] <-  (quantile(WXNR, probs=vectau[ntau])+quantile(WXNR, probs=vectau[1])-2*quantile(WXNR, probs=vectau[6]))/(quantile(WXNR, probs=vectau[ntau])-quantile(WXNR, probs=vectau[1]))
+	dispomega[q] <- quantile(WXNR, probs=vectau[ntau])-quantile(WXNR, probs=vectau[1])
+	kurpomega[q] <- (quantile(WXNR, probs=vectau[ntau-1])-quantile(WXNR, probs=vectau[1]))/(quantile(WXNR, probs=vectau[ntau-2])-quantile(WXNR, probs=vectau[2]))
+	#Measures for R&D Firms
+	rskomega[q] <-  (quantile(WXR, probs=vectau[ntau])+quantile(WXR, probs=vectau[1])-2*quantile(WXR, probs=vectau[6]))/(quantile(WXR, probs=vectau[ntau])-quantile(WXR, probs=vectau[1]))
+	rdispomega[q] <- quantile(WXR, probs=vectau[ntau])-quantile(WXR, probs=vectau[1])
+	rkurpomega[q] <- (quantile(WXR, probs=vectau[ntau-1])-quantile(WXR, probs=vectau[1]))/(quantile(WXR, probs=vectau[ntau-2])-quantile(WXR, probs=vectau[2]))
+}
+#Non-R&D Firms
+displot <- plot_ly(data.frame(x=vectau, y=dispomega), x=~x, y=~y, type="scatter", mode="lines", line=list(color="black"), showlegend=F, name="", hovertemplate = paste("<i>𝛕-productivity<i>: %{x}", "<br>Conditional Dispersion: %{y:.3f}")) %>% layout(xaxis=list(title="𝛕-productivity", titlefont=list(size=30), tickfont=list(size=25)), yaxis=list(title="Conditional Dispersion", titlefont=list(size=18), tickfont=list(size=25)))
+skewplot <- plot_ly(data.frame(x=vectau, y=skomega), x=~x, y=~y, type="scatter", mode="lines", line=list(color="black"), showlegend=F, name="", hovertemplate = paste("<i>𝛕-productivity<i>: %{x}", "<br>Conditional Skewness: %{y:.3f}")) %>% layout(xaxis=list(title="𝛕-productivity", titlefont=list(size=30), tickfont=list(size=25)), yaxis=list(title="Conditional Skewness", titlefont=list(size=18), tickfont=list(size=25)))
+kurplot <- plot_ly(data.frame(x=vectau, y=kurpomega), x=~x, y=~y, type="scatter", mode="lines", line=list(color="black"), showlegend=F, name="", hovertemplate = paste("<i>𝛕-productivity<i>: %{x}", "<br>Conditional Kurtosis: %{y:.3f}")) %>% layout(xaxis=list(title="𝛕-productivity", titlefont=list(size=30), tickfont=list(size=25)), yaxis=list(title="Conditional Kurtosis", titlefont=list(size=18), tickfont=list(size=25)))
+#R&D Firms
+rdisplot <- plot_ly(data.frame(x=vectau, y=rdispomega), x=~x, y=~y, type="scatter", mode="lines", line=list(color="black"), showlegend=F, name="", hovertemplate = paste("<i>𝛕-productivity<i>: %{x}", "<br>Conditional Dispersion: %{y:.3f}")) %>% layout(xaxis=list(title="𝛕-productivity", titlefont=list(size=30), tickfont=list(size=25)), yaxis=list(title="Conditional Dispersion", titlefont=list(size=18), tickfont=list(size=25)))
+rskewplot <- plot_ly(data.frame(x=vectau, y=rskomega), x=~x, y=~y, type="scatter", mode="lines", line=list(color="black"), showlegend=F, name="", hovertemplate = paste("<i>𝛕-productivity<i>: %{x}", "<br>Conditional Skewness: %{y:.3f}")) %>% layout(xaxis=list(title="𝛕-productivity", titlefont=list(size=30), tickfont=list(size=25)), yaxis=list(title="Conditional Skewness", titlefont=list(size=18), tickfont=list(size=25)))
+rkurplot <- plot_ly(data.frame(x=vectau, y=rkurpomega), x=~x, y=~y, type="scatter", mode="lines", line=list(color="black"), showlegend=F, name="", hovertemplate = paste("<i>𝛕-productivity<i>: %{x}", "<br>Conditional Kurtosis: %{y:.3f}")) %>% layout(xaxis=list(title="𝛕-productivity", titlefont=list(size=30), tickfont=list(size=25)), yaxis=list(title="Conditional Kurtosis", titlefont=list(size=18), tickfont=list(size=25)))
+#Annotate
+latexannotationsdist <- list(list(x=0.05, y=0.9, text="(a) Conditional Dispersion", font=list(size=35, family="Times New Roman"), xref="paper", yref="paper", xanchor="center,", yanchor="bottom", showarrow=FALSE),
+	list(x=0.5, y=0.9, text="(b) Conditional Skewness", font=list(size=35, family="Times New Roman"), xref="paper", yref="paper", xanchor="center,", yanchor="bottom", showarrow=FALSE),
+	list(x=0.95, y=0.9, text="(c) Conditional Kurtosis", font=list(size=35, family="Times New Roman"), xref="paper", yref="paper", xanchor="center,", yanchor="bottom", showarrow=FALSE))
+annotationsdist <- list(list(x=0.05, y=0.9, text="(a) Conditional Dispersion", font=list(size=18, family="Times New Roman"), xref="paper", yref="paper", xanchor="center,", yanchor="bottom", showarrow=FALSE),
+	list(x=0.5, y=0.9, text="(b) Conditional Skewness", font=list(size=18, family="Times New Roman"), xref="paper", yref="paper", xanchor="center,", yanchor="bottom", showarrow=FALSE),
+	list(x=0.95, y=0.9, text="(c) Conditional Kurtosis", font=list(size=18, family="Times New Roman"), xref="paper", yref="paper", xanchor="center,", yanchor="bottom", showarrow=FALSE))
+#Non-R&D Firms
+omgdist <- subplot(displot, skewplot, kurplot, nrows=1, shareX=TRUE) %>% layout(scene=list(aspectratio=list(x=.6, y=.6, z=.6), xaxis=list(title="𝛕-productivity", titlefont=list(size=25), tickfont=list(size=25)), yaxis=list(title="Conditional Dispersion", titlefont=list(size=18), tickfont=list(size=20))), 
+	scene2=list(aspectratio=list(x=.6, y=.6, z=.6), xaxis=list(title="𝛕-productivity", titlefont=list(size=25), tickfont=list(size=25)), yaxis=list(title="Conditional Skewness", titlefont=list(size=18), tickfont=list(size=25))),
+	scene3=list(aspectratio=list(x=.6, y=.6, z=.6), xaxis=list(title="𝛕-productivity", titlefont=list(size=25), tickfont=list(size=25)), yaxis=list(title="Conditional Kurtosis", titlefont=list(size=18), tickfont=list(size=25))))
+latexomgdist <- omgdist %>% layout(annotations=latexannotationsdist)
+latexomgdist
+omgdist <- omgdist %>% layout(annotations=annotationsdist)
+omgdist    <- plotly_json(omgdist, FALSE)
+write(omgdist, "/Users/justindoty/Documents/Home/My_Website/static/jmp/rnd/omgdist.json")
+#R&D Firms
+romgdist <- subplot(rdisplot, rskewplot, rkurplot, nrows=1, shareX=TRUE) %>% layout(scene=list(aspectratio=list(x=.6, y=.6, z=.6), xaxis=list(title="𝛕-productivity", titlefont=list(size=25), tickfont=list(size=25)), yaxis=list(title="Conditional Dispersion", titlefont=list(size=18), tickfont=list(size=20))), 
+	scene2=list(aspectratio=list(x=.6, y=.6, z=.6), xaxis=list(title="𝛕-productivity", titlefont=list(size=25), tickfont=list(size=25)), yaxis=list(title="Conditional Skewness", titlefont=list(size=18), tickfont=list(size=25))),
+	scene3=list(aspectratio=list(x=.6, y=.6, z=.6), xaxis=list(title="𝛕-productivity", titlefont=list(size=25), tickfont=list(size=25)), yaxis=list(title="Conditional Kurtosis", titlefont=list(size=18), tickfont=list(size=25))))
+latexromgdist <- romgdist %>% layout(annotations=latexannotationsdist)
+latexromgdist
+romgdist <- romgdist %>% layout(annotations=annotationsdist)
+romgdist    <- plotly_json(romgdist, FALSE)
+write(romgdist, "/Users/justindoty/Documents/Home/My_Website/static/jmp/rnd/romgdist.json")
 for (q in 1:ntau){
 	#Persistence of Productivity for Non-R&D Firms
 	#Fix quantiles of previous period productivity and previous R&D levels

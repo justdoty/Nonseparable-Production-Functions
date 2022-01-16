@@ -76,14 +76,11 @@ stdI <- sd(US$I)
 US <- US %>% mutate(Y=(Y-mean(Y))/stdY, K=(K-mean(K))/stdK, L=(L-mean(L))/stdL, M=(M-mean(M))/stdM, I=(I-mean(I))/stdI)
 wmin <- min(US$Y)
 wmax <- max(US$Y)
-#Load the method used (e.g. Cobb, Translog, Hermite)
-method <- results$method
-resY <- results$resY
 ###############################################################################
 #Simulate Productivity and Capital Evolution Given Model Parameters
 ##############################################################################
 #############################################################################
-Nsim <- 5
+Nsim <- 1
 N <- length(unique(US$id))*Nsim
 T <- length(unique(US$year))
 #Labor
@@ -149,7 +146,7 @@ for (t in 1:T){
 	#Restrict Support of Materials
 	lnmdata[,t] <- (lnmdata[,t]>max(ttdata$M))*max(ttdata$M)+(lnmdata[,t]<min(ttdata$M))*min(ttdata$M)+(lnmdata[,t]<=max(ttdata$M))*(lnmdata[,t]>=min(ttdata$M))*lnmdata[,t]
 	#Output
-	lnydata[,t] <- rowSums(PF(K=lnkdata[,t], L=lnldata[,t], M=lnmdata[,t], omega=omgdata[,t], method=method)*lspline(vectau=vectau, bvec=parY, b1=parYb[1], bL=parYb[2], u=etadata[,t]))
+	lnydata[,t] <- rowSums(PF(K=lnkdata[,t], L=lnldata[,t], M=lnmdata[,t], omega=omgdata[,t])*lspline(vectau=vectau, bvec=parY, b1=parYb[1], bL=parYb[2], u=etadata[,t]))
 	#Restrict Support of Output
 	lnydata[,t] <- (lnydata[,t]>max(ttdata$Y))*max(ttdata$Y)+(lnydata[,t]<min(ttdata$Y))*min(ttdata$Y)+(lnydata[,t]<=max(ttdata$Y))*(lnydata[,t]>=min(ttdata$Y))*lnydata[,t]
 }
@@ -195,6 +192,14 @@ hkpost <- c(12, 15, 17, 18)
 hlpost <- c(13, 15, 16, 19)
 #Hicks-Materials
 hmpost <- c(14, 16, 17, 20)
+#Scale and Ratio Effects
+ak <- parY[12,]; al <- parY[13,]; am <- parY[14,]
+akk <- parY[18,]; all <- parY[19,]; amm <- parY[20,]
+akl <- parY[15,]; akm <- parY[17,]; alm <- parY[16,]
+hspar <- cbind((ak+al+am)/3, 2*(akk+all+amm)/3)
+hklpar <- cbind((ak-al)/3, 2*(akk-(3/2)*akl+all)/3)
+hkmpar <- cbind((ak-am)/3, 2*(akk-(3/2)*akm+amm)/3)
+hlmpar <- cbind((al-am)/3, 2*(all-(3/2)*alm+amm)/3)
 ########################################################################################
 #Productivity Dynamics####################################################
 #########################################################################################
@@ -220,12 +225,18 @@ for (q in 1:ntau){
 	dispomega[q] <- WX(omega=omgqlag)%*%parWT[,ntau]-WX(omega=omgqlag)%*%parWT[,1]
 	kurpomega[q] <- (WX(omega=omgqlag)%*%parWT[,(ntau-1)]-WX(omega=omgqlag)%*%parWT[,1])/(WX(omega=omgqlag)%*%parWT[,(ntau-2)]-WX(omega=omgqlag)%*%parWT[,2])
 }
-displot <- ggplot(data=data.frame(x=vectau, y=dispomega), aes(x=x, y=y))+geom_line()+xlab(expression(paste(tau, "-productivity")))+ylab("Conditional Dispersion")
-skewplot <- ggplot(data=data.frame(x=vectau, y=skomega), aes(x=x, y=y))+geom_line()+xlab(expression(paste(tau, "-productivity")))+ylab("Conditional Skewness")
-kurplot <- ggplot(data=data.frame(x=vectau, y=kurpomega), aes(x=x, y=y))+geom_line()+xlab(expression(paste(tau, "-productivity")))+ylab("Conditional Kurtosis")
-
-omgdist <- plot_grid(displot, skewplot, kurplot, nrow=1)
-save_plot("/Users/justindoty/Documents/Research/Dissertation/Nonlinear_Production_Function_QR/Code/Figures/Main/omgdist.png", omgdist, base_width=10)
+displot <- plot_ly(data.frame(x=vectau, y=dispomega), x=~x, y=~y, type="scatter", mode="lines", line=list(color="black"), showlegend=F, name="", hovertemplate = paste("<i>𝛕-productivity<i>: %{x}", "<br>Conditional Dispersion: %{y:.3f}")) %>% layout(xaxis=list(title="𝛕-productivity", titlefont=list(size=30), tickfont=list(size=25)), yaxis=list(title="Conditional Dispersion", titlefont=list(size=18), tickfont=list(size=25)))
+skewplot <- plot_ly(data.frame(x=vectau, y=skomega), x=~x, y=~y, type="scatter", mode="lines", line=list(color="black"), showlegend=F, name="", hovertemplate = paste("<i>𝛕-productivity<i>: %{x}", "<br>Conditional Skewness: %{y:.3f}")) %>% layout(xaxis=list(title="𝛕-productivity", titlefont=list(size=30), tickfont=list(size=25)), yaxis=list(title="Conditional Skewness", titlefont=list(size=18), tickfont=list(size=25)))
+kurplot <- plot_ly(data.frame(x=vectau, y=kurpomega), x=~x, y=~y, type="scatter", mode="lines", line=list(color="black"), showlegend=F, name="", hovertemplate = paste("<i>𝛕-productivity<i>: %{x}", "<br>Conditional Kurtosis: %{y:.3f}")) %>% layout(xaxis=list(title="𝛕-productivity", titlefont=list(size=30), tickfont=list(size=25)), yaxis=list(title="Conditional Kurtosis", titlefont=list(size=18), tickfont=list(size=25)))
+#Annotate
+annotationsdist <- list(list(x=0.05, y=0.9, text="(a) Conditional Dispersion", font=list(size=35, family="Times New Roman"), xref="paper", yref="paper", xanchor="center,", yanchor="bottom", showarrow=FALSE),
+	list(x=0.5, y=0.9, text="(b) Conditional Skewness", font=list(size=35, family="Times New Roman"), xref="paper", yref="paper", xanchor="center,", yanchor="bottom", showarrow=FALSE),
+	list(x=0.95, y=0.9, text="(c) Conditional Kurtosis", font=list(size=35, family="Times New Roman"), xref="paper", yref="paper", xanchor="center,", yanchor="bottom", showarrow=FALSE))
+omgdist <- subplot(displot, skewplot, kurplot, nrows=1, shareX=TRUE) %>% layout(scene=list(aspectratio=list(x=.6, y=.6, z=.6), xaxis=list(title="𝛕-productivity", titlefont=list(size=25), tickfont=list(size=25)), yaxis=list(title="Conditional Dispersion", titlefont=list(size=18), tickfont=list(size=20))), 
+	scene2=list(aspectratio=list(x=.6, y=.6, z=.6), xaxis=list(title="𝛕-productivity", titlefont=list(size=25), tickfont=list(size=25)), yaxis=list(title="Conditional Skewness", titlefont=list(size=18), tickfont=list(size=25))),
+	scene3=list(aspectratio=list(x=.6, y=.6, z=.6), xaxis=list(title="𝛕-productivity", titlefont=list(size=25), tickfont=list(size=25)), yaxis=list(title="Conditional Kurtosis", titlefont=list(size=18), tickfont=list(size=25))))
+omgdist <- omgdist %>% layout(annotations=annotationsdist)
+omgdist
 ########################################################################################
 #Individual Quantile Marginal Effects########################x############################
 #########################################################################################
@@ -256,6 +267,8 @@ hl3d <- hk3d; hm3d <- hk3d
 hklq3d <- k3d; hkmq3d <- k3d
 hlkq3d <- k3d; hlmq3d <- k3d
 hmkq3d <- k3d; hmlq3d <- k3d
+#For scale and ratio effects
+hs <- k3d; hkl <- k3d; hkm <- k3d; hlm <- k3d
 for (q in 1:ntau){
 	#For fixed quantiles of capital
 	capkq <- rep(as.numeric(quantile(cap, probs=vectau[q])), length(cap))
@@ -281,48 +294,51 @@ for (q in 1:ntau){
 	iwq <- rowSums(IX(K=kmean, omega=wq)*lspline(vectau=vectau, bvec=parI, b1=parIb[1], bL=parIb[2], u=iota))
 	labw <- rowSums(LX(K=kmean, omega=wq)*lspline(vectau=vectau, bvec=parL, b1=parLb[1], bL=parLb[2], u=epsL))
 	matw <- rowSums(MX(K=kmean, L=mean(labw), omega=wq)*lspline(vectau=vectau, bvec=parM, b1=parMb[1], bL=parMb[2], u=epsM))
-	for (qq in 1:ntau){
-		#Production Elasticities (fixed percentiles of inputs)
-		k3d[q,] <- colMeans(cbind(1, labk, matk, 2*capkq, wmean, wmean*labk, wmean*matk, 2*capkq*wmean))%*%parY[kpost,]
-		l3d[q,] <- colMeans(cbind(1, kmean, matl, 2*lablq, wmean, wmean*kmean, wmean*matl, 2*lablq*wmean))%*%parY[lpost,]
-		m3d[q,] <- colMeans(cbind(1, labm, kmean, 2*matmq, wmean, wmean*labm, wmean*kmean, 2*matmq*wmean))%*%parY[mpost,]
-		#Production Elasticities (fixed percentiles of productivity)
-		kwq3d[q,] <- colMeans(cbind(1, labw, matw, 2*kmean, wq, wq*labw, wq*matw, 2*kmean*wq))%*%parY[kpost,]
-		lwq3d[q,] <- colMeans(cbind(1, kmean, matw, 2*labw, wq, wq*kmean, wq*matw, 2*labw*wq))%*%parY[lpost,]
-		mwq3d[q,] <- colMeans(cbind(1, labw, kmean, 2*matw, wq, wq*labw, wq*kmean, 2*matw*wq))%*%parY[mpost,]
-		#Production Elasticities (fixed percentiles of other inputs)
-		#Capital
-		klq3d[q,] <- colMeans(cbind(1, lablq, matl, 2*kmean, wmean, wmean*lablq, wmean*matl, 2*kmean*wmean))%*%parY[kpost,]
-		kmq3d[q,] <- colMeans(cbind(1, labm, matmq, 2*kmean, wmean, wmean*labm, wmean*matmq, 2*kmean*wmean))%*%parY[kpost,]
-		#Labor
-		lkq3d[q,] <- colMeans(cbind(1, capkq, matk, 2*labk, wmean, wmean*capkq, wmean*matk, 2*labk*wmean))%*%parY[lpost,]
-		lmq3d[q,] <- colMeans(cbind(1, kmean, matmq, 2*labm, wmean, wmean*kmean, wmean*matmq, 2*labm*wmean))%*%parY[lpost,]
-		#Materials
-		mkq3d[q,] <- colMeans(cbind(1, labk, capkq, 2*matk, wmean, wmean*labk, wmean*capkq, 2*matk*wmean))%*%parY[mpost,]
-		mlq3d[q,] <- colMeans(cbind(1, lablq, kmean, 2*matl, wmean, wmean*matl, wmean*kmean, 2*matl*wmean))%*%parY[mpost,]
-		#Production Efficiencies (fixed percentiles of inputs)
-		hk3d[q,] <- colMeans(cbind(1, labk, matk, 2*capkq))%*%parY[hkpost,]
-		hl3d[q,] <- colMeans(cbind(1, kmean, matl, 2*lablq))%*%parY[hlpost,]
-		hm3d[q,] <- colMeans(cbind(1, labm, kmean, 2*matmq))%*%parY[hmpost,]
-		#Production Efficiencies (fixed percentiles of other inputs)
-		#Capital
-		hklq3d[q,] <- colMeans(cbind(1, lablq, matl, 2*kmean))%*%parY[hkpost,]
-		hkmq3d[q,] <- colMeans(cbind(1, labm, matmq, 2*kmean))%*%parY[hkpost,]
-		#Labor
-		hlkq3d[q,] <- colMeans(cbind(1, capkq, matk, 2*labk))%*%parY[hlpost,]
-		hlmq3d[q,] <- colMeans(cbind(1, kmean, matmq, 2*labm))%*%parY[hlpost,]
-		#Materials
-		hmkq3d[q,] <- colMeans(cbind(1, labk, capkq, 2*matk))%*%parY[hmpost,]
-		hmlq3d[q,] <- colMeans(cbind(1, lablq, kmean, 2*matl))%*%parY[hmpost,]
-		#Marginal Productivities (fixed percentiles of productivity)
-		iw3d[q,] <- colMeans(IXD(K=kmean, omega=wq, par=parI, pos=2, sdpos=1))
-		lw3d[q,] <- colMeans(LXD(K=kmean, omega=wq, par=parL, pos=2, sdpos=1))
-		mw3d[q,] <- colMeans(MXD(K=kmean, L=labw, omega=wq, par=parM, pos=3, sdpos=1))
-		#Marginal Productivities (fixed percentiles of capital)
-		iwkq3d[q,] <- colMeans(IXD(K=capkq, omega=wmean, par=parI, pos=2, sdpos=1))
-		lwkq3d[q,] <- colMeans(LXD(K=capkq, omega=wmean, par=parL, pos=2, sdpos=1))
-		mwkq3d[q,] <- colMeans(MXD(K=capkq, L=labk, omega=wmean, par=parM, pos=3, sdpos=1))
-	}
+	#Production Elasticities (fixed percentiles of inputs)
+	k3d[q,] <- colMeans(cbind(1, labk, matk, 2*capkq, wmean, wmean*labk, wmean*matk, 2*capkq*wmean))%*%parY[kpost,]
+	l3d[q,] <- colMeans(cbind(1, kmean, matl, 2*lablq, wmean, wmean*kmean, wmean*matl, 2*lablq*wmean))%*%parY[lpost,]
+	m3d[q,] <- colMeans(cbind(1, labm, kmean, 2*matmq, wmean, wmean*labm, wmean*kmean, 2*matmq*wmean))%*%parY[mpost,]
+	#Production Elasticities (fixed percentiles of productivity)
+	kwq3d[q,] <- colMeans(cbind(1, labw, matw, 2*kmean, wq, wq*labw, wq*matw, 2*kmean*wq))%*%parY[kpost,]
+	lwq3d[q,] <- colMeans(cbind(1, kmean, matw, 2*labw, wq, wq*kmean, wq*matw, 2*labw*wq))%*%parY[lpost,]
+	mwq3d[q,] <- colMeans(cbind(1, labw, kmean, 2*matw, wq, wq*labw, wq*kmean, 2*matw*wq))%*%parY[mpost,]
+	#Production Elasticities (fixed percentiles of other inputs)
+	#Capital
+	klq3d[q,] <- colMeans(cbind(1, lablq, matl, 2*kmean, wmean, wmean*lablq, wmean*matl, 2*kmean*wmean))%*%parY[kpost,]
+	kmq3d[q,] <- colMeans(cbind(1, labm, matmq, 2*kmean, wmean, wmean*labm, wmean*matmq, 2*kmean*wmean))%*%parY[kpost,]
+	#Labor
+	lkq3d[q,] <- colMeans(cbind(1, capkq, matk, 2*labk, wmean, wmean*capkq, wmean*matk, 2*labk*wmean))%*%parY[lpost,]
+	lmq3d[q,] <- colMeans(cbind(1, kmean, matmq, 2*labm, wmean, wmean*kmean, wmean*matmq, 2*labm*wmean))%*%parY[lpost,]
+	#Materials
+	mkq3d[q,] <- colMeans(cbind(1, labk, capkq, 2*matk, wmean, wmean*labk, wmean*capkq, 2*matk*wmean))%*%parY[mpost,]
+	mlq3d[q,] <- colMeans(cbind(1, lablq, kmean, 2*matl, wmean, wmean*matl, wmean*kmean, 2*matl*wmean))%*%parY[mpost,]
+	#Production Efficiencies (fixed percentiles of inputs)
+	hk3d[q,] <- colMeans(cbind(1, labk, matk, 2*capkq))%*%parY[hkpost,]
+	hl3d[q,] <- colMeans(cbind(1, kmean, matl, 2*lablq))%*%parY[hlpost,]
+	hm3d[q,] <- colMeans(cbind(1, labm, kmean, 2*matmq))%*%parY[hmpost,]
+	#Production Efficiencies (fixed percentiles of other inputs)
+	#Capital
+	hklq3d[q,] <- colMeans(cbind(1, lablq, matl, 2*kmean))%*%parY[hkpost,]
+	hkmq3d[q,] <- colMeans(cbind(1, labm, matmq, 2*kmean))%*%parY[hkpost,]
+	#Labor
+	hlkq3d[q,] <- colMeans(cbind(1, capkq, matk, 2*labk))%*%parY[hlpost,]
+	hlmq3d[q,] <- colMeans(cbind(1, kmean, matmq, 2*labm))%*%parY[hlpost,]
+	#Materials
+	hmkq3d[q,] <- colMeans(cbind(1, labk, capkq, 2*matk))%*%parY[hmpost,]
+	hmlq3d[q,] <- colMeans(cbind(1, lablq, kmean, 2*matl))%*%parY[hmpost,]
+	#Scale and Ratio Effects
+	hs[q,] <- c(1, quantile(cap+lab+mat, probs=vectau[q]))%*%t(hspar)
+	hkl[q,] <- c(1, quantile(cap-lab, probs=vectau[q]))%*%t(hklpar)
+	hkm[q,] <- c(1, quantile(cap-mat, probs=vectau[q]))%*%t(hkmpar)
+	hlm[q,] <- c(1, quantile(lab-mat, probs=vectau[q]))%*%t(hlmpar)
+	#Marginal Productivities (fixed percentiles of productivity)
+	iw3d[q,] <- colMeans(IXD(K=kmean, omega=wq, par=parI, pos=2, sdpos=1))
+	lw3d[q,] <- colMeans(LXD(K=kmean, omega=wq, par=parL, pos=2, sdpos=1))
+	mw3d[q,] <- colMeans(MXD(K=kmean, L=labw, omega=wq, par=parM, pos=3, sdpos=1))
+	#Marginal Productivities (fixed percentiles of capital)
+	iwkq3d[q,] <- colMeans(IXD(K=capkq, omega=wmean, par=parI, pos=2, sdpos=1))
+	lwkq3d[q,] <- colMeans(LXD(K=capkq, omega=wmean, par=parL, pos=2, sdpos=1))
+	mwkq3d[q,] <- colMeans(MXD(K=capkq, L=labk, omega=wmean, par=parM, pos=3, sdpos=1))
 
 }
 ###################################################
@@ -416,6 +432,20 @@ mwplot <- plot_ly(x=vectau, y=vectau, z=mw3d, colorscale="Jet", type="surface", 
 #Material response to productivity (over capital)
 mwkqplot <- plot_ly(x=vectau, y=vectau, z=mwkq3d, colorscale="Jet", type="surface", showscale=FALSE, scene="scene3", name=" ", hovertemplate = paste("<i>𝛕-materials<i>: %{x:.2f}", "<br>𝛕-capital: %{y:.2f}<br>", "Estimate: %{z:.3f}")) %>% layout(scene3=list(camera=list(eye=list(x=-1.5, y=-1.5, z=0.5)), aspectratio=list(x=1, y=1, z=1), xaxis=list(title="𝛕-materials"), yaxis=list(title="𝛕-capital"), zaxis=list(title="Materials Productivity"))) 
 # mw3dplotly
+###############################################
+#Scale and Ratio Effects
+#Scale
+hsplot <- plot_ly(x=vectau, y=vectau, z=hs, colorscale="Jet", type="surface", showscale=FALSE, scene="scene1", name=" ", hovertemplate = paste("<i>𝛕-output<i>: %{x:.2f}", "<br>𝛕-scale: %{y:.2f}<br>", "Estimate: %{z:.3f}")) %>% layout(scene1=list(camera=list(eye=list(x=-1.5, y=-1.5, z=0.5)), aspectratio=list(x=1, y=1, z=1), xaxis=list(title="𝛕-output", titlefont=list(size=30), tickfont=list(size=16)), yaxis=list(title="𝛕-scale", titlefont=list(size=30), tickfont=list(size=16)), zaxis=list(title="Scale Effect", titlefont=list(size=30), tickfont=list(size=16)))) 
+hsplot
+#Capital-Labor
+hklplot <- plot_ly(x=vectau, y=vectau, z=hkl, colorscale="Jet", type="surface", showscale=FALSE, scene="scene1", name=" ", hovertemplate = paste("<i>𝛕-output<i>: %{x:.2f}", "<br>𝛕-k/l: %{y:.2f}<br>", "Estimate: %{z:.3f}")) %>% layout(scene1=list(camera=list(eye=list(x=-1.5, y=-1.5, z=0.5)), aspectratio=list(x=1, y=1, z=1), xaxis=list(title="𝛕-output"), yaxis=list(title="𝛕-k/l"), zaxis=list(title="Capital/Labor Effect"))) 
+# hklplot
+#Capital-Materials
+hkmplot <- plot_ly(x=vectau, y=vectau, z=hkm, colorscale="Jet", type="surface", showscale=FALSE, scene="scene2", name=" ", hovertemplate = paste("<i>𝛕-output<i>: %{x:.2f}", "<br>𝛕-k/m: %{y:.2f}<br>", "Estimate: %{z:.3f}")) %>% layout(scene2=list(camera=list(eye=list(x=-1.5, y=-1.5, z=0.5)), aspectratio=list(x=1, y=1, z=1), xaxis=list(title="𝛕-output"), yaxis=list(title="𝛕-k/m"), zaxis=list(title="Capital/Materials Effect"))) 
+# hkmplot
+#Labor-Materials
+hlmplot <- plot_ly(x=vectau, y=vectau, z=hlm, colorscale="Jet", type="surface", showscale=FALSE, scene="scene3", name=" ", hovertemplate = paste("<i>𝛕-output<i>: %{x:.2f}", "<br>𝛕-l/m: %{y:.2f}<br>", "Estimate: %{z:.3f}")) %>% layout(scene3=list(camera=list(eye=list(x=-1.5, y=-1.5, z=0.5)), aspectratio=list(x=1, y=1, z=1), xaxis=list(title="𝛕-output"), yaxis=list(title="𝛕-l/m"), zaxis=list(title="Labor/Materials Effect"))) 
+# hlmplot
 #Combined Plot.ly Elasticities
 #Elasticities (over percentiles of inputs)
 klmplot <- subplot(kplot, lplot, mplot, shareX=TRUE) %>% layout(scene=list(aspectratio=list(x=.6, y=.6, z=.6), xaxis=list(title="𝛕-output", titlefont=list(size=18), tickfont=list(size=14)), yaxis=list(title="𝛕-capital", titlefont=list(size=18), tickfont=list(size=14)), zaxis=list(title="Capital", titlefont=list(size=18), tickfont=list(size=14))), 
@@ -471,11 +501,11 @@ klmwqplot  <- plotly_json(klmwqplot, FALSE)
 kinpqplot  <- plotly_json(kinpqplot, FALSE)
 linpqplot   <- plotly_json(linpqplot, FALSE)
 minpqplot   <- plotly_json(minpqplot, FALSE)
-write(klmplot, "/Users/justindoty/Documents/Home/My_Website/static/jmp/main/klm3dplotly.json")
-write(klmwqplot , "/Users/justindoty/Documents/Home/My_Website/static/jmp/main/klmwq3dplotly.json")
-write(kinpqplot, "/Users/justindoty/Documents/Home/My_Website/static/jmp/mainext/kinpq3dplotly.json")
-write(linpqplot, "/Users/justindoty/Documents/Home/My_Website/static/jmp/mainext/linpq3dplotly.json")
-write(minpqplot, "/Users/justindoty/Documents/Home/My_Website/static/jmp/mainext/minpq3dplotly.json")
+# write(klmplot, "/Users/justindoty/Documents/Home/My_Website/static/jmp/main/klm3dplotly.json")
+# write(klmwqplot , "/Users/justindoty/Documents/Home/My_Website/static/jmp/main/klmwq3dplotly.json")
+# write(kinpqplot, "/Users/justindoty/Documents/Home/My_Website/static/jmp/mainext/kinpq3dplotly.json")
+# write(linpqplot, "/Users/justindoty/Documents/Home/My_Website/static/jmp/mainext/linpq3dplotly.json")
+# write(minpqplot, "/Users/justindoty/Documents/Home/My_Website/static/jmp/mainext/minpq3dplotly.json")
 #Combined Plot.ly Efficiecies
 hklmplot <- subplot(hkplot, hlplot, hmplot, shareX=TRUE) %>% layout(scene=list(aspectratio=list(x=.6, y=.6, z=.6), xaxis=list(title="𝛕-output", titlefont=list(size=18), tickfont=list(size=14)), yaxis=list(title="𝛕-capital", titlefont=list(size=18), tickfont=list(size=14)), zaxis=list(title="Capital", titlefont=list(size=18), tickfont=list(size=14))), 
 	scene2=list(aspectratio=list(x=.6, y=.6, z=.6), xaxis=list(title="𝛕-output", titlefont=list(size=18), tickfont=list(size=14)), yaxis=list(title="𝛕-labor", titlefont=list(size=18), tickfont=list(size=14)), zaxis=list(title="Labor", titlefont=list(size=18), tickfont=list(size=14))),
@@ -518,10 +548,26 @@ hklmplot   <- plotly_json(hklmplot, FALSE)
 hkinpqplot   <- plotly_json(hkinpqplot, FALSE)
 hlinpqplot   <- plotly_json(hlinpqplot, FALSE)
 hminpqplot   <- plotly_json(hminpqplot, FALSE)
-write(hklmplot, "/Users/justindoty/Documents/Home/My_Website/static/jmp/main/hklm3dplotly.json")
-write(hkinpqplot, "/Users/justindoty/Documents/Home/My_Website/static/jmp/mainext/hkinpq3dplotly.json")
-write(hlinpqplot, "/Users/justindoty/Documents/Home/My_Website/static/jmp/mainext/hlinpq3dplotly.json")
-write(hminpqplot, "/Users/justindoty/Documents/Home/My_Website/static/jmp/mainext/hminpq3dplotly.json")
+# write(hklmplot, "/Users/justindoty/Documents/Home/My_Website/static/jmp/main/hklm3dplotly.json")
+# write(hkinpqplot, "/Users/justindoty/Documents/Home/My_Website/static/jmp/mainext/hkinpq3dplotly.json")
+# write(hlinpqplot, "/Users/justindoty/Documents/Home/My_Website/static/jmp/mainext/hlinpq3dplotly.json")
+# write(hminpqplot, "/Users/justindoty/Documents/Home/My_Website/static/jmp/mainext/hminpq3dplotly.json")
+#Scale and Ratio Effects
+#Annotations
+ratioannotations <- list(list(x=0.03, y=0.75, text="(a) Capital-Labor Efficiency", font=list(size=30, family="Times New Roman"), xref="paper", yref="paper", xanchor="center,", yanchor="bottom", showarrow=FALSE),
+	list(x=0.5, y=0.75, text="(b) Capital-Materials Efficiency", font=list(size=30, family="Times New Roman"), xref="paper", yref="paper", xanchor="center,", yanchor="bottom", showarrow=FALSE),
+	list(x=0.95, y=0.75, text="(c) Labor-Materials Efficiency", font=list(size=30, family="Times New Roman"), xref="paper", yref="paper", xanchor="center,", yanchor="bottom", showarrow=FALSE))
+ratioplots <- subplot(hklplot, hkmplot, hlmplot, shareX=TRUE) %>% layout(scene=list(aspectratio=list(x=.6, y=.6, z=.6), xaxis=list(title="𝛕-output", titlefont=list(size=18), tickfont=list(size=14)), yaxis=list(title="𝛕-(k-l)", titlefont=list(size=18), tickfont=list(size=14)), zaxis=list(title="Capital-Labor", titlefont=list(size=18), tickfont=list(size=14))), 
+	scene2=list(aspectratio=list(x=.6, y=.6, z=.6), xaxis=list(title="𝛕-output", titlefont=list(size=18), tickfont=list(size=14)), yaxis=list(title="𝛕-(k-m)", titlefont=list(size=18), tickfont=list(size=14)), zaxis=list(title="Capital-Materials", titlefont=list(size=18), tickfont=list(size=14))),
+	scene3=list(aspectratio=list(x=.6, y=.6, z=.6), xaxis=list(title="𝛕-output", titlefont=list(size=18), tickfont=list(size=14)), yaxis=list(title="𝛕-(l-m)", titlefont=list(size=18), tickfont=list(size=14)), zaxis=list(title="Labor-Materials", titlefont=list(size=18), tickfont=list(size=14))))
+ratioplots <- ratioplots %>% layout(annotations=ratioannotations)
+ratioplots
+
+
+
+
+
+
 #Combined Productivities
 lmiwplot <- subplot(iwplot, lwplot, mwplot) %>% layout(scene=list(aspectratio=list(x=0.6, y=0.6, z=0.6), xaxis=list(title="𝛕-investment", titlefont=list(size=18), tickfont=list(size=14)), yaxis=list(title="𝛕-productivity", titlefont=list(size=18), tickfont=list(size=14)), zaxis=list(title="Investment", titlefont=list(size=18), tickfont=list(size=14))), 
 	scene2=list(aspectratio=list(x=0.6, y=0.6, z=0.6), xaxis=list(title="𝛕-labor", titlefont=list(size=18), tickfont=list(size=14)), yaxis=list(title="𝛕-productivity", titlefont=list(size=18), tickfont=list(size=14)), zaxis=list(title="Labor", titlefont=list(size=18), tickfont=list(size=14))),
@@ -548,8 +594,8 @@ lmiwkqplot <- lmiwkqplot %>% layout(annotations=annotationsw)
 #Save
 lmiwplot   <- plotly_json(lmiwplot, FALSE)
 lmiwkqplot   <- plotly_json(lmiwkqplot, FALSE)
-write(lmiwplot, "/Users/justindoty/Documents/Home/My_Website/static/jmp/main/lmiw3dplotly.json")
-write(lmiwkqplot, "/Users/justindoty/Documents/Home/My_Website/static/jmp/mainext/lmiwkq3dplotly.json")
+# write(lmiwplot, "/Users/justindoty/Documents/Home/My_Website/static/jmp/main/lmiw3dplotly.json")
+# write(lmiwkqplot, "/Users/justindoty/Documents/Home/My_Website/static/jmp/mainext/lmiwkq3dplotly.json")
 ######################################################################################################################################################################################
 #Productivity
 #####################################################################################################################################################################################
@@ -567,7 +613,7 @@ for (q in 1:ntau){
 omgplotly <- plot_ly(x=vectau, y=vectau, z=omg3dq, colorscale="Jet", type="surface", showscale=FALSE, scene="scene1", name=" ", hovertemplate = paste("<i>𝛕-innovation<i>: %{x:.2f}", "<br>𝛕-productivity: %{y:.2f}<br>", "Estimate: %{z:.3f}")) %>% layout(scene1=list(camera=list(eye=list(x=-1.5, y=-1.5, z=0.5)), aspectratio=list(x=1, y=1, z=1), xaxis=list(title="𝛕-innovation", titlefont=list(size=20), tickfont=list(size=16)), yaxis=list(title="𝛕-productivity", titlefont=list(size=20), tickfont=list(size=16)), zaxis=list(title="Persistence", titlefont=list(size=20), tickfont=list(size=16)))) 
 omgplotly
 omgplotly <- plotly_json(omgplotly, FALSE)
-write(omgplotly, "/Users/justindoty/Documents/Home/My_Website/static/jmp/main/omgplotly.json")
+# write(omgplotly, "/Users/justindoty/Documents/Home/My_Website/static/jmp/main/omgplotly.json")
 #Side by Side Persistence Plots
 omgplotly3 <- plot_ly(x=vectau, y=vectau, z=omg3dq, colorscale="Jet", type="surface", showscale=FALSE, scene="scene3", name=" ", hovertemplate = paste("<i>𝛕-innovation<i>: %{x:.2f}", "<br>𝛕-productivity: %{y:.2f}<br>", "Estimate: %{z:.3f}")) %>% layout(scene3=list(camera=list(eye=list(x=-1.5, y=-1.5, z=0.5)), aspectratio=list(x=1, y=1, z=1), xaxis=list(title="𝛕-innovation", titlefont=list(size=20), tickfont=list(size=16)), yaxis=list(title="𝛕-productivity", titlefont=list(size=20), tickfont=list(size=16)), zaxis=list(title="Persistence", titlefont=list(size=20), tickfont=list(size=16)))) 
 
