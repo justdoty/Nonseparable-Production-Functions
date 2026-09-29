@@ -3,12 +3,12 @@ by Justin Doty (2021)
 ## Abstract
 This paper studies identification and estimation of a nonseparable model for production functions with unobserved heterogeneity. Nonparametric identification results are established for the production function and productivity process under stationarity conditions. This framework allows for heterogeneous effects of output elasticities and factor efficiencies in addition to nonlinear productivity persistence. It also allows for additional unobservables in the input demand functions, which would violate the scalar unobservability requirement in proxy variables under previous approaches. This extension is used to show firms' heterogeneous responses to productivity shocks corresponding to their productivity history. This paper illustrates these results in an application to U.S. manufacturing firms where the proposed model is estimated using nonlinear quantile regression.
 
-## Software Implementation
-All code is written in R language and evaluated on an HPC system.
+## Implementation
+All code is evaluated on an HPC system.
 
 ## Replication Files
 The following folders contain replication files for the tables and figures in the paper.
-1. [Environments](/Environments): A folder containing all R environments used in the analysis
+1. [Environments](/Environments): A folder containing all saved estimation environments used in the analysis
 2. [Figures](/Figures): A folder containing all the figures produced by the replication files
 3. [Functions](/Functions): A folder containing all of the replication files which contains the following
 	- [Labor Dynamics](/Functions/Labor_Dynamics): Contains replication files for producing impulse response functions for labor in the Appendix
@@ -18,13 +18,13 @@ The following folders contain replication files for the tables and figures in th
 	- [Data Cleaning](/Functions/Compustat_Cleaning.R): Procedure for cleaning the data from Compustat
 	
 In addition, each of the folders contain variations of the same files used in estimation
-- Production_EM.R: Main estimation file. Uses functions below as dependencies.
-- Posterior.R: Function used to compute the posterior density (E-step)
-- Mstep.R: Function to perform Maximization step (M-step) of algorithm
-- Tensors.R: Function used to specify functional forms for the production function, inputs, and productivity
-- omega.R: Function used to estimate a production function using [Levinsohn and Petrin (2003)](https://doi.org/10.1111/1467-937X.00246)
-- Auxfuns.R: Contains auxiliary files used in estimation procedures
-- elasticities.R: Function used to construct production function estimates
-- impulse_response.R: Function used to construct productivity and input responses to shocks
+- Production_EM: Main estimation file. Uses functions below as dependencies.
+- Posterior: Function used to compute the posterior density (E-step)
+- Mstep: Function to perform Maximization step (M-step) of algorithm
+- Tensors: Function used to specify functional forms for the production function, inputs, and productivity
+- omega: Function used to estimate a production function using [Levinsohn and Petrin (2003)](https://doi.org/10.1111/1467-937X.00246)
+- Auxfuns: Contains auxiliary files used in estimation procedures
+- elasticities: Function used to construct production function estimates
+- impulse_response: Function used to construct productivity and input responses to shocks
 
 
